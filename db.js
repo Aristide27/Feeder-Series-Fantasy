@@ -30,6 +30,20 @@ db.prepare(`
   )
 `).run();
 
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS picks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    driver1_id INTEGER NOT NULL,
+    driver2_id INTEGER NOT NULL,
+    constructor_id INTEGER NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY(driver1_id) REFERENCES drivers(id),
+    FOREIGN KEY(driver2_id) REFERENCES drivers(id),
+    FOREIGN KEY(constructor_id) REFERENCES constructors(id)
+  )
+`).run();
+
 // --- Ajouter la colonne constructor_id seulement si elle n'existe pas ---
 const pragma = db.prepare("PRAGMA table_info(drivers)").all();
 const hasConstructorId = pragma.some(col => col.name === "constructor_id");
@@ -49,9 +63,28 @@ if (countDrivers.count === 0) {
     VALUES (?, ?)
   `);
   const drivers = [
-    { name: "Victor Martins", number: 1 },
-    { name: "Théo Pourchaire", number: 5 },
-    { name: "Jack Doohan", number: 2 },
+    { name: "Rafael Câmara", number: 1 },
+    { name: "Joshua Dürksen", number: 2 },
+    { name: "Ritomo Miyata", number: 3 },
+    { name: "Colton Hertan", number: 4 },
+    { name: "Noel León", number: 5 },
+    { name: "Nikola Tsolov", number: 6 },
+    { name: "Dino Beganovic", number: 7 },
+    { name: "Roman Bilinski", number: 8 },
+    { name: "Gabriele Minì", number: 9 },
+    { name: "Oliver Goethe", number: 10 },
+    { name: "Sebastián Montoya", number: 11 },
+    { name: "Mari Boya", number: 12 },
+    { name: "Martinius Stenshorne", number: 14 },
+    { name: "Alexander Dunne", number: 15 },
+    { name: "Kush Maini", number: 16 },
+    { name: "Tasanapol Inthraphuvasak", number: 17 },
+    { name: "Emerson Fittipaldi", number: 20 },
+    { name: "Cian Shields", number: 21 },
+    { name: "Nicolás Varrone", number: 22 },
+    { name: "Driver 23", number: 23 },
+    { name: "Laurens van Hoepen", number: 24 },
+    { name: "John Bennett", number: 25 }
   ];
   drivers.forEach(driver => insertDriver.run(driver.name, driver.number));
 }
@@ -64,9 +97,17 @@ if (countConstructors.count === 0) {
     VALUES (?, ?)
   `);
   const constructors = [
+    { name: "Invicta Racing", code: "INV" },
+    { name: "Hitech TGR", code: "HIT" },
+    { name: "Campos Racing", code: "CAM" },
+    { name: "DAMS Lucas Oil", code: "DAM" },
+    { name: "MP Motorsport", code: "MPM" },
+    { name: "PREMA Racing", code: "PRE" },
+    { name: "Rodin Motorsport", code: "ROD" },
     { name: "ART Grand Prix", code: "ART" },
-    { name: "MP Motorsport", code: "MP" },
-    { name: "Virtuosi Racing", code: "VIR" }
+    { name: "AIX Racing", code: "AIX" },
+    { name: "Van Amersfoort Racing", code: "VAR" },
+    { name: "TRIDENT", code: "TRI" }
   ];
   constructors.forEach(c => insertConstructor.run(c.name, c.code));
 }

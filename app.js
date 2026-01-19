@@ -14,6 +14,38 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "OK" });
 });
 
+app.post("/api/users", (req, res) => {
+  const { username, email } = req.body;
+
+  try {
+    const stmt = db.prepare(`
+      INSERT INTO users (username, email)
+      VALUES (?, ?)
+    `);
+    const info = stmt.run(username, email);
+
+    res.json({ id: info.lastInsertRowid, username, email });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post("/api/picks", (req, res) => {
+  const { user_id, driver1_id, driver2_id, constructor_id } = req.body;
+
+  try {
+    const stmt = db.prepare(`
+      INSERT INTO picks (user_id, driver1_id, driver2_id, constructor_id)
+      VALUES (?, ?, ?, ?)
+    `);
+    const info = stmt.run(user_id, driver1_id, driver2_id, constructor_id);
+
+    res.json({ id: info.lastInsertRowid, user_id, driver1_id, driver2_id, constructor_id });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 app.get("/api/drivers", (req, res) => {
   const drivers = db.prepare(`
     SELECT drivers.id,
@@ -32,28 +64,29 @@ app.get("/api/constructors", (req, res) => {
   res.json(constructors);
 });
 
-app.post("/api/users", (req, res) => {
-  const { username, email } = req.body;
-
-  try {
-    const stmt = db.prepare(`
-      INSERT INTO users (username, email)
-      VALUES (?, ?)
-    `);
-    const info = stmt.run(username, email);
-
-    res.json({ id: info.lastInsertRowid, username, email });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
-
 app.get("/api/users", (req, res) => {
   const users = db.prepare("SELECT * FROM users").all();
   res.json(users);
 });
 
-// Lancer le serveur
+app.get("/api/picks/:user_id", (req, res) => {
+  const user_id = req.params.user_id;
+
+  const picks = db.prepare(`
+    SELECT picks.id, 
+           drivers1.name AS driver1, 
+           drivers2.name AS driver2, 
+           constructors.name AS constructor
+    FROM picks
+    JOIN drivers AS drivers1 ON picks.driver1_id = drivers1.id
+    JOIN drivers AS drivers2 ON picks.driver2_id = drivers2.id
+    JOIN constructors ON picks.constructor_id = constructors.id
+    WHERE picks.user_id = ?
+  `).all(user_id);
+
+  res.json(picks);
+});
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
