@@ -1,0 +1,17 @@
+{
+  "name": "fantasy-f2",
+  "version": "1.0.0",
+  "description": "Jeu FSF Formula 2 développé en HTML, CSS, JavaScript, Node.js et SQLite.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
