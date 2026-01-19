@@ -1,15 +1,21 @@
 const express = require("express");
 const path = require("path");
+const db = require("./db");
 
 const app = express();
 const PORT = 3000;
 
-// Servir les fichiers statiques (HTML, CSS, JS)
+// Fichiers statiques
 app.use(express.static(path.join(__dirname, "public")));
 
-// Route de test API
+// Routes API
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK" });
+});
+
+app.get("/api/drivers", (req, res) => {
+  const drivers = db.prepare("SELECT * FROM drivers").all();
+  res.json(drivers);
 });
 
 // Lancer le serveur
