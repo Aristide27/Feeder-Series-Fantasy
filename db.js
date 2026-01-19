@@ -14,6 +14,20 @@ db.prepare(`
   )
 `).run();
 
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS constructors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    code TEXT NOT NULL,
+    active INTEGER DEFAULT 1
+  )
+`).run();
+
+db.prepare(`
+  ALTER TABLE drivers
+  ADD COLUMN constructor_id INTEGER
+`).run();
+
 const insertDriver = db.prepare(`
   INSERT INTO drivers (name, number)
   VALUES (?, ?)
@@ -25,6 +39,29 @@ const drivers = [
   { name: "Jack Doohan", number: 2 },
 ];
 
+const constructors = [
+  { name: "ART Grand Prix", code: "ART" },
+  { name: "MP Motorsport", code: "MP" },
+  { name: "Virtuosi Racing", code: "VIR" }
+];
+
 drivers.forEach((driver) => {
   insertDriver.run(driver.name, driver.number);
 });
+
+const insertConstructor = db.prepare(`
+  INSERT INTO constructors (name, code)
+  VALUES (?, ?)
+`);
+
+constructors.forEach((c) => {
+  insertConstructor.run(c.name, c.code);
+});
+
+db.prepare(`
+  UPDATE drivers SET constructor_id = 1 WHERE name = 'Victor Martins'
+`).run();
+
+db.prepare(`
+  UPDATE drivers SET constructor_id = 2 WHERE name = 'Théo Pourchaire'
+`).run();
