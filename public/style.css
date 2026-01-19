@@ -1,0 +1,30 @@
+/* Palette F2 */
+:root {
+  --blue: #1c78fb;
+  --light-blue: #7cb1fc;
+  --indigo: #122f61;
+  --midnight: #023f96;
+  --black: #0c1414;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--black);
+  color: white;
+}
+
+header {
+  background-color: var(--indigo);
+  padding: 20px;
+}
+
+h1 {
+  margin: 0;
+  color: var(--light-blue);
+}
+
+main {
+  padding: 20px;
+  background-color: var(--midnight);
+}

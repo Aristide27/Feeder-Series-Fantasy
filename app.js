@@ -1,14 +1,15 @@
 const express = require("express");
+const path = require("path");
 
-// Crée une application Express
 const app = express();
-
-// Port sur lequel le serveur écoute
 const PORT = 3000;
 
-// Route de test
-app.get("/", (req, res) => {
-  res.send("Fantasy F2 server is running");
+// Servir les fichiers statiques (HTML, CSS, JS)
+app.use(express.static(path.join(__dirname, "public")));
+
+// Route de test API
+app.get("/api/health", (req, res) => {
+  res.json({ status: "OK" });
 });
 
 // Lancer le serveur
