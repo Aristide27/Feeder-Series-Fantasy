@@ -90,3 +90,11 @@ app.get("/api/picks/:user_id", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+
+const { calculateQualifyingDriverPoints } = require("./logic/points");
+
+console.log("Q P1:", calculateQualifyingDriverPoints({ position: 1, status: "classified" }));
+console.log("Q P10:", calculateQualifyingDriverPoints({ position: 10, status: "classified" }));
+console.log("Q P15:", calculateQualifyingDriverPoints({ position: 15, status: "classified" }));
+console.log("Q NC:", calculateQualifyingDriverPoints({ position: null, status: "NC" }));
+console.log("Q DSQ:", calculateQualifyingDriverPoints({ position: null, status: "DSQ" }));
