@@ -30,20 +30,76 @@ app.post("/api/users", (req, res) => {
   }
 });
 
-app.post("/api/picks", (req, res) => {
-  const { user_id, driver1_id, driver2_id, constructor_id } = req.body;
+app.post("/api/fantasy-teams", (req, res) => {
+  const { user_id, constructor_id } = req.body;
 
-  try {
-    const stmt = db.prepare(`
-      INSERT INTO picks (user_id, driver1_id, driver2_id, constructor_id)
-      VALUES (?, ?, ?, ?)
-    `);
-    const info = stmt.run(user_id, driver1_id, driver2_id, constructor_id);
+  // Vérifier constructeur
+  const constructor = db
+    .prepare("SELECT id FROM constructors WHERE id = ?")
+    .get(constructor_id);
 
-    res.json({ id: info.lastInsertRowid, user_id, driver1_id, driver2_id, constructor_id });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+  if (!constructor) {
+    return res.status(400).json({ error: "Constructor does not exist" });
   }
+
+  // Vérifier que l'utilisateur n'a pas déjà une équipe
+  const existing = db
+    .prepare("SELECT id FROM fantasy_teams WHERE user_id = ?")
+    .get(user_id);
+
+  if (existing) {
+    return res.status(400).json({ error: "User already has a fantasy team" });
+  }
+
+  const result = db.prepare(`
+    INSERT INTO fantasy_teams (user_id, constructor_id)
+    VALUES (?, ?)
+  `).run(user_id, constructor_id);
+
+  res.json({ fantasy_team_id: result.lastInsertRowid });
+});
+
+app.post("/api/fantasy-teams/:teamId/picks", (req, res) => {
+  const { teamId } = req.params;
+  const { driver_id } = req.body;
+
+  // Vérifier pilote
+  const driver = db
+    .prepare("SELECT id FROM drivers WHERE id = ?")
+    .get(driver_id);
+
+  if (!driver) {
+    return res.status(400).json({ error: "Driver does not exist" });
+  }
+
+  // Vérifier nombre de pilotes
+  const picks = db.prepare(`
+    SELECT COUNT(*) as count
+    FROM fantasy_picks
+    WHERE fantasy_team_id = ?
+  `).get(teamId);
+
+  if (picks.count >= 2) {
+    return res.status(400).json({ error: "Maximum 2 drivers allowed" });
+  }
+
+  // Vérifier doublon
+  const alreadyPicked = db.prepare(`
+    SELECT id FROM fantasy_picks
+    WHERE fantasy_team_id = ? AND driver_id = ?
+  `).get(teamId, driver_id);
+
+  if (alreadyPicked) {
+    return res.status(400).json({ error: "Driver already picked" });
+  }
+
+  // Ajouter le pick
+  db.prepare(`
+    INSERT INTO fantasy_picks (fantasy_team_id, driver_id)
+    VALUES (?, ?)
+  `).run(teamId, driver_id);
+
+  res.json({ success: true });
 });
 
 app.get("/api/drivers", (req, res) => {
@@ -69,32 +125,34 @@ app.get("/api/users", (req, res) => {
   res.json(users);
 });
 
-app.get("/api/picks/:user_id", (req, res) => {
-  const user_id = req.params.user_id;
+app.get("/api/fantasy-teams", (req, res) => {
+  const teams = db.prepare(`
+    SELECT * FROM fantasy_teams
+  `).all();
 
-  const picks = db.prepare(`
-    SELECT picks.id, 
-           drivers1.name AS driver1, 
-           drivers2.name AS driver2, 
-           constructors.name AS constructor
-    FROM picks
-    JOIN drivers AS drivers1 ON picks.driver1_id = drivers1.id
-    JOIN drivers AS drivers2 ON picks.driver2_id = drivers2.id
-    JOIN constructors ON picks.constructor_id = constructors.id
-    WHERE picks.user_id = ?
-  `).all(user_id);
+  res.json(teams);
+});
 
-  res.json(picks);
+app.get("/api/fantasy-teams/:teamId", (req, res) => {
+  const { teamId } = req.params;
+
+  const team = db.prepare(`
+    SELECT ft.id, c.name AS constructor
+    FROM fantasy_teams ft
+    JOIN constructors c ON ft.constructor_id = c.id
+    WHERE ft.id = ?
+  `).get(teamId);
+
+  const drivers = db.prepare(`
+    SELECT d.name, d.number
+    FROM fantasy_picks fp
+    JOIN drivers d ON fp.driver_id = d.id
+    WHERE fp.fantasy_team_id = ?
+  `).all(teamId);
+
+  res.json({ team, drivers });
 });
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
-
-const { calculateQualifyingDriverPoints } = require("./logic/points");
-
-console.log("Q P1:", calculateQualifyingDriverPoints({ position: 1, status: "classified" }));
-console.log("Q P10:", calculateQualifyingDriverPoints({ position: 10, status: "classified" }));
-console.log("Q P15:", calculateQualifyingDriverPoints({ position: 15, status: "classified" }));
-console.log("Q NC:", calculateQualifyingDriverPoints({ position: null, status: "NC" }));
-console.log("Q DSQ:", calculateQualifyingDriverPoints({ position: null, status: "DSQ" }));

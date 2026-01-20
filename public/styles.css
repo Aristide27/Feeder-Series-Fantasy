@@ -28,3 +28,23 @@ main {
   padding: 20px;
   background-color: var(--midnight);
 }
+
+.slot {
+  position: relative;
+  padding: 10px;
+  border: 1px solid #023f96;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.slot button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+}

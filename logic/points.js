@@ -22,6 +22,42 @@ function calculateQualifyingDriverPoints(result) {
   return 0;
 }
 
+function calculateQualifyingConstructorPoints(driver1, driver2) {
+  const p1 = calculateQualifyingDriverPoints(driver1);
+  const p2 = calculateQualifyingDriverPoints(driver2);
+
+  let total = p1 + p2;
+
+  const positions = [
+    driver1.position ?? 20,
+    driver2.position ?? 20
+  ];
+
+  let bonusP16 = 0;
+  let bonusP10 = 0;
+
+  // Bonus/malus P16
+  const p16count = positions.filter(p => p <= 16).length;
+  if (p16count === 0) bonusP16 = -1;
+  if (p16count === 1) bonusP16 = 1;
+  if (p16count === 2) bonusP16 = 3;
+
+  // Bonus P10 (top10)
+  const top10count = positions.filter(p => p <= 10).length;
+  if (top10count === 1) bonusP10 = 5;
+  if (top10count === 2) bonusP10 = 10;
+
+  let bonus = bonusP16;
+  if (bonusP10 > 0) {
+  bonus = bonusP10;
+  }
+
+  total += bonus;
+
+  return total;
+}
+
 module.exports = {
-  calculateQualifyingDriverPoints
+  calculateQualifyingDriverPoints,
+  calculateQualifyingConstructorPoints
 };

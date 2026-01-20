@@ -31,16 +31,23 @@ db.prepare(`
 `).run();
 
 db.prepare(`
-  CREATE TABLE IF NOT EXISTS picks (
+  CREATE TABLE IF NOT EXISTS fantasy_teams (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    driver1_id INTEGER NOT NULL,
-    driver2_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL UNIQUE,
     constructor_id INTEGER NOT NULL,
     FOREIGN KEY(user_id) REFERENCES users(id),
-    FOREIGN KEY(driver1_id) REFERENCES drivers(id),
-    FOREIGN KEY(driver2_id) REFERENCES drivers(id),
     FOREIGN KEY(constructor_id) REFERENCES constructors(id)
+  )
+`).run();
+
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS fantasy_picks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fantasy_team_id INTEGER NOT NULL,
+    driver_id INTEGER NOT NULL,
+    UNIQUE(fantasy_team_id, driver_id),
+    FOREIGN KEY(fantasy_team_id) REFERENCES fantasy_teams(id),
+    FOREIGN KEY(driver_id) REFERENCES drivers(id)
   )
 `).run();
 

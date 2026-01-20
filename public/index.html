@@ -1,68 +1,51 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Fantasy Formula 2</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <header>
-      <h1>Fantasy Formula 2</h1>
-      <p>Feeder Series Fantasy – Version 1</p>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <title>Fantasy F2</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
 
-    <main>
-      <p>
-        Bienvenue sur le Fantasy Formula 2.  
-        Le jeu est en cours de développement 🚧
-      </p>
+<h1>Fantasy F2</h1>
 
-      <h2>Ajouter un utilisateur</h2>
-      <form id="userForm">
-        <input type="text" placeholder="Pseudo" id="username" required>
-        <input type="email" placeholder="Email" id="email">
-        <button type="submit">Créer</button>
-      </form>
+<section class="container">
 
-      <div id="userList">
-        <h3>Liste des utilisateurs :</h3>
-        <ul id="users"></ul>
-      </div>
-    </main>
+  <!-- GAUCHE : ÉQUIPE -->
+  <div class="team">
+    <h2>Mon équipe</h2>
 
-    <script>
-      // Gestion du formulaire
-      document.getElementById("userForm").addEventListener("submit", async (e) => {
-        e.preventDefault(); // empêche le rechargement
-        const username = document.getElementById("username").value;
-        const email = document.getElementById("email").value;
+    <div class="slot" id="constructor-slot">
+      Écurie : <span>Aucune</span>
+      <button onclick="removeSlot('constructor-slot')">Supprimer</button>
+    </div>
 
-        const res = await fetch("/api/users", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, email })
-        });
+    <div class="slot" id="driver-slot-1">
+      Pilote 1 : <span>Aucun</span>
+      <button onclick="removeSlot('driver-slot-1')">Supprimer</button>
+    </div>
 
-        const data = await res.json();
-        alert("Utilisateur créé : " + JSON.stringify(data));
-        loadUsers(); // recharge la liste
-      });
+    <div class="slot" id="driver-slot-2">
+      Pilote 2 : <span>Aucun</span>
+      <button onclick="removeSlot('driver-slot-2')">Supprimer</button>
+    </div>
 
-      // Fonction pour afficher la liste des utilisateurs
-      async function loadUsers() {
-        const res = await fetch("/api/users");
-        const users = await res.json();
-        const ul = document.getElementById("users");
-        ul.innerHTML = ""; // vide la liste
-        users.forEach(user => {
-          const li = document.createElement("li");
-          li.textContent = `${user.username} (${user.email || "Pas d'email"})`;
-          ul.appendChild(li);
-        });
-      }
+  </div>
 
-      // Charger la liste au démarrage
-      loadUsers();
-    </script>
-  </body>
+  <!-- DROITE : SÉLECTION -->
+  <div class="selection">
+    <h2>Sélection</h2>
+
+    <div class="tabs">
+      <button onclick="showDrivers()">Pilotes</button>
+      <button onclick="showConstructors()">Écuries</button>
+    </div>
+
+    <div id="list"></div>
+  </div>
+
+</section>
+
+<script src="app.js" defer></script>
+</body>
 </html>
