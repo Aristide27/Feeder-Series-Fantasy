@@ -29,3 +29,33 @@ L’objectif est de créer une application web simple, pédagogique et évolutiv
 ---
 
 ## 📁 Structure du projet
+
+---
+
+## 🔌 API REST (résumé)
+
+### Drivers
+- `GET /api/drivers` → liste des pilotes F2
+- `POST /api/drivers` → ajouter un pilote
+- `DELETE /api/drivers/:id` → supprimer un pilote
+
+### Constructors
+- `GET /api/constructors` → liste des écuries F2
+- `POST /api/constructors` → ajouter une écurie
+- `DELETE /api/constructors/:id` → supprimer une écurie
+
+### Users
+- `POST /api/users` → créer un utilisateur
+
+### Fantasy Teams
+- `POST /api/fantasy-teams` → créer une équipe fantasy (1 écurie)
+- `DELETE /api/fantasy-teams/:id` → supprimer l’équipe
+
+### Picks (pilotes)
+- `POST /api/fantasy-teams/:id/picks` → ajouter un pilote
+- `DELETE /api/fantasy-teams/:id/picks/:driverId` → retirer un pilote
+
+### Contraintes serveur
+- Maximum **2 pilotes par équipe**
+- Pas de doublon pilote
+- Validation côté backend (frontend non fiable)

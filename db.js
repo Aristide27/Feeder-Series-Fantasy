@@ -1,5 +1,5 @@
 const Database = require("better-sqlite3");
-const db = new Database("database.sqlite");
+const db = new Database("db/database.sqlite");
 module.exports = db;
 
 // --- Création des tables ---
@@ -66,34 +66,36 @@ if (!hasConstructorId) {
 const countDrivers = db.prepare("SELECT COUNT(*) AS count FROM drivers").get();
 if (countDrivers.count === 0) {
   const insertDriver = db.prepare(`
-    INSERT INTO drivers (name, number)
-    VALUES (?, ?)
+    INSERT INTO drivers (name, number, rookie)
+    VALUES (?, ?, ?)
   `);
+
   const drivers = [
-    { name: "Rafael Câmara", number: 1 },
-    { name: "Joshua Dürksen", number: 2 },
-    { name: "Ritomo Miyata", number: 3 },
-    { name: "Colton Hertan", number: 4 },
-    { name: "Noel León", number: 5 },
-    { name: "Nikola Tsolov", number: 6 },
-    { name: "Dino Beganovic", number: 7 },
-    { name: "Roman Bilinski", number: 8 },
-    { name: "Gabriele Minì", number: 9 },
-    { name: "Oliver Goethe", number: 10 },
-    { name: "Sebastián Montoya", number: 11 },
-    { name: "Mari Boya", number: 12 },
-    { name: "Martinius Stenshorne", number: 14 },
-    { name: "Alexander Dunne", number: 15 },
-    { name: "Kush Maini", number: 16 },
-    { name: "Tasanapol Inthraphuvasak", number: 17 },
-    { name: "Emerson Fittipaldi", number: 20 },
-    { name: "Cian Shields", number: 21 },
-    { name: "Nicolás Varrone", number: 22 },
-    { name: "Driver 23", number: 23 },
-    { name: "Laurens van Hoepen", number: 24 },
-    { name: "John Bennett", number: 25 }
+    { name: "Rafael Câmara", number: 1, rookie: 1 },
+    { name: "Joshua Dürksen", number: 2, rookie: 0 },
+    { name: "Ritomo Miyata", number: 3, rookie: 0 },
+    { name: "Colton Hertan", number: 4, rookie: 1 },
+    { name: "Noel León", number: 5, rookie: 1 },
+    { name: "Nikola Tsolov", number: 6, rookie: 1 },
+    { name: "Dino Beganovic", number: 7, rookie: 0 },
+    { name: "Roman Bilinski", number: 8, rookie: 1 },
+    { name: "Gabriele Minì", number: 9, rookie: 0 },
+    { name: "Oliver Goethe", number: 10, rookie: 0 },
+    { name: "Sebastián Montoya", number: 11, rookie: 0 },
+    { name: "Mari Boya", number: 12, rookie: 1 },
+    { name: "Martinius Stenshorne", number: 14, rookie: 1 },
+    { name: "Alexander Dunne", number: 15, rookie: 0 },
+    { name: "Kush Maini", number: 16, rookie: 0 },
+    { name: "Tasanapol Inthraphuvasak", number: 17, rookie: 1 },
+    { name: "Emerson Fittipaldi", number: 20, rookie: 1 },
+    { name: "Cian Shields", number: 21, rookie: 0 },
+    { name: "Nicolás Varrone", number: 22, rookie: 1 },
+    { name: "Driver 23", number: 23, rookie: 1 },
+    { name: "Laurens van Hoepen", number: 24, rookie: 1 },
+    { name: "John Bennett", number: 25, rookie: 0 }
   ];
-  drivers.forEach(driver => insertDriver.run(driver.name, driver.number));
+
+  drivers.forEach(driver => insertDriver.run(driver.name, driver.number, driver.rookie));
 }
 
 // --- Seed constructeurs (uniquement si vide) ---
@@ -118,7 +120,3 @@ if (countConstructors.count === 0) {
   ];
   constructors.forEach(c => insertConstructor.run(c.name, c.code));
 }
-
-// --- Lier pilotes ↔ écuries (UPDATE ne crée jamais de doublons) ---
-db.prepare(`UPDATE drivers SET constructor_id = 1 WHERE name = 'Victor Martins'`).run();
-db.prepare(`UPDATE drivers SET constructor_id = 2 WHERE name = 'Théo Pourchaire'`).run();
