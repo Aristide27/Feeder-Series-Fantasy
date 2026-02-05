@@ -1,63 +1,62 @@
-function calculateQualifyingDriverPoints(result) {
-  const { position, status } = result;
-
-  // Cas pénalités
-  if (status === "NC" || status === "DSQ") {
-    return -5;
+function pointsQualifying(position, status) {
+  if (status === "DNS" || status === "DNF"|| status === "DSQ") return -20;
+  switch (position) {
+    case 1: return 10;
+    case 2: return 9;
+    case 3: return 8;
+    case 4: return 7;
+    case 5: return 6;
+    case 6: return 5;
+    case 7: return 4;
+    case 8: return 3;
+    case 9: return 2;
+    case 10: return 1;
+    default: return 0;
   }
-
-  // Cas positions
-  if (position === 1) return 10;
-  if (position === 2) return 9;
-  if (position === 3) return 8;
-  if (position === 4) return 7;
-  if (position === 5) return 6;
-  if (position === 6) return 5;
-  if (position === 7) return 4;
-  if (position === 8) return 3;
-  if (position === 9) return 2;
-  if (position === 10) return 1;
-
-  // 11–20
-  return 0;
 }
 
-function calculateQualifyingConstructorPoints(driver1, driver2) {
-  const p1 = calculateQualifyingDriverPoints(driver1);
-  const p2 = calculateQualifyingDriverPoints(driver2);
-
-  let total = p1 + p2;
-
-  const positions = [
-    driver1.position ?? 20,
-    driver2.position ?? 20
-  ];
-
-  let bonusP16 = 0;
-  let bonusP10 = 0;
-
-  // Bonus/malus P16
-  const p16count = positions.filter(p => p <= 16).length;
-  if (p16count === 0) bonusP16 = -1;
-  if (p16count === 1) bonusP16 = 1;
-  if (p16count === 2) bonusP16 = 3;
-
-  // Bonus P10 (top10)
-  const top10count = positions.filter(p => p <= 10).length;
-  if (top10count === 1) bonusP10 = 5;
-  if (top10count === 2) bonusP10 = 10;
-
-  let bonus = bonusP16;
-  if (bonusP10 > 0) {
-  bonus = bonusP10;
+function pointsSprint(position, status, fastestLap = false) {
+  if (status === "DNS" || status === "DNF"|| status === "DSQ") return -20;
+  let pts = 0;
+  switch (position) {
+    case 1: pts = 10; break;
+    case 2: pts = 8; break;
+    case 3: pts = 6; break;
+    case 4: pts = 5; break;
+    case 5: pts = 4; break;
+    case 6: pts = 3; break;
+    case 7: pts = 2; break;
+    case 8: pts = 1; break;
   }
 
-  total += bonus;
+  if (fastestLap) pts += 5;
+  return pts;
+}
 
-  return total;
+function pointsFeature(position, status, fastestLap = false) {
+  if (status === "DNS" || status === "DNF"|| status === "DSQ") return -20;
+  if (status === "CANCELLED") return 0;
+
+  let pts = 0;
+  switch (position) {
+    case 1: pts = 25; break;
+    case 2: pts = 18; break;
+    case 3: pts = 15; break;
+    case 4: pts = 12; break;
+    case 5: pts = 10; break;
+    case 6: pts = 8; break;
+    case 7: pts = 6; break;
+    case 8: pts = 4; break;
+    case 9: pts = 2; break;
+    case 10: pts = 1; break;
+  }
+
+  if (fastestLap) pts += 10;
+  return pts;
 }
 
 module.exports = {
-  calculateQualifyingDriverPoints,
-  calculateQualifyingConstructorPoints
+  pointsQualifying,
+  pointsSprint,
+  pointsFeature
 };

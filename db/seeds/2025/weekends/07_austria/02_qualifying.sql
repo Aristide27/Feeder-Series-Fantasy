@@ -1,0 +1,24 @@
+INSERT INTO qualifying_results (race_entry_id, position, status)
+VALUES
+(23, 1, 'OK'),   -- Leonardo Fornaroli
+(30, 2, 'OK'),   -- Victor Martins
+(27, 3, 'OK'),   -- Richard Verschoor
+(9, 4, 'OK'),    -- Gabriele Minì
+(31, 5, 'OK'),   -- Amaury Cordeel
+(24, 6, 'OK'),   -- Roman Staněk
+(14, 7, 'OK'),   -- Alexander Dunne
+(2, 8, 'OK'),    -- Joshua Dürksen
+(25, 9, 'OK'),   -- Pepe Martí
+(22, 10, 'OK'),  -- John Bennett
+(11, 11, 'OK'),  -- Sebastián Montoya
+(26, 12, 'OK'),  -- Arvid Lindblad
+(3, 13, 'OK'),   -- Ritomo Miyata
+(32, 14, 'OK'),  -- Sami Meguetounif
+(29, 15, 'OK'),  -- Jak Crawford
+(10, 16, 'OK'),  -- Oliver Goethe
+(28, 17, 'OK'),  -- Luke Browning
+(15, 18, 'OK'),  -- Kush Maini
+(33, 19, 'OK'),  -- Max Esterson
+(35, 20, 'OK'),  -- Rafael Villagómez
+(7, 21, 'OK'),   -- Dino Beganovic
+(18, 22, 'OK');  -- Cian Shields

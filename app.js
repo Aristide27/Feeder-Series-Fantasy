@@ -1,15 +1,53 @@
+require("dotenv").config();
+
 const express = require("express");
 const path = require("path");
 const db = require("./db");
+const cors = require("cors");
+const session = require("express-session");
+const passport = require("./api/passport");
+
+require("./db/init");
+
+const scoringRouter = require("./logic/scoring-router");
+const fantasyRouter = require("./api/fantasy");
+const authRouter = require("./api/auth");
+const userRouter = require("./api/users");
+const leaguesRouter = require("./api/leagues");
+const rankingsRouter = require("./api/rankings");
+const contactRouter = require("./api/contact");
+const teamsRouter = require("./api/teams");
 
 const app = express();
 const PORT = 3000;
 
-// Middlewares
-app.use(express.json()); // pour lire JSON POST
-app.use(express.static(path.join(__dirname, "public"))); // fichiers statiques
+app.use(cors({
+  origin: "http://localhost:3001",
+  credentials: true
+}));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
+app.use(session({
+  secret: process.env.SESSION_SECRET || "fsf_fantasy_secret_change_me",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 7
+  }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use("/auth", authRouter);
+app.use("/users", userRouter);
+app.use('/api', scoringRouter);
+app.use("/api/fantasy", fantasyRouter);
+app.use("/api/leagues", leaguesRouter);
+app.use("/api/rankings", rankingsRouter);
+app.use("/api/contact", contactRouter);
+app.use("/api/teams", teamsRouter);
 
-// Routes API
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK" });
 });
