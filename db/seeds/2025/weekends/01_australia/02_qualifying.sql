@@ -1,23 +1,23 @@
-INSERT INTO qualifying_results (race_entry_id, position, status)
+INSERT INTO qualifying_results (driver_id, race_weekend_id, position, status)
 VALUES
-(9, 1, 'OK'),    -- Gabriele Minì
-(30, 2, 'OK'),   -- Victor Martins
-(29, 3, 'OK'),   -- Jak Crawford
-(27, 4, 'OK'),   -- Richard Verschoor
-(14, 5, 'OK'),   -- Alexander Dunne
-(24, 6, 'OK'),   -- Roman Staněk
-(7, 7, 'OK'),    -- Dino Beganovic
-(28, 8, 'OK'),   -- Luke Browning
-(2, 9, 'OK'),    -- Joshua Dürksen
-(23, 10, 'OK'),  -- Leonardo Fornaroli
-(11, 11, 'OK'),  -- Sebastián Montoya
-(3, 12, 'OK'),   -- Ritomo Miyata
-(15, 13, 'OK'),  -- Kush Maini
-(26, 14, 'OK'),  -- Arvid Lindblad
-(32, 15, 'OK'),  -- Sami Meguetounif
-(25, 16, 'OK'),  -- Pepe Martí
-(31, 17, 'OK'),  -- Amaury Cordeel
-(35, 18, 'OK'),  -- Rafael Villagómez
-(10, 19, 'OK'),  -- Oliver Goethe
-(22, 20, 'OK'),  -- John Bennett
-(18, 21, 'OK');  -- Cian Shields
+(9, 1, 1, 'OK'),   -- Gabriele Minì
+(30, 1, 2, 'OK'),   -- Victor Martins
+(29, 1, 3, 'OK'),   -- Jak Crawford
+(27, 1, 4, 'OK'),   -- Richard Verschoor
+(14, 1, 5, 'OK'),   -- Alexander Dunne
+(24, 1, 6, 'OK'),   -- Roman Staněk
+(7, 1, 7, 'OK'),   -- Dino Beganovic
+(28, 1, 8, 'OK'),   -- Luke Browning
+(2, 1, 9, 'OK'),   -- Joshua Dürksen
+(23, 1, 10, 'OK'),   -- Leonardo Fornaroli
+(11, 1, 11, 'OK'),   -- Sebastián Montoya
+(3, 1, 12, 'OK'),   -- Ritomo Miyata
+(15, 1, 13, 'OK'),   -- Kush Maini
+(26, 1, 14, 'OK'),   -- Arvid Lindblad
+(32, 1, 15, 'OK'),   -- Sami Meguetounif
+(25, 1, 16, 'OK'),   -- Pepe Martí
+(31, 1, 17, 'OK'),   -- Amaury Cordeel
+(20, 1, 18, 'OK'),   -- Rafael Villagómez
+(10, 1, 19, 'OK'),   -- Oliver Goethe
+(22, 1, 20, 'OK'),   -- John Bennett
+(18, 1, 21, 'OK');   -- Cian Shields

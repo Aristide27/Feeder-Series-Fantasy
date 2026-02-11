@@ -8,7 +8,7 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || "http://localhost:3000/auth/google/callback";
 
 if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
-  console.warn("⚠️  Configuration Google OAuth manquante dans .env");
+  console.warn("Configuration Google OAuth manquante dans .env");
   console.warn("   L'authentification Google ne sera pas disponible");
 }
 

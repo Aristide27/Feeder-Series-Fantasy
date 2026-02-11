@@ -3,16 +3,52 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getUsername } from "@/lib/auth/token";
+import { getToken } from "@/lib/auth/token";
 
 export default function NavigationStyle2() {
   const pathname = usePathname();
   const [username, setUsername] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
+  // ✅ VÉRIFICATION DE L'UTILISATEUR AU MONTAGE
   useEffect(() => {
-    setUsername(getUsername());
-  }, []);
+    const checkUser = async () => {
+      const token = getToken();
+      
+      if (!token) {
+        setUsername(null);
+        setLoading(false);
+        return;
+      }
+
+      // Vérifier que l'utilisateur existe vraiment en base
+      try {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+        const res = await fetch(`${API_URL}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (res.ok) {
+          const user = await res.json();
+          setUsername(user.username);
+        } else {
+          // Token invalide ou utilisateur supprimé
+          console.warn("[Navigation] Utilisateur introuvable - Suppression du token");
+          localStorage.removeItem("token");
+          setUsername(null);
+        }
+      } catch (err) {
+        console.error("[Navigation] Erreur vérification utilisateur:", err);
+        localStorage.removeItem("token");
+        setUsername(null);
+      }
+      
+      setLoading(false);
+    };
+
+    checkUser();
+  }, [pathname]); // Re-vérifier quand la page change
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -118,7 +154,13 @@ export default function NavigationStyle2() {
               <span className="text-xs opacity-70">F11</span>
             </button>
 
-            {!username ? (
+            {/* Bouton connexion/profil */}
+            {loading ? (
+              // Skeleton pendant le chargement
+              <div className="px-4 py-2 h-9 rounded-lg bg-slate-800/50 border border-slate-700/50 animate-pulse">
+                <div className="h-4 w-20 bg-slate-700/50 rounded" />
+              </div>
+            ) : !username ? (
               <Link
                 href="/login"
                 className="px-4 py-2 text-sm font-medium rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-800 hover:border-slate-700 transition-all duration-200"
@@ -126,21 +168,19 @@ export default function NavigationStyle2() {
                 Se connecter
               </Link>
             ) : (
-              <>
-                <Link
-                  href="/profile"
-                  className={`h-9 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    pathname === "/profile"
-                      ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-900/30"
-                      : "bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-800 hover:border-slate-700"
-                  }`}
-                >
-                  <span className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                    {username}
-                  </span>
-                </Link>
-              </>
+              <Link
+                href="/profile"
+                className={`h-9 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  pathname === "/profile"
+                    ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-900/30"
+                    : "bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-800 hover:border-slate-700"
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                  {username}
+                </span>
+              </Link>
             )}
           </div>
 

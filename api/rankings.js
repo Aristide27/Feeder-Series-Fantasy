@@ -2,29 +2,15 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 const jwt = require("jsonwebtoken");
+const { authenticateToken } = require("./auth");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) throw new Error("JWT_SECRET manquant dans .env");
 
 // ============================================
-// MIDDLEWARE D'AUTHENTIFICATION
-// ============================================
-function auth(req, res, next) {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ error: "Token manquant" });
-
-  try {
-    req.user = jwt.verify(token, JWT_SECRET);
-    next();
-  } catch {
-    res.status(401).json({ error: "Token invalide" });
-  }
-}
-
-// ============================================
 // GET /api/rankings/global - Classement mondial
 // ============================================
-router.get("/global", auth, (req, res) => {
+router.get("/global", authenticateToken, (req, res) => {
   try {
     // Récupérer le classement mondial depuis la ligue officielle FSF
     const fsfLeague = db.prepare("SELECT id FROM leagues WHERE code = 'FSF'").get();

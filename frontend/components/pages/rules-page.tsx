@@ -158,7 +158,7 @@ export default function RulesPage() {
                       <PointItem position="7th place" points={2} />
                       <PointItem position="8th place" points={1} />
                       <PointItem position="9th - 20th place" points={0} />
-                      <PointItem position="Fastest Lap" points={5} />
+                      <PointItem position="Fastest Lap" points={1} />
                       <PointItem position="DNF / DNS" points={-20} negative />
                       <PointItem position="Disqualified" points={-20} negative />
                     </div>
@@ -189,7 +189,7 @@ export default function RulesPage() {
                       <PointItem position="9th place" points={2} />
                       <PointItem position="10th place" points={1} />
                       <PointItem position="11th - 20th place" points={0} />
-                      <PointItem position="Fastest Lap" points={10} />
+                      <PointItem position="Fastest Lap" points={4} />
                       <PointItem position="DNF / DNS" points={-20} negative />
                       <PointItem position="Disqualified" points={-20} negative />
                     </div>

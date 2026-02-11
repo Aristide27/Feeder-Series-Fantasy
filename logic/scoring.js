@@ -6,42 +6,39 @@ const { pointsQualifying, pointsSprint, pointsFeature } = require('./points');
 // --------------------
 function getQualifyingPoints(weekendId) {
   const results = db.prepare(`
-    SELECT re.driver_season_id, qr.position, qr.status
+    SELECT qr.driver_id, qr.position, qr.status
     FROM qualifying_results qr
-    JOIN race_entries re ON qr.race_entry_id = re.id
-    WHERE re.race_weekend_id = ?
+    WHERE qr.race_weekend_id = ?
   `).all(weekendId);
 
   return results.map(r => ({
-    driver_season_id: r.driver_season_id,
+    driver_id: r.driver_id,
     points: pointsQualifying(r.position, r.status)
   }));
 }
 
 function getSprintPoints(weekendId) {
   const results = db.prepare(`
-    SELECT re.driver_season_id, sr.finish_position AS position, sr.status, sr.fastest_lap
+    SELECT sr.driver_id, sr.finish_position AS position, sr.status, sr.fastest_lap
     FROM sprint_results sr
-    JOIN race_entries re ON sr.race_entry_id = re.id
-    WHERE re.race_weekend_id = ?
+    WHERE sr.race_weekend_id = ?
   `).all(weekendId);
 
   return results.map(r => ({
-    driver_season_id: r.driver_season_id,
+    driver_id: r.driver_id,
     points: pointsSprint(r.position, r.status, r.fastest_lap)
   }));
 }
 
 function getFeaturePoints(weekendId) {
   const results = db.prepare(`
-    SELECT re.driver_season_id, fr.finish_position AS position, fr.status, fr.fastest_lap
+    SELECT fr.driver_id, fr.finish_position AS position, fr.status, fr.fastest_lap
     FROM feature_results fr
-    JOIN race_entries re ON fr.race_entry_id = re.id
-    WHERE re.race_weekend_id = ?
+    WHERE fr.race_weekend_id = ?
   `).all(weekendId);
 
   return results.map(r => ({
-    driver_season_id: r.driver_season_id,
+    driver_id: r.driver_id,
     points: pointsFeature(r.position, r.status, r.fastest_lap)
   }));
 }
@@ -50,32 +47,32 @@ function getFeaturePoints(weekendId) {
 // Points constructeurs
 // --------------------
 function getConstructorPoints(weekendId) {
-  // Récupérer tous les pilotes actifs ayant une entrée ce weekend
+  const season = 2026; // Ajouter cette ligne
+
   const drivers = db.prepare(`
-    SELECT ds.id AS driver_season_id, ds.constructor_id
-    FROM driver_seasons ds
-    JOIN race_entries re ON re.driver_season_id = ds.id
-    WHERE re.race_weekend_id = ?
-  `).all(weekendId);
+    SELECT wp.driver_id, ds.constructor_id
+    FROM weekend_participants wp
+    JOIN driver_seasons ds ON ds.driver_id = wp.driver_id AND ds.season = ?
+    WHERE wp.race_weekend_id = ?
+  `).all(season, weekendId);
 
   // Récupérer points pilotes
-  const qualPoints = Object.fromEntries(getQualifyingPoints(weekendId).map(p => [p.driver_season_id, p.points]));
-  const sprintPoints = Object.fromEntries(getSprintPoints(weekendId).map(p => [p.driver_season_id, p.points]));
-  const featurePoints = Object.fromEntries(getFeaturePoints(weekendId).map(p => [p.driver_season_id, p.points]));
+  const qualPoints = Object.fromEntries(getQualifyingPoints(weekendId).map(p => [p.driver_id, p.points]));
+  const sprintPoints = Object.fromEntries(getSprintPoints(weekendId).map(p => [p.driver_id, p.points]));
+  const featurePoints = Object.fromEntries(getFeaturePoints(weekendId).map(p => [p.driver_id, p.points]));
 
-  // Total points pilotes par driver_season
+  // Total points pilotes
   const driverTotals = drivers.map(d => ({
-    driver_season_id: d.driver_season_id,
+    driver_id: d.driver_id,
     constructor_id: d.constructor_id,
-    points: (qualPoints[d.driver_season_id] || 0) +
-            (sprintPoints[d.driver_season_id] || 0) +
-            (featurePoints[d.driver_season_id] || 0),
+    points: (qualPoints[d.driver_id] || 0) +
+            (sprintPoints[d.driver_id] || 0) +
+            (featurePoints[d.driver_id] || 0),
     qualPosition: db.prepare(`
       SELECT qr.position
       FROM qualifying_results qr
-      JOIN race_entries re ON qr.race_entry_id = re.id
-      WHERE re.driver_season_id = ? AND re.race_weekend_id = ?
-    `).get(d.driver_season_id, weekendId)?.position ?? 20
+      WHERE qr.driver_id = ? AND qr.race_weekend_id = ?
+    `).get(d.driver_id, weekendId)?.position ?? 20
   }));
 
   // Grouper par constructeur

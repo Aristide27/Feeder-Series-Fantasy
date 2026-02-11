@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
+// import "../styles/globals.css";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import LayoutFrame from "@/components/layout-frame";
@@ -16,10 +17,10 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: '/logo/favicon.ico', sizes: 'any' },
-      { url: '/logo/icon-192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/logo/icon-512.png', sizes: '512x512', type: 'image/png' },
+      // { url: '/logo/icon-192.png', sizes: '192x192', type: 'image/png' },
+      // { url: '/logo/icon-512.png', sizes: '512x512', type: 'image/png' },
     ],
-    apple: '/logo/apple-touch-icon.png',
+    // apple: '/logo/apple-touch-icon.png',
   },
 }
 

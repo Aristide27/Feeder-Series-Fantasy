@@ -1,14 +1,13 @@
 import { apiFetch } from "./apiClient";
 
 export type DriverSeasonRow = {
-  driver_season_id: number;
-  season: number;
-  rookie: number;
-  driver_price: number;
-
   driver_id: number;
   driver_name: string;
   driver_nationality: string;
+
+  season: number;
+  rookie: number;
+  driver_price: number;
 
   constructor_id: number;
   constructor_name: string;

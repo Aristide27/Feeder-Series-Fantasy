@@ -8,6 +8,31 @@ const passport = require("./passport");
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) throw new Error("JWT_SECRET manquant dans .env");
 
+// MIDDLEWARE D'AUTHENTIFICATION
+function authenticateToken(req, res, next) {
+  const token = req.headers.authorization?.split(" ")[1];
+  
+  if (!token) {
+    return res.status(401).json({ error: "Token manquant" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    // Vérifier que l'utilisateur existe encore en base
+    const user = db.prepare("SELECT id, username, email FROM users WHERE id = ?").get(decoded.id);
+    
+    if (!user) {
+      return res.status(401).json({ error: "Utilisateur introuvable" });
+    }
+    
+    req.user = user;
+    next();
+  } catch (err) {
+    return res.status(401).json({ error: "Token invalide" });
+  }
+}
+
 // --- Inscription ---
 router.post("/register", async (req, res) => {
   let { username, email, password } = req.body;
@@ -31,7 +56,7 @@ router.post("/register", async (req, res) => {
     
     const userId = result.lastInsertRowid;
 
-    // Auto-inscription à la ligue FSF Officiel
+    // Auto-inscription Ã  la ligue FSF Officiel
     try {
       const fsfLeague = db.prepare("SELECT id FROM leagues WHERE code = 'FSF'").get();
       
@@ -48,14 +73,14 @@ router.post("/register", async (req, res) => {
           VALUES (?, ?, 0)
         `).run(fsfLeague.id, userId);
 
-        console.log(`[REGISTER] User ${username} auto-inscrit à la ligue FSF`);
+        console.log(`[REGISTER] User ${username} auto-inscrit Ã  la ligue FSF`);
       }
     } catch (leagueErr) {
       console.error("[REGISTER] Erreur auto-inscription FSF:", leagueErr.message);
-      // On ne bloque pas l'inscription si l'ajout à la ligue échoue
+      // On ne bloque pas l'inscription si l'ajout Ã  la ligue Ã©choue
     }
 
-    return res.json({ message: "Compte créé !" });
+    return res.json({ message: "Compte crÃ©Ã© !" });
   } catch (err) {
     console.error("[REGISTER ERROR]", err);
     return res.status(400).json({ error: err?.message ?? "Erreur inscription" });
@@ -115,4 +140,35 @@ router.get("/google/callback",
   }
 );
 
+// --- Vérifier le token (route protégée) ---
+router.get("/me", (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  
+  if (!token) {
+    return res.status(401).json({ error: "Token manquant" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    // Vérifier que l'utilisateur existe toujours
+    const user = db.prepare("SELECT id, username, email FROM users WHERE id = ?").get(decoded.id);
+    
+    if (!user) {
+      return res.status(401).json({ error: "Utilisateur introuvable" });
+    }
+
+    res.json({
+      id: user.id,
+      username: user.username,
+      email: user.email
+    });
+
+  } catch (err) {
+    console.error("[GET /api/auth/me] Token invalide:", err.message);
+    res.status(401).json({ error: "Token invalide" });
+  }
+});
+
 module.exports = router;
+module.exports.authenticateToken = authenticateToken;

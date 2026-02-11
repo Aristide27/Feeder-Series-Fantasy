@@ -8,32 +8,12 @@ import { getToken } from "@/lib/auth/token";
 import { getTeam, saveTeam, getDeadlineStatus, updateTeamName } from "@/lib/api/teams.api";
 import GarageStage from "@/components/garage/garage-stage";
 import DriverSlotCard from "@/components/garage/driver-slot-card";
+import DriverStatsPopup from "@/components/driver-stats-popup";
+import { Info, ArrowUpDown } from "lucide-react";
 
 const SEASON_DEFAULT = 2026;
 const BUDGET_MAX = 100;
 const AUTOSAVE_DELAY = 0;
-
-function formatRemaining(targetIso: string) {
-  const diffMs = new Date(targetIso).getTime() - Date.now();
-  if (!Number.isFinite(diffMs) || diffMs <= 0) {
-    return null;
-  }
-
-  const totalMinutes = Math.floor(diffMs / (1000 * 60));
-  const days = Math.floor(totalMinutes / (60 * 24));
-  const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
-  const minutes = totalMinutes % 60;
-
-  if (days > 0) {
-    return `${days} jour${days > 1 ? "s" : ""}`;
-  }
-
-  if (hours > 0) {
-    return `${hours} heure${hours > 1 ? "s" : ""} ${minutes} min`;
-  }
-
-  return `${minutes} min`;
-}
 
 export default function MyTeamPage() {
   const router = useRouter();
@@ -44,6 +24,8 @@ export default function MyTeamPage() {
   // États principaux
   const [season] = useState(SEASON_DEFAULT);
   const [teamName, setTeamName] = useState("");
+  const [leagueName, setLeagueName] = useState("");
+  const [teamBudget, setTeamBudget] = useState(BUDGET_MAX);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -73,6 +55,12 @@ export default function MyTeamPage() {
   const [selectedConstructorsIds, setselectedConstructorsIds] = useState<number[]>([]);
   const [selectedDriverSeasonIds, setSelectedDriverSeasonIds] = useState<number[]>([]);
 
+  // État pour l'apparition progressive du message
+  const [showUnsavedMessage, setShowUnsavedMessage] = useState(false);
+
+  // État pour forcer l'animation shake
+  const [shakeKey, setShakeKey] = useState(0);
+
   // Chargement initial
   useEffect(() => {
     // Vérifier qu'on a un leagueId
@@ -92,9 +80,15 @@ export default function MyTeamPage() {
     // Charger l'équipe depuis le backend
     getTeam(token, parseInt(leagueId))
       .then((data) => {
+        console.log("Données reçues:", data); // DEBUG
+
         if (data.team) {
           const name = data.team.name?.trim() || "";
           setTeamName(name);
+          
+          setLeagueName(data.league?.name || "");
+          console.log("Nom de la ligue:", data.league?.name); // DEBUG
+          setTeamBudget(data.team.budget || BUDGET_MAX);
           
           // Afficher popup si pas de nom
           if (!name) {
@@ -108,7 +102,7 @@ export default function MyTeamPage() {
           
           // Charger les pilotes
           if (data.drivers.length > 0) {
-            setSelectedDriverSeasonIds(data.drivers.map(d => d.driver_season_id));
+            setSelectedDriverSeasonIds(data.drivers.map(d => d.driver_id));
           }
         } else {
           // Pas d'équipe = afficher popup
@@ -168,7 +162,7 @@ export default function MyTeamPage() {
   );
 
   const selectedDrivers = useMemo(
-    () => drivers.filter(d => selectedDriverSeasonIds.includes(d.driver_season_id)),
+    () => drivers.filter(d => selectedDriverSeasonIds.includes(d.driver_id)),
     [drivers, selectedDriverSeasonIds]
   );
 
@@ -178,14 +172,15 @@ export default function MyTeamPage() {
     return constructorsPrice + driversPrice;
   }, [selectedConstructors, selectedDrivers]);
 
-  const budgetLeft = BUDGET_MAX - budgetUsed;
+  const budgetLeft = teamBudget - budgetUsed;
+  const isOverBudget = budgetLeft < 0;
 
   // Équipe valide = prête pour sauvegarde
   const isValidTeam =
     canEdit && // Ne pas sauvegarder si verrouillé
     selectedConstructorsIds.length === 2 &&
     selectedDriverSeasonIds.length === 5 &&
-    budgetLeft >= 0 &&
+    !isOverBudget &&
     teamName.trim().length > 0;
 
   // Fonction auto-save
@@ -203,17 +198,13 @@ export default function MyTeamPage() {
       await saveTeam(token, parseInt(leagueId), {
         teamName: teamName.trim(),
         constructorIds: selectedConstructorsIds,
-        driverSeasonIds: selectedDriverSeasonIds,
+        driverIds: selectedDriverSeasonIds,
       });
 
+      // Garder le spinner pendant 1 seconde même si c'est instantané
       setTimeout(() => {
         setSaveStatus('saved');
-        
-        // Retour à idle après 2.5 secondes
-        setTimeout(() => {
-          setSaveStatus('idle');
-        }, 2500);
-      }, 500);
+      }, 1000); // 1 seconde de spinner
 
     } catch (err: any) {
       setSaveStatus('error');
@@ -225,14 +216,19 @@ export default function MyTeamPage() {
   // Auto-save avec debounce
   useEffect(() => {
     // Ne déclencher le timer que si l'équipe est valide
-    if (!isValidTeam) return;
+    if (!isValidTeam) {
+      if (selectedConstructorsIds.length > 0 || selectedDriverSeasonIds.length > 0) {
+        setSaveStatus('idle'); // Montrera "Modifications non enregistrées"
+      }
+      return;
+    }
 
     const timer = setTimeout(() => {
       performAutoSave();
     }, AUTOSAVE_DELAY);
 
     return () => clearTimeout(timer);
-  }, [isValidTeam, performAutoSave]);
+  }, [isValidTeam, performAutoSave, selectedConstructorsIds.length, selectedDriverSeasonIds.length]);
 
   // Fonctions de toggle
   function toggleConstructor(id: number) {
@@ -302,6 +298,23 @@ export default function MyTeamPage() {
     }
   }
 
+  useEffect(() => {
+    if (isOverBudget) {
+      setShakeKey(prev => prev + 1); // Force le re-render de l'animation
+    }
+  }, [isOverBudget]);
+
+  useEffect(() => {
+    if (saveStatus === 'idle') {
+      const timer = setTimeout(() => {
+        setShowUnsavedMessage(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else {
+      setShowUnsavedMessage(false);
+    }
+  }, [saveStatus]);
+
   // Affichage loading/error
   if (loading) return <div className="p-6 text-white">Chargement…</div>;
   if (error) return <div className="p-6 text-red-300">{error}</div>;
@@ -334,9 +347,18 @@ export default function MyTeamPage() {
           {/* Budget */}
           <div>
             <div className="text-xs opacity-70">Budget</div>
-            <div className="text-lg font-semibold">
-              {budgetUsed.toFixed(1)} / {BUDGET_MAX.toFixed(1)} M
-              <span className="ml-3 text-sm opacity-70">
+            <div 
+              key={shakeKey}
+              className={`text-lg font-semibold transition-all ${
+                isOverBudget 
+                  ? "text-red-500 animate-shake" 
+                  : ""
+              }`}
+            >
+              {budgetUsed.toFixed(1)} / {teamBudget.toFixed(1)} M
+              <span className={`ml-3 text-sm opacity-70 ${
+                isOverBudget ? "text-red-400" : ""
+              }`}>
                 (reste {budgetLeft.toFixed(1)} M)
               </span>
             </div>
@@ -350,8 +372,9 @@ export default function MyTeamPage() {
         {/* Centre = titre + timer */}
         <div className="text-center">
           <div className="text-lg font-bold leading-tight">Mon Équipe</div>
+          {/* Afficher le nom de la ligue */}
           <div className="text-xs text-white/60">
-            Ligue: {leagueId} • Saison {season}
+            {leagueName || `Ligue ${leagueId}`} • Saison {season}
           </div>
 
           {/* Timer selon l'état */}
@@ -376,9 +399,12 @@ export default function MyTeamPage() {
 
         {/* Indicateur sauvegarde */}
         <div className="flex items-center gap-3">
-          {saveStatus === 'idle' && (
-            <div className="text-sm text-slate-500">
-              {/* Vide quand idle */}
+          {saveStatus === 'idle' && showUnsavedMessage && (
+            <div className="flex items-center gap-2 text-sm text-orange-400 animate-fade-in">
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <span>Modifications non enregistrées</span>
             </div>
           )}
           
@@ -407,7 +433,7 @@ export default function MyTeamPage() {
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
-                <span>Erreur</span>
+                <span>Erreur de sauvegarde</span>
               </div>
               <button
                 onClick={retrySave}
@@ -486,7 +512,7 @@ export default function MyTeamPage() {
                     driver={
                       selectedDrivers[i]
                         ? {
-                            id: selectedDrivers[i].driver_season_id,
+                            id: selectedDrivers[i].driver_id,
                             name: selectedDrivers[i].driver_name,
                             teamName: selectedDrivers[i].constructor_name,
                             price: selectedDrivers[i].driver_price,
@@ -594,6 +620,9 @@ export default function MyTeamPage() {
   );
 }
 
+// Type pour le mode de tri
+type SortMode = "default" | "asc" | "desc";
+
 function RightSelectorPanel(props: {
   constructors: ConstructorRow[];
   drivers: DriverSeasonRow[];
@@ -614,10 +643,47 @@ function RightSelectorPanel(props: {
   } = props;
 
   const [viewMode, setViewMode] = useState<"drivers" | "teams">("drivers");
+  const [statsDriverId, setStatsDriverId] = useState<number | null>(null);
+  
+  // État de tri
+  const [sortMode, setSortMode] = useState<SortMode>("default");
+
+  // Fonction pour changer le mode de tri
+  function cycleSortMode() {
+    setSortMode(prev => {
+      if (prev === "default") return "asc";
+      if (prev === "asc") return "desc";
+      return "default";
+    });
+  }
+
+  // Tri des pilotes
+  const sortedDrivers = useMemo(() => {
+    if (sortMode === "default") return drivers;
+    
+    return [...drivers].sort((a, b) => {
+      if (sortMode === "asc") {
+        return a.driver_price - b.driver_price;
+      }
+      return b.driver_price - a.driver_price;
+    });
+  }, [drivers, sortMode]);
+
+  // Tri des écuries
+  const sortedConstructors = useMemo(() => {
+    if (sortMode === "default") return constructors;
+    
+    return [...constructors].sort((a, b) => {
+      if (sortMode === "asc") {
+        return a.price - b.price;
+      }
+      return b.price - a.price;
+    });
+  }, [constructors, sortMode]);
 
   return (
     <div className="h-full flex flex-col p-0">
-      {/* Toggle */}
+      {/* Toggle + Sort button */}
       <div className="flex gap-2 mb-3">
         <button
           onClick={() => setViewMode("drivers")}
@@ -640,6 +706,25 @@ function RightSelectorPanel(props: {
         >
           Écuries
         </button>
+
+        {/* Bouton de tri */}
+        <button
+          onClick={cycleSortMode}
+          className="px-2 py-2 w-20 rounded-lg font-medium text-sm bg-secondary text-foreground hover:bg-muted transition-colors flex items-center justify-between"
+        >
+          <ArrowUpDown className="w-4 h-4 opacity-70" />
+          <span>
+            {sortMode === "default" && "Écurie"}
+            {sortMode === "asc" && "Prix"}
+            {sortMode === "desc" && "Prix"}
+          </span>
+
+          {(sortMode === "asc" || sortMode === "desc") && (
+            <span>
+              {sortMode === "asc" ? "↑" : "↓"}
+            </span>
+          )}
+        </button>
       </div>
 
       {/* Scrollable list */}
@@ -650,31 +735,42 @@ function RightSelectorPanel(props: {
               Sélectionne 5 pilotes • {selectedDriverSeasonIds.length}/5
             </div>
 
-            {drivers.map((d) => {
-              const selected = selectedDriverSeasonIds.includes(d.driver_season_id);
+            {sortedDrivers.map((d) => {
+              const selected = selectedDriverSeasonIds.includes(d.driver_id);
               const disabled = (!selected && selectedDriverSeasonIds.length >= 5) || !canEdit;
 
               return (
-                <button
-                  key={d.driver_season_id}
-                  onClick={() => onToggleDriver(d.driver_season_id)}
-                  disabled={disabled}
+                <div
+                  key={d.driver_id}
+                  onClick={() => !disabled && onToggleDriver(d.driver_id)}
                   className={[
-                    "w-full text-left rounded-xl p-3 bg-black/30 hover:bg-black/40 border transition-colors",
+                    "w-full text-left rounded-xl p-3 bg-black/30 hover:bg-black/40 border transition-colors cursor-pointer",
                     selected ? "border-white/60" : "border-white/10",
                     disabled ? "opacity-40 cursor-not-allowed" : ""
                   ].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="font-semibold truncate">{d.driver_name}</div>
                       <div className="text-xs text-white/60 truncate">{d.constructor_name}</div>
                     </div>
-                    <div className="text-sm text-white/80 whitespace-nowrap">
-                      {d.driver_price.toFixed(1)} M
+                    <div className="flex items-center gap-2">
+                      <div className="text-sm text-white/80 whitespace-nowrap">
+                        {d.driver_price.toFixed(1)} M
+                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setStatsDriverId(d.driver_id);
+                        }}
+                        className="w-5 h-5 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full transition-colors group"
+                      >
+                        <Info className="w-3 h-3 text-white/60 group-hover:text-blue-400 transition-colors" />
+                      </button>
                     </div>
                   </div>
-                </button>
+                </div>
               );
             })}
           </>
@@ -686,7 +782,7 @@ function RightSelectorPanel(props: {
               Sélectionne 2 écuries • {selectedConstructorsIds.length}/2
             </div>
 
-            {constructors.map((c) => {
+            {sortedConstructors.map((c) => {
               const selected = selectedConstructorsIds.includes(c.constructor_id);
               const disabled = (!selected && selectedConstructorsIds.length >= 2) || !canEdit;
 
@@ -713,6 +809,14 @@ function RightSelectorPanel(props: {
           </>
         )}
       </div>
+
+      {/* Popup stats */}
+      {statsDriverId && (
+        <DriverStatsPopup
+          driverId={statsDriverId}
+          onClose={() => setStatsDriverId(null)}
+        />
+      )}
     </div>
   );
 }

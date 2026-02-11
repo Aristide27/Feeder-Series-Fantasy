@@ -64,6 +64,8 @@ CREATE TABLE IF NOT EXISTS fantasy_teams (
   is_validated INTEGER DEFAULT 0,
   validated_at TEXT,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  budget REAL DEFAULT 100.0,
+  initial_spent REAL DEFAULT 0.0,
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (league_id) REFERENCES leagues(id),
   UNIQUE(user_id, league_id, season)
@@ -87,18 +89,19 @@ db.exec(`
 CREATE TABLE IF NOT EXISTS fantasy_picks (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   fantasy_team_id INTEGER NOT NULL,
-  driver_season_id INTEGER NOT NULL,
+  driver_id INTEGER NOT NULL,
+  season INTEGER NOT NULL,
   FOREIGN KEY (fantasy_team_id) REFERENCES fantasy_teams(id),
-  FOREIGN KEY (driver_season_id) REFERENCES driver_seasons(id),
-  UNIQUE(fantasy_team_id, driver_season_id)
+  FOREIGN KEY (driver_id) REFERENCES drivers(id),
+  UNIQUE(fantasy_team_id, driver_id, season)
 );
 `);
 
 /* ========= DRIVERS ========= */
 db.exec(`
 CREATE TABLE IF NOT EXISTS drivers (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE,
   nationality TEXT
 );
 `);
@@ -114,15 +117,35 @@ CREATE TABLE IF NOT EXISTS constructors (
 );
 `);
 
-/* ========= DRIVER SEASONS ========= */
+/* ========= HISTORIQUE PRIX ========= */
 db.exec(`
-CREATE TABLE IF NOT EXISTS driver_seasons (
+CREATE TABLE IF NOT EXISTS price_history (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   driver_id INTEGER NOT NULL,
   season INTEGER NOT NULL,
+  race_weekend_id INTEGER NOT NULL,
+  price_before REAL NOT NULL,
+  price_after REAL NOT NULL,
+  delta_brute REAL NOT NULL,
+  s_perf REAL NOT NULL,
+  attente REAL NOT NULL,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (driver_id) REFERENCES drivers(id),
+  FOREIGN KEY (race_weekend_id) REFERENCES race_weekends(id),
+  UNIQUE(driver_id, race_weekend_id)
+);
+`);
+
+/* ========= DRIVER SEASONS ========= */
+db.exec(`
+CREATE TABLE IF NOT EXISTS driver_seasons (
+  driver_id INTEGER,
+  season INTEGER,
   constructor_id INTEGER NOT NULL,
   rookie INTEGER DEFAULT 0,
   price REAL NOT NULL,
+  last_delta REAL DEFAULT 0,
+  PRIMARY KEY (driver_id, season),
   FOREIGN KEY (driver_id) REFERENCES drivers(id),
   FOREIGN KEY (constructor_id) REFERENCES constructors(id)
 );
@@ -136,20 +159,22 @@ CREATE TABLE IF NOT EXISTS race_weekends (
   round INTEGER NOT NULL,
   name TEXT NOT NULL,
   lock_deadline TEXT,
-  unlock_at TEXT
+  unlock_at TEXT,
+  prices_updated INTEGER DEFAULT 0, 
+  UNIQUE(season, round)
 );
 `);
 
-/* ========= RACE ENTRIES ========= */
+/* ========= WEEKEND PARTICIPANTS ========= */
 db.exec(`
-CREATE TABLE IF NOT EXISTS race_entries (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  race_weekend_id INTEGER NOT NULL,
-  driver_season_id INTEGER NOT NULL,
-  constructor_id INTEGER NOT NULL,
+CREATE TABLE IF NOT EXISTS weekend_participants (
+  driver_id INTEGER,
+  race_weekend_id INTEGER,
   car_number INTEGER NOT NULL,
+  constructor_id INTEGER NOT NULL,
+  PRIMARY KEY (driver_id, race_weekend_id),
+  FOREIGN KEY (driver_id) REFERENCES drivers(id),
   FOREIGN KEY (race_weekend_id) REFERENCES race_weekends(id),
-  FOREIGN KEY (driver_season_id) REFERENCES driver_seasons(id),
   FOREIGN KEY (constructor_id) REFERENCES constructors(id)
 );
 `);
@@ -157,34 +182,43 @@ CREATE TABLE IF NOT EXISTS race_entries (
 /* ========= QUALIFYING ========= */
 db.exec(`
 CREATE TABLE IF NOT EXISTS qualifying_results (
-  race_entry_id INTEGER,
+  driver_id INTEGER,
+  race_weekend_id INTEGER,
   position INTEGER,
-  status TEXT,
-  FOREIGN KEY (race_entry_id) REFERENCES race_entries(id)
+  status TEXT DEFAULT 'OK',
+  PRIMARY KEY (driver_id, race_weekend_id),
+  FOREIGN KEY (driver_id) REFERENCES drivers(id),
+  FOREIGN KEY (race_weekend_id) REFERENCES race_weekends(id)
 );
 `);
 
 /* ========= SPRINT RACE ========= */
 db.exec(`
 CREATE TABLE IF NOT EXISTS sprint_results (
-  race_entry_id INTEGER,
+  driver_id INTEGER,
+  race_weekend_id INTEGER,
   start_position INTEGER,
   finish_position INTEGER,
-  status TEXT,
+  status TEXT DEFAULT 'OK',
   fastest_lap INTEGER DEFAULT 0,
-  FOREIGN KEY (race_entry_id) REFERENCES race_entries(id)
+  PRIMARY KEY (driver_id, race_weekend_id),
+  FOREIGN KEY (driver_id) REFERENCES drivers(id),
+  FOREIGN KEY (race_weekend_id) REFERENCES race_weekends(id)
 );
 `);
 
 /* ========= FEATURE RACE ========= */
 db.exec(`
 CREATE TABLE IF NOT EXISTS feature_results (
-  race_entry_id INTEGER,
+  driver_id INTEGER,
+  race_weekend_id INTEGER,
   start_position INTEGER,
   finish_position INTEGER,
-  status TEXT,
+  status TEXT DEFAULT 'OK',
   fastest_lap INTEGER DEFAULT 0,
-  FOREIGN KEY (race_entry_id) REFERENCES race_entries(id)
+  PRIMARY KEY (driver_id, race_weekend_id),
+  FOREIGN KEY (driver_id) REFERENCES drivers(id),
+  FOREIGN KEY (race_weekend_id) REFERENCES race_weekends(id)
 );
 `);
 

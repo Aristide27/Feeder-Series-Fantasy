@@ -29,7 +29,7 @@ function pointsSprint(position, status, fastestLap = false) {
     case 8: pts = 1; break;
   }
 
-  if (fastestLap) pts += 5;
+  if (fastestLap) pts += 1;
   return pts;
 }
 
@@ -51,7 +51,7 @@ function pointsFeature(position, status, fastestLap = false) {
     case 10: pts = 1; break;
   }
 
-  if (fastestLap) pts += 10;
+  if (fastestLap) pts += 4;
   return pts;
 }
 

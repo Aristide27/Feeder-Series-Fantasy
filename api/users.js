@@ -3,29 +3,15 @@ const router = express.Router();
 const db = require("../db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { authenticateToken } = require("./auth");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) throw new Error("JWT_SECRET manquant dans .env");
 
 // ============================================
-// MIDDLEWARE D'AUTHENTIFICATION
-// ============================================
-function auth(req, res, next) {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ error: "Token manquant" });
-
-  try {
-    req.user = jwt.verify(token, JWT_SECRET);
-    next();
-  } catch {
-    res.status(401).json({ error: "Token invalide" });
-  }
-}
-
-// ============================================
 // GET /users/me - Récupérer le profil
 // ============================================
-router.get("/me", auth, (req, res) => {
+router.get("/me", authenticateToken, (req, res) => {
   try {
     const user = db
       .prepare("SELECT id, username, email, created_at FROM users WHERE id = ?")
@@ -45,7 +31,7 @@ router.get("/me", auth, (req, res) => {
 // ============================================
 // PATCH /users/me/username - Modifier le username
 // ============================================
-router.patch("/me/username", auth, async (req, res) => {
+router.patch("/me/username", authenticateToken, async (req, res) => {
   let { username } = req.body;
   username = (username ?? "").trim();
 
@@ -85,7 +71,7 @@ router.patch("/me/username", auth, async (req, res) => {
 // ============================================
 // PATCH /users/me/email - Modifier l'email
 // ============================================
-router.patch("/me/email", auth, (req, res) => {
+router.patch("/me/email", authenticateToken, (req, res) => {
   let { email } = req.body;
   email = (email ?? "").trim();
 
@@ -120,7 +106,7 @@ router.patch("/me/email", auth, (req, res) => {
 // ============================================
 // PATCH /users/me/password - Modifier le mot de passe
 // ============================================
-router.patch("/me/password", auth, async (req, res) => {
+router.patch("/me/password", authenticateToken, async (req, res) => {
   let { oldPassword, newPassword } = req.body;
   oldPassword = oldPassword ?? "";
   newPassword = newPassword ?? "";

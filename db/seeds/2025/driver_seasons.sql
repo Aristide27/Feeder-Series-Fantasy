@@ -1,162 +1,50 @@
-INSERT INTO driver_seasons (driver_id, season, constructor_id, rookie, price)
-VALUES
---------------------------------------
-/* ========= 2025 drivers ========= */
---------------------------------------
+INSERT INTO driver_seasons (driver_id, season, constructor_id, rookie, price) VALUES
 
 /* ========= INVICTA RACING ========= */
-((SELECT id FROM drivers WHERE name = 'Leonardo Fornaroli'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Invicta Racing'),
-  0,
-  4.5),
-((SELECT id FROM drivers WHERE name = 'Roman Staněk'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Invicta Racing'),
-  0,
-  4.0),
-
-/* ========= CAMPOS RACING ========= */
-((SELECT id FROM drivers WHERE name = 'Pepe Martí'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Campos Racing'),
-  0,
-  3.8),
-((SELECT id FROM drivers WHERE name = 'Arvid Lindblad'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Campos Racing'),
-  1,
-  3.2),
-((SELECT id FROM drivers WHERE name = 'Nikola Tsolov'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Campos Racing'),
-  0,
-  4.2),
-
-/* ========= MP MOTORSPORT ========= */
-((SELECT id FROM drivers WHERE name = 'Oliver Goethe'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'MP Motorsport'),
-  0,
-  3.6),
-((SELECT id FROM drivers WHERE name = 'Richard Verschoor'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'MP Motorsport'),
-  0,
-  4.4),
+(23, 2025, 1, 0, 4.5),  -- Leonardo Fornaroli
+(24, 2025, 1, 0, 4.0),  -- Roman Staněk
 
 /* ========= HITECH TGR ========= */
-((SELECT id FROM drivers WHERE name = 'Luke Browning'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Hitech TGR'),
-  0,
-  4.1),
-((SELECT id FROM drivers WHERE name = 'Dino Beganovic'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Hitech TGR'),
-  0,
-  4.0),
+(28, 2025, 2, 0, 4.1),  -- Luke Browning
+(7,  2025, 2, 0, 4.0),  -- Dino Beganovic
 
-/* ========= PREMA RACING ========= */
-((SELECT id FROM drivers WHERE name = 'Sebastián Montoya'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'PREMA Racing'),
-  0,
-  3.9),
-((SELECT id FROM drivers WHERE name = 'Gabriele Minì'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'PREMA Racing'),
-  0,
-  4.6),
+/* ========= CAMPOS RACING ========= */
+(25, 2025, 3, 0, 3.8),  -- Pepe Martí
+(26, 2025, 3, 1, 3.2),  -- Arvid Lindblad
+(6,  2025, 3, 0, 4.2),  -- Nikola Tsolov
 
 /* ========= DAMS LUCAS OIL ========= */
-((SELECT id FROM drivers WHERE name = 'Jak Crawford'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'DAMS Lucas Oil'),
-  0,
-  4.3),
-((SELECT id FROM drivers WHERE name = 'Kush Maini'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'DAMS Lucas Oil'),
-  0,
-  3.7),
+(29, 2025, 4, 0, 4.3),  -- Jak Crawford
+(15, 2025, 4, 0, 3.7),  -- Kush Maini
 
-/* ========= ART GRAND PRIX ========= */
-((SELECT id FROM drivers WHERE name = 'Victor Martins'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'ART Grand Prix'),
-  0,
-  4.8),
-((SELECT id FROM drivers WHERE name = 'Ritomo Miyata'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'ART Grand Prix'),
-  0,
-  4.4),
+/* ========= MP MOTORSPORT ========= */
+(10, 2025, 5, 0, 3.6),  -- Oliver Goethe
+(27, 2025, 5, 0, 4.4),  -- Richard Verschoor
+
+/* ========= PREMA RACING ========= */
+(11, 2025, 6, 0, 3.9),  -- Sebastián Montoya
+(9,  2025, 6, 0, 4.6),  -- Gabriele Minì
 
 /* ========= RODIN MOTORSPORT ========= */
-((SELECT id FROM drivers WHERE name = 'Amaury Cordeel'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Rodin Motorsport'),
-  0,
-  3.0),
-((SELECT id FROM drivers WHERE name = 'Alexander Dunne'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Rodin Motorsport'),
-  1,
-  2.8),
-((SELECT id FROM drivers WHERE name = 'Martinius Stenshorne'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Rodin Motorsport'),
-  1,
-  2.6),
+(31, 2025, 7, 0, 3.0),  -- Amaury Cordeel
+(14, 2025, 7, 1, 2.8),  -- Alexander Dunne
+(13, 2025, 7, 1, 2.6),  -- Martinius Stenshorne
+
+/* ========= ART GRAND PRIX ========= */
+(30, 2025, 8, 0, 4.8),  -- Victor Martins
+(3,  2025, 8, 0, 4.4),  -- Ritomo Miyata
 
 /* ========= AIX RACING ========= */
-((SELECT id FROM drivers WHERE name = 'Joshua Dürksen'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'AIX Racing'),
-  0,
-  3.5),
-((SELECT id FROM drivers WHERE name = 'Cian Shields'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'AIX Racing'),
-  0,
-  2.5),
-
-/* ========= TRIDENT ========= */
-((SELECT id FROM drivers WHERE name = 'Sami Meguetounif'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Trident'),
-  1,
-  2.9),
-((SELECT id FROM drivers WHERE name = 'Laurens van Hoepen'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Trident'),
-  1,
-  2.4),
-((SELECT id FROM drivers WHERE name = 'Max Esterson'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Trident'),
-  0,
-  2.2),
-((SELECT id FROM drivers WHERE name = 'James Wharton'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Trident'),
-  1,
-  2.0),
-((SELECT id FROM drivers WHERE name = 'Tasanapol Inthraphuvasak'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Trident'),
-  1,
-  1.8),
+(2,  2025, 9, 0, 3.5),  -- Joshua Dürksen
+(18, 2025, 9, 0, 2.5),  -- Cian Shields
 
 /* ========= VAN AMERSFOORT RACING ========= */
-((SELECT id FROM drivers WHERE name = 'John Bennett'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Van Amersfoort Racing'),
-  1,
-  1.9),
-((SELECT id FROM drivers WHERE name = 'Rafael Villagómez'),
-  2025,
-  (SELECT id FROM constructors WHERE name = 'Van Amersfoort Racing'),
-  0,
-  3.1);
+(22, 2025, 10, 1, 1.9), -- John Bennett
+(20, 2025, 10, 0, 3.1), -- Rafael Villagómez
+
+/* ========= TRIDENT ========= */
+(32, 2025, 11, 1, 2.9), -- Sami Meguetounif
+(21, 2025, 11, 1, 2.4), -- Laurens van Hoepen
+(33, 2025, 11, 0, 2.2), -- Max Esterson
+(34, 2025, 11, 1, 2.0), -- James Wharton
+(16, 2025, 11, 1, 1.8); -- Tasanapol Inthraphuvasak

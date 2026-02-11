@@ -1,9 +1,13 @@
-const KEY = "fsf_token";
-const USERNAME_KEY = "fsf_username";
+const KEY = "token";          // ← Simplifié
+const USERNAME_KEY = "username"; // ← Simplifié
 
 export function saveAuth(token: string, username: string) {
-  localStorage.setItem(KEY, token);
-  localStorage.setItem(USERNAME_KEY, username);
+  if (typeof window !== "undefined") {
+    localStorage.setItem(KEY, token);
+    localStorage.setItem(USERNAME_KEY, username);
+    
+    window.dispatchEvent(new Event('localStorageChange'));
+  }
 }
 
 export function getToken() {
@@ -15,6 +19,17 @@ export function getUsername() {
 }
 
 export function clearAuth() {
-  localStorage.removeItem(KEY);
-  localStorage.removeItem(USERNAME_KEY);
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(KEY);
+    localStorage.removeItem(USERNAME_KEY);
+    
+    window.dispatchEvent(new Event('localStorageChange'));
+  }
+}
+
+export function clearToken() {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(KEY);
+    window.location.href = "/login";
+  }
 }

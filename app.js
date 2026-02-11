@@ -17,7 +17,7 @@ const leaguesRouter = require("./api/leagues");
 const rankingsRouter = require("./api/rankings");
 const contactRouter = require("./api/contact");
 const teamsRouter = require("./api/teams");
-
+const driverStatsRouter = require('./api/driver-stats');
 const app = express();
 const PORT = 3000;
 
@@ -39,14 +39,15 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use("/auth", authRouter);
-app.use("/users", userRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/users", userRouter);
 app.use('/api', scoringRouter);
 app.use("/api/fantasy", fantasyRouter);
 app.use("/api/leagues", leaguesRouter);
 app.use("/api/rankings", rankingsRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api/teams", teamsRouter);
+app.use('/api/driver-stats', driverStatsRouter);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK" });

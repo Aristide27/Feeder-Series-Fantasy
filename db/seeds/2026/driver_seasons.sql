@@ -1,137 +1,45 @@
-INSERT INTO driver_seasons (driver_id, season, constructor_id, rookie, price)
-VALUES
---------------------------------------
-/* ========= 2026 drivers ========= */
---------------------------------------
+INSERT INTO driver_seasons (driver_id, season, constructor_id, rookie, price) VALUES
 
 /* ========= INVICTA RACING ========= */
-((SELECT id FROM drivers WHERE name = 'Rafael Câmara'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'Invicta Racing'),
-  1,
-  24.0),
-((SELECT id FROM drivers WHERE name = 'Joshua Dürksen'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'Invicta Racing'),
-  0,
-  21.0),
+(1,  2026, 1, 1, 24.0),  -- Rafael Câmara
+(2,  2026, 1, 0, 21.0),  -- Joshua Dürksen
 
 /* ========= HITECH TGR ========= */
-((SELECT id FROM drivers WHERE name = 'Ritomo Miyata'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'Hitech TGR'),
-  0,
-  14),
-((SELECT id FROM drivers WHERE name = 'Colton Herta'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'Hitech TGR'),
-  1,
-  13.0),
+(3,  2026, 2, 0, 14.0),  -- Ritomo Miyata
+(4,  2026, 2, 1, 13.0),  -- Colton Herta
 
 /* ========= CAMPOS RACING ========= */
-((SELECT id FROM drivers WHERE name = 'Noel León'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'Campos Racing'),
-  1,
-  16.0),
-((SELECT id FROM drivers WHERE name = 'Nikola Tsolov'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'Campos Racing'),
-  1,
-  20.0),
+(5,  2026, 3, 1, 16.0),  -- Noel León
+(6,  2026, 3, 1, 20.0),  -- Nikola Tsolov
 
 /* ========= DAMS LUCAS OIL ========= */
-((SELECT id FROM drivers WHERE name = 'Dino Beganovic'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'DAMS Lucas Oil'),
-  0,
-  21.0),
-((SELECT id FROM drivers WHERE name = 'Roman Bilinski'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'DAMS Lucas Oil'),
-  1,
-  14.0),
+(7,  2026, 4, 0, 21.0),  -- Dino Beganovic
+(8,  2026, 4, 1, 14.0),  -- Roman Bilinski
 
 /* ========= MP MOTORSPORT ========= */
-((SELECT id FROM drivers WHERE name = 'Gabriele Minì'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'MP Motorsport'),
-  0,
-  17.0),
-((SELECT id FROM drivers WHERE name = 'Oliver Goethe'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'MP Motorsport'),
-  0,
-  19.0),
+(9,  2026, 5, 0, 17.0),  -- Gabriele Minì
+(10, 2026, 5, 0, 19.0),  -- Oliver Goethe
 
 /* ========= PREMA RACING ========= */
-((SELECT id FROM drivers WHERE name = 'Sebastián Montoya'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'PREMA Racing'),
-  0,
-  14.0),
-((SELECT id FROM drivers WHERE name = 'Mari Boya'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'PREMA Racing'),
-  1,
-  18.0),
+(11, 2026, 6, 0, 14.0),  -- Sebastián Montoya
+(12, 2026, 6, 1, 18.0),  -- Mari Boya
 
 /* ========= RODIN MOTORSPORT ========= */
-((SELECT id FROM drivers WHERE name = 'Martinius Stenshorne'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'Rodin Motorsport'),
-  1,
-  20.0),
-((SELECT id FROM drivers WHERE name = 'Alexander Dunne'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'Rodin Motorsport'),
-  0,
-  22.0),
+(13, 2026, 7, 1, 20.0),  -- Martinius Stenshorne
+(14, 2026, 7, 0, 22.0),  -- Alexander Dunne
 
 /* ========= ART GRAND PRIX ========= */
-((SELECT id FROM drivers WHERE name = 'Kush Maini'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'ART Grand Prix'),
-  0,
-  8.0),
-((SELECT id FROM drivers WHERE name = 'Tasanapol Inthraphuvasak'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'ART Grand Prix'),
-  1,
-  10.0),
+(15, 2026, 8, 0, 8.0),   -- Kush Maini
+(16, 2026, 8, 1, 10.0),  -- Tasanapol Inthraphuvasak
 
 /* ========= AIX RACING ========= */
-((SELECT id FROM drivers WHERE name = 'Emerson Fittipaldi Jr.'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'AIX Racing'),
-  1,
-  7.0),
-((SELECT id FROM drivers WHERE name = 'Cian Shields'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'AIX Racing'),
-  0,
-  5.0),
+(17, 2026, 9, 1, 7.0),   -- Emerson Fittipaldi Jr.
+(18, 2026, 9, 0, 5.0),   -- Cian Shields
 
 /* ========= VAN AMERSFOORT RACING ========= */
-((SELECT id FROM drivers WHERE name = 'Nicolás Varrone'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'Van Amersfoort Racing'),
-  1,
-  7.0),
-((SELECT id FROM drivers WHERE name = 'Driver 23'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'Van Amersfoort Racing'),
-  1,
-  5.0),
-  
+(19, 2026, 10, 1, 7.0),  -- Nicolás Varrone
+(20, 2026, 10, 1, 5.0),  -- Rafael Villagómez
+
 /* ========= TRIDENT ========= */
-((SELECT id FROM drivers WHERE name = 'Laurens van Hoepen'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'Trident'),
-  1,
-  10.0),
-((SELECT id FROM drivers WHERE name = 'John Bennett'),
-  2026,
-  (SELECT id FROM constructors WHERE name = 'Trident'),
-  0,
-  7.0);
+(21, 2026, 11, 1, 10.0), -- Laurens van Hoepen
+(22, 2026, 11, 0, 7.0);  -- John Bennett

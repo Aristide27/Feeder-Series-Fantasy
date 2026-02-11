@@ -2,27 +2,13 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 const jwt = require("jsonwebtoken");
+const { authenticateToken } = require("./auth");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) throw new Error("JWT_SECRET manquant dans .env");
 
 // ============================================
-// MIDDLEWARE D'AUTHENTIFICATION
-// ============================================
-function auth(req, res, next) {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ error: "Token manquant" });
-
-  try {
-    req.user = jwt.verify(token, JWT_SECRET);
-    next();
-  } catch {
-    res.status(401).json({ error: "Token invalide" });
-  }
-}
-
-// ============================================
-// HELPER: GÃ©nÃ©rer un code unique
+// HELPER: Générer un code unique
 // ============================================
 function generateUniqueCode() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -72,9 +58,9 @@ router.get("/public/fsf", (req, res) => {
 });
 
 // ============================================
-// POST /api/leagues - CrÃ©er une ligue
+// POST /api/leagues - Créer une ligue
 // ============================================
-router.post("/", auth, (req, res) => {
+router.post("/", authenticateToken, (req, res) => {
   let { name } = req.body;
   name = (name ?? "").trim();
 
@@ -101,10 +87,10 @@ router.post("/", auth, (req, res) => {
       return res.status(400).json({ error: "Vous avez atteint la limite de 10 ligues" });
     }
 
-    // GÃ©nÃ©rer un code unique
+    // Générer un code unique
     const code = generateUniqueCode();
 
-    // CrÃ©er la ligue
+    // Créer la ligue
     const result = db.prepare(`
       INSERT INTO leagues (name, code, creator_id)
       VALUES (?, ?, ?)
@@ -112,13 +98,13 @@ router.post("/", auth, (req, res) => {
 
     const leagueId = result.lastInsertRowid;
 
-    // Ajouter le crÃ©ateur comme membre
+    // Ajouter le créateur comme membre
     db.prepare(`
       INSERT INTO league_members (league_id, user_id)
       VALUES (?, ?)
     `).run(leagueId, req.user.id);
 
-    // Initialiser le score du crÃ©ateur
+    // Initialiser le score du créateur
     db.prepare(`
       INSERT INTO league_scores (league_id, user_id, total_points)
       VALUES (?, ?, 0)
@@ -142,7 +128,7 @@ router.post("/", auth, (req, res) => {
 // ============================================
 // POST /api/leagues/join - Rejoindre une ligue
 // ============================================
-router.post("/join", auth, (req, res) => {
+router.post("/join", authenticateToken, (req, res) => {
   let { code } = req.body;
   code = (code ?? "").trim().toUpperCase();
 
@@ -201,7 +187,7 @@ router.post("/join", auth, (req, res) => {
 // ============================================
 // GET /api/leagues - Liste des ligues de l'utilisateur
 // ============================================
-router.get("/", auth, (req, res) => {
+router.get("/", authenticateToken, (req, res) => {
   try {
     const leagues = db.prepare(`
       SELECT 
@@ -234,9 +220,9 @@ router.get("/", auth, (req, res) => {
 });
 
 // ============================================
-// GET /api/leagues/:code - DÃ©tails d'une ligue
+// GET /api/leagues/:code - Détails d'une ligue
 // ============================================
-router.get("/:code", auth, (req, res) => {
+router.get("/:code", authenticateToken, (req, res) => {
   const { code } = req.params;
 
   try {
@@ -277,7 +263,7 @@ router.get("/:code", auth, (req, res) => {
 // ============================================
 // PATCH /api/leagues/:code - Modifier une ligue (admin only)
 // ============================================
-router.patch("/:code", auth, (req, res) => {
+router.patch("/:code", authenticateToken, (req, res) => {
   const { code } = req.params;
   const { name, is_closed } = req.body;
 
@@ -342,7 +328,7 @@ router.patch("/:code", auth, (req, res) => {
 // ============================================
 // GET /api/leagues/:code/leaderboard - Classement d'une ligue
 // ============================================
-router.get("/:code/leaderboard", auth, (req, res) => {
+router.get("/:code/leaderboard", authenticateToken, (req, res) => {
   const { code } = req.params;
 
   try {
@@ -387,7 +373,7 @@ router.get("/:code/leaderboard", auth, (req, res) => {
 // ============================================
 // GET /api/leagues/:code/team/:userId - Voir la composition d'un membre
 // ============================================
-router.get("/:code/team/:userId", auth, (req, res) => {
+router.get("/:code/team/:userId", authenticateToken, (req, res) => {
   const { code, userId } = req.params;
 
   try {
@@ -437,7 +423,7 @@ router.get("/:code/team/:userId", auth, (req, res) => {
       });
     }
 
-    // RÃ©cupÃ©rer les Ã©curies (2)
+    // Récupérer les écuries (2)
     const constructors = db.prepare(`
       SELECT 
         c.id,
@@ -448,7 +434,9 @@ router.get("/:code/team/:userId", auth, (req, res) => {
       WHERE fc.fantasy_team_id = ?
     `).all(team.id);
 
-    // RÃ©cupÃ©rer les pilotes (5)
+    // Récupérer les pilotes (5)
+    const season = 2026; // Ajouter cette ligne avant la requête
+
     const drivers = db.prepare(`
       SELECT 
         d.id,
@@ -457,11 +445,11 @@ router.get("/:code/team/:userId", auth, (req, res) => {
         ds.rookie,
         c.name as constructor_name
       FROM fantasy_picks fp
-      JOIN driver_seasons ds ON fp.driver_season_id = ds.id
-      JOIN drivers d ON ds.driver_id = d.id
+      JOIN drivers d ON fp.driver_id = d.id
+      JOIN driver_seasons ds ON ds.driver_id = d.id AND ds.season = ?
       LEFT JOIN constructors c ON ds.constructor_id = c.id
       WHERE fp.fantasy_team_id = ?
-    `).all(team.id);
+    `).all(season, team.id);
 
     res.json({
       username: team.username,
@@ -480,7 +468,7 @@ router.get("/:code/team/:userId", auth, (req, res) => {
 // ============================================
 // DELETE /api/leagues/:code - Supprimer une ligue (admin only)
 // ============================================
-router.delete("/:code", auth, (req, res) => {
+router.delete("/:code", authenticateToken, (req, res) => {
   const { code } = req.params;
 
   try {
