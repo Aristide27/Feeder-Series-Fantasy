@@ -32,26 +32,33 @@ function getFeaturePosition(driver_id, weekendId) {
 
 /**
  * Calcule le Score de Performance (S_perf)
- * S_perf = Points_F2 + ((22 - Pos_Feature) / 22 * 1.5)
+ * S_perf = Points_F2 + Bonus (uniquement si Points_F2 == 0)
  */
 function calculateSPerf(driver_id, weekendId) {
-  // Points F2 officiels
+  // 1. Calcul des Points F2 officiels (Qualif + Sprint + Feature)
   const qualPoints = getQualifyingPoints(weekendId).find(p => p.driver_id === driver_id)?.points || 0;
   const sprintPoints = getSprintPoints(weekendId).find(p => p.driver_id === driver_id)?.points || 0;
   const featurePoints = getFeaturePoints(weekendId).find(p => p.driver_id === driver_id)?.points || 0;
   
   const pointsF2 = qualPoints + sprintPoints + featurePoints;
   
-  // Bonus position Feature
-  const posFeature = getFeaturePosition(driver_id, weekendId);
-  const bonusPosition = ((22 - posFeature) / 22) * 1.5;
+  // 2. Calcul du Bonus de position
+  let bonusPosition = 0;
+
+  // Condition : Le bonus ne s'applique QUE si le pilote n'a pas marqué de points F2
+  if (pointsF2 === 0) {
+    const posFeature = getFeaturePosition(driver_id, weekendId);
+    // On garde ta formule originale pour valoriser les "proches du top 10"
+    bonusPosition = ((22 - posFeature) / 22) * 1.5;
+  }
   
+  // 3. Score final
   const sPerf = pointsF2 + bonusPosition;
   
   return {
     sPerf,
     pointsF2,
-    posFeature,
+    posFeature: pointsF2 === 0 ? getFeaturePosition(driver_id, weekendId) : null,
     bonusPosition
   };
 }
@@ -94,7 +101,8 @@ function calculateNewPrice(prixActuel, deltaBrute, deltaBrutePrecedente, isFirst
   // Appliquer plancher et plafond
   nouveauPrix = Math.max(PRIX_PLANCHER, Math.min(PRIX_PLAFOND, nouveauPrix));
   
-  return nouveauPrix;
+  // Arrondi au centième (2 décimales)
+  return Math.round(nouveauPrix * 100) / 100;
 }
 
 /**
@@ -205,9 +213,10 @@ function updateConstructorPrices(season) {
     if (pilots.length === 0) continue;
     
     const prix = pilots.reduce((sum, p) => sum + p.price, 0) / pilots.length;
+    const prixArrondi = Math.round(prix * 100) / 100; // Arrondi au centième
     
-    db.prepare(`UPDATE constructors SET price = ? WHERE id = ?`).run(prix, c.id);
-    result.push({ constructor_id: c.id, price: prix });
+    db.prepare(`UPDATE constructors SET price = ? WHERE id = ?`).run(prixArrondi, c.id);
+    result.push({ constructor_id: c.id, price: prixArrondi });
   }
   
   return result;

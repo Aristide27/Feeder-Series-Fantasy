@@ -18,7 +18,7 @@ function calculateTeamBudget(teamId, season) {
     throw new Error(`Team ${teamId} not found`);
   }
 
-  const budgetNonDepense = 100.0 - team.initial_spent;
+  const budgetNonDepense = Math.round((100.0 - team.initial_spent) * 100) / 100;
 
   // 2. Récupérer les 5 pilotes de l'équipe
   const drivers = db.prepare(`
@@ -46,6 +46,7 @@ function calculateTeamBudget(teamId, season) {
 
   // 6. Plafonner à 200M
   nouveauBudget = Math.min(nouveauBudget, BUDGET_MAX);
+  nouveauBudget = Math.round(nouveauBudget * 100) / 100;
 
   return {
     teamId,
@@ -130,16 +131,18 @@ function recordInitialSpent(teamId) {
     drivers.reduce((sum, d) => sum + d.price, 0) +
     constructors.reduce((sum, c) => sum + c.price, 0);
 
+  const totalCostRounded = Math.round(totalCost * 100) / 100;
+
   // Enregistrer le coût initial
   db.prepare(`
     UPDATE fantasy_teams 
     SET initial_spent = ? 
     WHERE id = ?
-  `).run(totalCost, teamId);
+  `).run(totalCostRounded, teamId);
 
-  console.log(`Team ${teamId}: Coût initial enregistré = ${totalCost.toFixed(1)}M`);
+  console.log(`Team ${teamId}: Coût initial enregistré = ${totalCostRounded.toFixed(1)}M`);
 
-  return totalCost;
+  return totalCostRounded;
 }
 
 module.exports = {

@@ -22,7 +22,7 @@ INSERT INTO drivers (id, name, nationality) VALUES
 (18, 'Cian Shields', 'United Kingdom'),
 (19, 'Nicolás Varrone', 'Argentina'),
 (20, 'Rafael Villagómez', 'Mexico'),
-(21, 'Laurens van Hoepen', 'Netherlands'),
+(21, 'Laurens Van Hoepen', 'Netherlands'),
 (22, 'John Bennett', 'United Kingdom'),
 
 -----------------------------------------

@@ -12,7 +12,7 @@ import DriverStatsPopup from "@/components/driver-stats-popup";
 import { Info, ArrowUpDown } from "lucide-react";
 
 const SEASON_DEFAULT = 2026;
-const BUDGET_MAX = 100;
+const BUDGET_MAX = 200;
 const AUTOSAVE_DELAY = 0;
 
 export default function MyTeamPage() {
@@ -52,8 +52,8 @@ export default function MyTeamPage() {
   const [drivers, setDrivers] = useState<DriverSeasonRow[]>([]);
   
   // Sélections
-  const [selectedConstructorsIds, setselectedConstructorsIds] = useState<number[]>([]);
-  const [selectedDriverSeasonIds, setSelectedDriverSeasonIds] = useState<number[]>([]);
+  const [selectedConstructorsIds, setselectedConstructorsIds] = useState<(number | null)[]>([null, null]);
+  const [selectedDriverSeasonIds, setSelectedDriverSeasonIds] = useState<(number | null)[]>([null, null, null, null, null]);
 
   // État pour l'apparition progressive du message
   const [showUnsavedMessage, setShowUnsavedMessage] = useState(false);
@@ -96,18 +96,29 @@ export default function MyTeamPage() {
           }
           
           // Charger les écuries
-          if (data.constructors.length > 0) {
-            setselectedConstructorsIds(data.constructors.map(c => c.constructor_id));
+          if (data.constructors && data.constructors.length > 0) {
+            // On type explicitement le tableau pour éviter l'erreur TypeScript
+            const cSlots: (number | null)[] = [null, null]; 
+            data.constructors.forEach((c, i) => {
+              if (i < 2) cSlots[i] = c.constructor_id;
+            });
+            setselectedConstructorsIds(cSlots);
+          } else {
+            setselectedConstructorsIds([null, null]);
           }
-          
+
           // Charger les pilotes
-          if (data.drivers.length > 0) {
-            setSelectedDriverSeasonIds(data.drivers.map(d => d.driver_id));
-          }
-        } else {
-          // Pas d'équipe = afficher popup
-          setShowNamePopup(true);
-        }
+          if (data.drivers && data.drivers.length > 0) {
+            // const slots = [null, null, null, null, null];
+            const slots: (number | null)[] = [null, null, null, null, null];
+            data.drivers.forEach((d, i) => {
+              if (i < 5) slots[i] = d.driver_id;
+            });
+            setSelectedDriverSeasonIds(slots);
+          } else {
+            // Si aucune équipe n'existe encore, on initialise 5 slots vides
+            setSelectedDriverSeasonIds([null, null, null, null, null]);
+          }}
       })
       .catch((err) => {
         console.error("Erreur chargement équipe:", err);
@@ -157,18 +168,18 @@ export default function MyTeamPage() {
 
   // Calculs dérivés
   const selectedConstructors = useMemo(
-    () => constructors.filter(c => selectedConstructorsIds.includes(c.constructor_id)),
+    () => selectedConstructorsIds.map(id => id ? constructors.find(c => c.constructor_id === id) : null),
     [constructors, selectedConstructorsIds]
   );
 
   const selectedDrivers = useMemo(
-    () => drivers.filter(d => selectedDriverSeasonIds.includes(d.driver_id)),
+    () => selectedDriverSeasonIds.map(id => id ? drivers.find(d => d.driver_id === id) : null),
     [drivers, selectedDriverSeasonIds]
   );
 
   const budgetUsed = useMemo(() => {
-    const constructorsPrice = selectedConstructors.reduce((sum, c) => sum + (c.price ?? 0), 0);
-    const driversPrice = selectedDrivers.reduce((sum, d) => sum + (d.driver_price ?? 0), 0);
+    const constructorsPrice = selectedConstructors.reduce((sum, c) => sum + (c?.price ?? 0), 0);
+    const driversPrice = selectedDrivers.reduce((sum, d) => sum + (d?.driver_price ?? 0), 0);
     return constructorsPrice + driversPrice;
   }, [selectedConstructors, selectedDrivers]);
 
@@ -177,9 +188,9 @@ export default function MyTeamPage() {
 
   // Équipe valide = prête pour sauvegarde
   const isValidTeam =
-    canEdit && // Ne pas sauvegarder si verrouillé
-    selectedConstructorsIds.length === 2 &&
-    selectedDriverSeasonIds.length === 5 &&
+    canEdit && 
+    selectedConstructorsIds.filter(id => id !== null).length === 2 &&
+    selectedDriverSeasonIds.filter(id => id !== null).length === 5 &&
     !isOverBudget &&
     teamName.trim().length > 0;
 
@@ -188,37 +199,33 @@ export default function MyTeamPage() {
     const token = getToken();
     if (!token || !leagueId) return;
 
-    // Ne sauvegarder que si l'équipe est valide
     if (!isValidTeam) return;
 
     setSaveStatus('saving');
-    setSaveError(null);
+
+    // ON FILTRE ICI : on enlève les null pour n'envoyer que les vrais IDs
+    const driverIdsToSave = selectedDriverSeasonIds.filter((id): id is number => id !== null);
+    const constructorIdsToSave = selectedConstructorsIds.filter((id): id is number => id !== null);
 
     try {
       await saveTeam(token, parseInt(leagueId), {
         teamName: teamName.trim(),
-        constructorIds: selectedConstructorsIds,
-        driverIds: selectedDriverSeasonIds,
+        constructorIds: constructorIdsToSave, // Version nettoyée
+        driverIds: driverIdsToSave,           // Version nettoyée
       });
-
-      // Garder le spinner pendant 1 seconde même si c'est instantané
-      setTimeout(() => {
-        setSaveStatus('saved');
-      }, 1000); // 1 seconde de spinner
-
+      
+      setTimeout(() => { setSaveStatus('saved'); }, 1000);
     } catch (err: any) {
       setSaveStatus('error');
       setSaveError(err?.message ?? "Erreur sauvegarde");
-      console.error("Erreur auto-save:", err);
     }
   }, [leagueId, teamName, selectedConstructorsIds, selectedDriverSeasonIds, isValidTeam]);
-
-  // Auto-save avec debounce
+  
   useEffect(() => {
     // Ne déclencher le timer que si l'équipe est valide
     if (!isValidTeam) {
       if (selectedConstructorsIds.length > 0 || selectedDriverSeasonIds.length > 0) {
-        setSaveStatus('idle'); // Montrera "Modifications non enregistrées"
+        setSaveStatus('idle'); // Montrera "Non sauvegardé"
       }
       return;
     }
@@ -232,24 +239,51 @@ export default function MyTeamPage() {
 
   // Fonctions de toggle
   function toggleConstructor(id: number) {
-    if (!canEdit) return; // Bloqué si deadline passée
+    if (!canEdit) return;
     
     setselectedConstructorsIds(prev => {
-      const exists = prev.includes(id);
-      if (exists) return prev.filter(x => x !== id);
-      if (prev.length >= 2) return prev;
-      return [...prev, id];
+      const currentIndex = prev.indexOf(id);
+
+      if (currentIndex !== -1) {
+        // Désélection : on remet le slot à null
+        const next = [...prev];
+        next[currentIndex] = null;
+        return next;
+      } else {
+        // Sélection : on cherche le premier slot vide (null)
+        const firstEmptySlot = prev.indexOf(null);
+        if (firstEmptySlot !== -1 && !prev.includes(id)) {
+          const next = [...prev];
+          next[firstEmptySlot] = id;
+          return next;
+        }
+        return prev;
+      }
     });
   }
 
   function toggleDriver(driverSeasonId: number) {
-    if (!canEdit) return; // Bloqué si deadline passée
-    
+    if (!canEdit) return;
+
     setSelectedDriverSeasonIds(prev => {
-      const exists = prev.includes(driverSeasonId);
-      if (exists) return prev.filter(x => x !== driverSeasonId);
-      if (prev.length >= 5) return prev;
-      return [...prev, driverSeasonId];
+      const currentIndex = prev.indexOf(driverSeasonId);
+
+      if (currentIndex !== -1) {
+        // Désélection : on remplace par null
+        const next = [...prev];
+        next[currentIndex] = null;
+        return next;
+      } else {
+        // Sélection : on cherche la 1ère place libre
+        const firstEmptySlot = prev.indexOf(null);
+        // On vérifie aussi que le pilote n'est pas déjà dans le tableau (sécurité)
+        if (firstEmptySlot !== -1 && !prev.includes(driverSeasonId)) {
+          const next = [...prev];
+          next[firstEmptySlot] = driverSeasonId;
+          return next;
+        }
+        return prev;
+      }
     });
   }
 
@@ -335,114 +369,95 @@ export default function MyTeamPage() {
     <div className="h-screen bg-background text-white overflow-hidden">
       {/* HUD global */}
       <div className="h-16 px-6 flex items-center justify-between gap-6 border-b border-white/10">
-        <div className="flex items-center gap-6">
-          {/* Nom de l'équipe (read-only) */}
-          <div>
-            <div className="text-xs opacity-70">Nom de l'équipe</div>
-            <div className="text-sm font-semibold text-white/90">
-              {teamName || "Sans nom"}
-            </div>
+        
+        {/* GAUCHE : Identité */}
+        <div className="ml-20">
+          <div className="justify-right text-lg font-semibold text-white/90">
+            {teamName || "Sans nom"}
           </div>
-          
-          {/* Budget */}
-          <div>
-            <div className="text-xs opacity-70">Budget</div>
-            <div 
-              key={shakeKey}
-              className={`text-lg font-semibold transition-all ${
-                isOverBudget 
-                  ? "text-red-500 animate-shake" 
-                  : ""
-              }`}
-            >
-              {budgetUsed.toFixed(1)} / {teamBudget.toFixed(1)} M
-              <span className={`ml-3 text-sm opacity-70 ${
-                isOverBudget ? "text-red-400" : ""
-              }`}>
-                (reste {budgetLeft.toFixed(1)} M)
-              </span>
-            </div>
-          </div>
-
-          <div className="text-sm opacity-70">
-            Écuries: {selectedConstructorsIds.length}/2 • Pilotes: {selectedDriverSeasonIds.length}/5
-          </div>
-        </div>
-
-        {/* Centre = titre + timer */}
-        <div className="text-center">
-          <div className="text-lg font-bold leading-tight">Mon Équipe</div>
-          {/* Afficher le nom de la ligue */}
           <div className="text-xs text-white/60">
-            {leagueName || `Ligue ${leagueId}`} • Saison {season}
+            {leagueName || "FSF Officiel"} • Saison {season}
           </div>
-
-          {/* Timer selon l'état */}
-          {deadlineState === "open" && deadline && timeRemaining && (
-            <div className="text-xs mt-1 text-slate-400">
-              Verrouillage dans {timeRemaining}
-            </div>
-          )}
-
-          {deadlineState === "urgent" && deadline && timeRemaining && (
-            <div className="text-xs mt-1 text-orange-400 font-semibold">
-              ⚠️ Verrouillage dans {timeRemaining}
-            </div>
-          )}
-
-          {deadlineState === "locked" && unlockAt && timeRemaining && (
-            <div className="text-xs mt-1 text-red-400">
-              🔒 Déverrouillage dans {timeRemaining}
-            </div>
-          )}
         </div>
 
-        {/* Indicateur sauvegarde */}
-        <div className="flex items-center gap-3">
-          {saveStatus === 'idle' && showUnsavedMessage && (
-            <div className="flex items-center gap-2 text-sm text-orange-400 animate-fade-in">
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-              <span>Modifications non enregistrées</span>
-            </div>
-          )}
+        {/* CENTRE : Budget */}
+        <div className="text-center">
+          <div 
+            key={shakeKey}
+            className={`text-lg font-semibold transition-all ${
+              isOverBudget ? "text-red-500 animate-shake" : ""
+            }`}
+          >
+            Budget : {budgetUsed.toFixed(1)} / {teamBudget.toFixed(1)} M
+          </div>
+          <div className={`text-xs opacity-70 ${isOverBudget ? "text-red-400" : ""}`}>
+            (reste {budgetLeft.toFixed(1)} M)
+          </div>
+        </div>
+
+        {/* DROITE : Sauvegarde (Haut) + Infos (Bas) */}
+        <div className="flex flex-col items-end gap-1">
           
-          {saveStatus === 'saving' && (
-            <div className="flex items-center gap-2 text-sm text-yellow-400">
-              <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <span>Sauvegarde...</span>
-            </div>
-          )}
-          
-          {saveStatus === 'saved' && (
-            <div className="flex items-center gap-2 text-sm text-green-400 font-medium">
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Sauvegardé</span>
-            </div>
-          )}
-          
-          {saveStatus === 'error' && (
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2 text-sm text-red-400">
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                <span>Erreur de sauvegarde</span>
+          {/* Ligne 1 : Statut Sauvegarde */}
+          <div className="h-5 flex items-center">
+            {saveStatus === 'idle' && showUnsavedMessage && (
+              <div className="flex items-center gap-2 text-sm text-orange-400 animate-fade-in">
+                <span>Modifications non enregistrées</span>
               </div>
-              <button
-                onClick={retrySave}
-                className="text-xs px-2 py-1 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 rounded transition-colors"
-              >
-                Réessayer
-              </button>
+            )}
+            
+            {saveStatus === 'saving' && (
+              <div className="flex items-center gap-2 text-sm text-yellow-400">
+                <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Sauvegarde</span>
+              </div>
+            )}
+            
+            {saveStatus === 'saved' && (
+              <div className="flex items-center gap-2 text-sm text-green-400 font-medium">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Sauvegardé</span>
+              </div>
+            )}
+
+            {saveStatus === 'error' && (
+              <div className="flex items-center gap-2 text-sm text-red-400">
+                 <span>Erreur</span>
+                 <button onClick={retrySave} className="underline">Réessayer</button>
+              </div>
+            )}
+          </div>
+
+          {/* Ligne 2 : Compo + Deadline */}
+          <div className="flex items-center gap-55">
+            <div className="text-sm opacity-70">
+              {/* Écuries : {selectedConstructorsIds.length} / 2 | Pilotes : {selectedDriverSeasonIds.length} / 5 */}
+              Écuries : {selectedConstructorsIds.filter(id => id !== null).length} / 2 | Pilotes : {selectedDriverSeasonIds.filter(id => id !== null).length} / 5
             </div>
-          )}
+
+            {deadlineState === "open" && timeRemaining && (
+              <div className="text-xs text-slate-400">
+                Verrouillage dans {timeRemaining}
+              </div>
+            )}
+
+            {deadlineState === "urgent" && timeRemaining && (
+              <div className="text-xs text-orange-400 font-semibold">
+                ⚠️ Verrouillage dans {timeRemaining}
+              </div>
+            )}
+
+            {deadlineState === "locked" && timeRemaining && (
+              <div className="text-xs text-red-400">
+                🔒 Verrouillé ({timeRemaining})
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -505,31 +520,36 @@ export default function MyTeamPage() {
           >
             {/* Slots pilotes */}
             <div className="absolute inset-0 z-30 pointer-events-none">
-              {driverSlots.map((slot, i) => (
-                <div key={slot.label} className={`absolute ${slot.className} pointer-events-auto`}>
-                  <DriverSlotCard
-                    label={slot.label}
-                    driver={
-                      selectedDrivers[i]
-                        ? {
-                            id: selectedDrivers[i].driver_id,
-                            name: selectedDrivers[i].driver_name,
-                            teamName: selectedDrivers[i].constructor_name,
-                            price: selectedDrivers[i].driver_price,
-                          }
-                        : undefined
-                    }
-                    avatarIndex={i}
-                  />
-                </div>
-              ))}
+              {driverSlots.map((slot, i) => {
+                // On récupère le pilote à cet index précis
+                const driverAtSlot = selectedDrivers[i]; 
+
+                return (
+                  <div key={slot.label} className={`absolute ${slot.className} pointer-events-auto`}>
+                    <DriverSlotCard
+                      label={slot.label}
+                      driver={
+                        driverAtSlot
+                          ? {
+                              id: driverAtSlot.driver_id,
+                              name: driverAtSlot.driver_name,
+                              teamName: driverAtSlot.constructor_name,
+                              price: driverAtSlot.driver_price,
+                            }
+                          : undefined // Si pas de pilote à cet index, le slot reste vide
+                      }
+                      avatarIndex={i}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </GarageStage>
         </div>
 
         {/* RIGHT : panel de sélection */}
         <div className="h-[calc(100vh-4rem)] p-1">
-          <div className="h-full overflow-hidden rounded-2xl border border-white/10 bg-black/25">
+          <div className="h-full  rounded-2xl border border-white/10 bg-black/25">
             <div className="h-full overflow-y-auto p-2">
               <RightSelectorPanel
                 constructors={constructors}
@@ -626,8 +646,8 @@ type SortMode = "default" | "asc" | "desc";
 function RightSelectorPanel(props: {
   constructors: ConstructorRow[];
   drivers: DriverSeasonRow[];
-  selectedConstructorsIds: number[];
-  selectedDriverSeasonIds: number[];
+  selectedConstructorsIds: (number | null)[]; // Adapté pour les slots
+  selectedDriverSeasonIds: (number | null)[]; // Adapté pour les slots
   onToggleConstructor: (id: number) => void;
   onToggleDriver: (id: number) => void;
   canEdit: boolean;
@@ -645,6 +665,10 @@ function RightSelectorPanel(props: {
   const [viewMode, setViewMode] = useState<"drivers" | "teams">("drivers");
   const [statsDriverId, setStatsDriverId] = useState<number | null>(null);
   
+  // Compteurs pour l'affichage (car les tableaux contiennent maintenant des nulls)
+  const nbDrivers = selectedDriverSeasonIds.filter(id => id !== null).length;
+  const nbConstructors = selectedConstructorsIds.filter(id => id !== null).length;
+
   // État de tri
   const [sortMode, setSortMode] = useState<SortMode>("default");
 
@@ -728,16 +752,16 @@ function RightSelectorPanel(props: {
       </div>
 
       {/* Scrollable list */}
-      <div className="h-[calc(100vh-4rem-50px)] overflow-y-scroll pr-1 space-y-2">
+      <div className="h-[calc(100vh-4rem-50px)] overflow-y-scroll pr-1 space-y-2 pb-15">
         {viewMode === "drivers" && (
           <>
             <div className="text-xs text-white/60 mb-2">
-              Sélectionne 5 pilotes • {selectedDriverSeasonIds.length}/5
+              Sélectionne 5 pilotes • {nbDrivers}/5
             </div>
 
             {sortedDrivers.map((d) => {
               const selected = selectedDriverSeasonIds.includes(d.driver_id);
-              const disabled = (!selected && selectedDriverSeasonIds.length >= 5) || !canEdit;
+              const disabled = (!selected && nbDrivers >= 5) || !canEdit;
 
               return (
                 <div
@@ -779,31 +803,58 @@ function RightSelectorPanel(props: {
         {viewMode === "teams" && (
           <>
             <div className="text-xs text-white/60 mb-2">
-              Sélectionne 2 écuries • {selectedConstructorsIds.length}/2
+              Sélectionne 2 écuries - {nbConstructors}/2
             </div>
 
             {sortedConstructors.map((c) => {
               const selected = selectedConstructorsIds.includes(c.constructor_id);
-              const disabled = (!selected && selectedConstructorsIds.length >= 2) || !canEdit;
+              const disabled = (!selected && nbConstructors >= 2) || !canEdit;
+
+              // On cherche les pilotes qui appartiennent à cette écurie
+              const teamDrivers = drivers
+                .filter(d => d.constructor_id === c.constructor_id)
+                .map(d => {
+                  const name = d.driver_name;
+                  // Si c'est Fittipaldi Jr.
+                  if (name.includes("Jr."))  {
+                    return name.split(' ').slice(-2).join(' '); // Prend les 2 derniers mots
+                  }
+                  // Si c'est Van Hoepen
+                  if (name.toLowerCase().includes("van ")) {
+                    return name.split(' ').slice(-2).join(' '); // Prend les 2 derniers mots
+                  }
+                  // Sinon, on garde le comportement par défaut (Nom de famille)
+                  return name.split(' ').pop();
+                });
 
               return (
-                <button
+                <div
                   key={c.constructor_id}
-                  onClick={() => onToggleConstructor(c.constructor_id)}
-                  disabled={disabled}
+                  onClick={() => !disabled && onToggleConstructor(c.constructor_id)}
                   className={[
-                    "w-full text-left rounded-xl p-3 bg-black/30 hover:bg-black/40 border transition-colors",
+                    "w-full text-left rounded-xl p-3 bg-black/30 hover:bg-black/40 border transition-colors cursor-pointer",
                     selected ? "border-white/60" : "border-white/10",
                     disabled ? "opacity-40 cursor-not-allowed" : ""
                   ].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <div className="font-semibold truncate">{c.name}</div>
+                    <div className="min-w-0 flex-1">
+                      {/* Nom de l'écurie */}
+                      <div className="font-semibold truncate">{c.name}</div>
+                      
+                      {/* Affichage des pilotes trouvés */}
+                      <div className="text-xs text-white/60 truncate">
+                        {teamDrivers.length > 0 
+                          ? teamDrivers.join(" - ") 
+                          : "Aucun pilote"}
+                      </div>
+                    </div>
+
                     <div className="text-sm text-white/80 whitespace-nowrap">
                       {c.price.toFixed(1)} M
                     </div>
                   </div>
-                </button>
+                </div>
               );
             })}
           </>
