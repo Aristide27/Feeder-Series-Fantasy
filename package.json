@@ -2,9 +2,11 @@
   "name": "fantasy-f2",
   "version": "1.0.0",
   "description": "Jeu FSF Formula 2 développé en HTML, CSS, JavaScript, Node.js et SQLite.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node server.js",
+    "build": "cd frontend && npm install && npm run build",
+    "dev": "node app.js"
   },
   "keywords": [],
   "author": "",
@@ -19,8 +21,11 @@
     "express": "^5.2.1",
     "express-session": "^1.19.0",
     "jsonwebtoken": "^9.0.3",
+    "next": "^16.0.10",
     "nodemailer": "^7.0.13",
     "passport": "^0.7.0",
-    "passport-google-oauth20": "^2.0.0"
+    "passport-google-oauth20": "^2.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   }
 }
