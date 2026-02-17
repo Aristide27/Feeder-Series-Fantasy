@@ -1,21 +1,26 @@
+require('dotenv').config();
+
 const express = require('express');
 const next = require('next');
-const path = require('path');
 
 const dev = process.env.NODE_ENV !== 'production';
-const app = next({ dev, dir: './frontend' });
-const handle = app.getRequestHandler();
+const nextApp = next({ dev, dir: './frontend' });
+const handle = nextApp.getRequestHandler();
 
 const PORT = process.env.PORT || 3000;
 
-app.prepare().then(() => {
+nextApp.prepare().then(() => {
   const server = express();
+
+  // Middleware JSON
+  server.use(express.json());
+  server.use(express.urlencoded({ extended: true }));
 
   // API routes
   server.use('/api', require('./api'));
 
   // Next.js pages
-  server.all('*', (req, res) => {
+  server.all('/{*path}', (req, res) => {
     return handle(req, res);
   });
 
