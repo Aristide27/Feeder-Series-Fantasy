@@ -22,4 +22,5 @@ VALUES
 (33, 10, 21, 19, 'OK', 0),   -- Max Esterson
 (22, 10, 15, NULL, 'DNF', 0),   -- John Bennett
 (30, 10, 7, NULL, 'DNF', 0),   -- Victor Martins
-(31, 10, 13, NULL, 'DNF', 0);   -- Amaury Cordeel
+(31, 10, 13, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

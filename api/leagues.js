@@ -10,7 +10,7 @@ if (!JWT_SECRET) throw new Error("JWT_SECRET manquant dans .env");
 // ============================================
 // HELPER: Générer un code unique
 // ============================================
-function generateUniqueCode() {
+async function generateUniqueCode() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let code;
   let attempts = 0;
@@ -23,8 +23,8 @@ function generateUniqueCode() {
     }
     attempts++;
 
-    const existing = db.prepare("SELECT id FROM leagues WHERE code = ?").get(code);
-    if (!existing) break;
+    const existing = await db.query("SELECT id FROM leagues WHERE code = $1", [code]);
+    if (!existing.rows[0]) break;
 
     if (attempts >= maxAttempts) {
       throw new Error("Impossible de gÃ©nÃ©rer un code unique");
@@ -37,14 +37,16 @@ function generateUniqueCode() {
 // ============================================
 // GET /api/leagues/public/fsf - Ligue FSF publique (pas d'auth)
 // ============================================
-router.get("/public/fsf", (req, res) => {
+router.get("/public/fsf", async (req, res) => {
   try {
-    const fsfLeague = db.prepare(`
+    const result = await db.query(`
       SELECT id, name, code, is_official
       FROM leagues
       WHERE code = 'FSF' OR is_official = 1
       LIMIT 1
-    `).get();
+    `);
+
+    const fsfLeague = result.rows[0];
 
     if (!fsfLeague) {
       return res.status(404).json({ error: "Ligue FSF introuvable" });
@@ -60,7 +62,7 @@ router.get("/public/fsf", (req, res) => {
 // ============================================
 // POST /api/leagues - Créer une ligue
 // ============================================
-router.post("/", authenticateToken, (req, res) => {
+router.post("/", authenticateToken, async (req, res) => {
   let { name } = req.body;
   name = (name ?? "").trim();
 
@@ -79,36 +81,38 @@ router.post("/", authenticateToken, (req, res) => {
 
   try {
     // VÃ©rifier le nombre de ligues crÃ©Ã©es par l'utilisateur (max 10)
-    const userLeagues = db
-      .prepare("SELECT COUNT(*) as count FROM leagues WHERE creator_id = ? AND is_official = 0")
-      .get(req.user.id);
+    const userLeagues = await db.query(
+      "SELECT COUNT(*) as count FROM leagues WHERE creator_id = $1 AND is_official = 0",
+      [req.user.id]
+    );
 
-    if (userLeagues.count >= 10) {
+    if (userLeagues.rows[0].count >= 10) {
       return res.status(400).json({ error: "Vous avez atteint la limite de 10 ligues" });
     }
 
     // Générer un code unique
-    const code = generateUniqueCode();
+    const code = await generateUniqueCode();
 
     // Créer la ligue
-    const result = db.prepare(`
+    const result = await db.query(`
       INSERT INTO leagues (name, code, creator_id)
-      VALUES (?, ?, ?)
-    `).run(name, code, req.user.id);
+      VALUES ($1, $2, $3)
+      RETURNING id
+    `, [name, code, req.user.id]);
 
-    const leagueId = result.lastInsertRowid;
+    const leagueId = result.rows[0].id;
 
     // Ajouter le créateur comme membre
-    db.prepare(`
+    await db.query(`
       INSERT INTO league_members (league_id, user_id)
-      VALUES (?, ?)
-    `).run(leagueId, req.user.id);
+      VALUES ($1, $2)
+    `, [leagueId, req.user.id]);
 
     // Initialiser le score du créateur
-    db.prepare(`
+    await db.query(`
       INSERT INTO league_scores (league_id, user_id, total_points)
-      VALUES (?, ?, 0)
-    `).run(leagueId, req.user.id);
+      VALUES ($1, $2, 0)
+    `, [leagueId, req.user.id]);
 
     res.json({
       message: "Ligue crÃ©Ã©e avec succÃ¨s",
@@ -128,7 +132,7 @@ router.post("/", authenticateToken, (req, res) => {
 // ============================================
 // POST /api/leagues/join - Rejoindre une ligue
 // ============================================
-router.post("/join", authenticateToken, (req, res) => {
+router.post("/join", authenticateToken, async (req, res) => {
   let { code } = req.body;
   code = (code ?? "").trim().toUpperCase();
 
@@ -138,7 +142,8 @@ router.post("/join", authenticateToken, (req, res) => {
 
   try {
     // VÃ©rifier que la ligue existe
-    const league = db.prepare("SELECT * FROM leagues WHERE code = ?").get(code);
+    const leagueResult = await db.query("SELECT * FROM leagues WHERE code = $1", [code]);
+    const league = leagueResult.rows[0];
 
     if (!league) {
       return res.status(404).json({ error: "Ligue introuvable avec ce code" });
@@ -149,26 +154,27 @@ router.post("/join", authenticateToken, (req, res) => {
       return res.status(400).json({ error: "Cette ligue est fermÃ©e et n'accepte plus de nouveaux membres" });
     }
 
-    // VÃ©rifier si l'utilisateur est dÃ©jÃ  membre
-    const alreadyMember = db
-      .prepare("SELECT id FROM league_members WHERE league_id = ? AND user_id = ?")
-      .get(league.id, req.user.id);
+    // VÃ©rifier si l'utilisateur est dÃ©jÃ  membre
+    const alreadyMember = await db.query(
+      "SELECT id FROM league_members WHERE league_id = $1 AND user_id = $2",
+      [league.id, req.user.id]
+    );
 
-    if (alreadyMember) {
-      return res.status(400).json({ error: "Vous Ãªtes dÃ©jÃ  membre de cette ligue" });
+    if (alreadyMember.rows[0]) {
+      return res.status(400).json({ error: "Vous Ãªtes dÃ©jÃ  membre de cette ligue" });
     }
 
     // Ajouter l'utilisateur comme membre
-    db.prepare(`
+    await db.query(`
       INSERT INTO league_members (league_id, user_id)
-      VALUES (?, ?)
-    `).run(league.id, req.user.id);
+      VALUES ($1, $2)
+    `, [league.id, req.user.id]);
 
     // Initialiser le score de l'utilisateur
-    db.prepare(`
+    await db.query(`
       INSERT INTO league_scores (league_id, user_id, total_points)
-      VALUES (?, ?, 0)
-    `).run(league.id, req.user.id);
+      VALUES ($1, $2, 0)
+    `, [league.id, req.user.id]);
 
     res.json({
       message: "Vous avez rejoint la ligue avec succÃ¨s",
@@ -180,16 +186,16 @@ router.post("/join", authenticateToken, (req, res) => {
     });
   } catch (err) {
     console.error("[POST /api/leagues/join ERROR]", err);
-    res.status(500).json({ error: "Erreur lors de l'inscription Ã  la ligue" });
+    res.status(500).json({ error: "Erreur lors de l'inscription Ã  la ligue" });
   }
 });
 
 // ============================================
 // GET /api/leagues - Liste des ligues de l'utilisateur
 // ============================================
-router.get("/", authenticateToken, (req, res) => {
+router.get("/", authenticateToken, async (req, res) => {
   try {
-    const leagues = db.prepare(`
+    const result = await db.query(`
       SELECT 
         l.id,
         l.name,
@@ -207,12 +213,12 @@ router.get("/", authenticateToken, (req, res) => {
         ) as rank
       FROM leagues l
       JOIN league_members lm ON l.id = lm.league_id
-      LEFT JOIN league_scores ls ON l.id = ls.league_id AND ls.user_id = ?
-      WHERE lm.user_id = ?
+      LEFT JOIN league_scores ls ON l.id = ls.league_id AND ls.user_id = $1
+      WHERE lm.user_id = $2
       ORDER BY l.is_official DESC, l.created_at DESC
-    `).all(req.user.id, req.user.id);
+    `, [req.user.id, req.user.id]);
 
-    res.json(leagues);
+    res.json(result.rows);
   } catch (err) {
     console.error("[GET /api/leagues ERROR]", err);
     res.status(500).json({ error: "Erreur lors de la rÃ©cupÃ©ration des ligues" });
@@ -222,31 +228,34 @@ router.get("/", authenticateToken, (req, res) => {
 // ============================================
 // GET /api/leagues/:code - Détails d'une ligue
 // ============================================
-router.get("/:code", authenticateToken, (req, res) => {
+router.get("/:code", authenticateToken, async (req, res) => {
   const { code } = req.params;
 
   try {
     // RÃ©cupÃ©rer la ligue
-    const league = db.prepare(`
+    const leagueResult = await db.query(`
       SELECT 
         l.*,
         u.username as creator_username,
         (SELECT COUNT(*) FROM league_members WHERE league_id = l.id) as member_count
       FROM leagues l
       LEFT JOIN users u ON l.creator_id = u.id
-      WHERE l.code = ?
-    `).get(code.toUpperCase());
+      WHERE l.code = $1
+    `, [code.toUpperCase()]);
+
+    const league = leagueResult.rows[0];
 
     if (!league) {
       return res.status(404).json({ error: "Ligue introuvable" });
     }
 
     // VÃ©rifier si l'utilisateur est membre
-    const isMember = db
-      .prepare("SELECT id FROM league_members WHERE league_id = ? AND user_id = ?")
-      .get(league.id, req.user.id);
+    const isMember = await db.query(
+      "SELECT id FROM league_members WHERE league_id = $1 AND user_id = $2",
+      [league.id, req.user.id]
+    );
 
-    if (!isMember) {
+    if (!isMember.rows[0]) {
       return res.status(403).json({ error: "Vous n'Ãªtes pas membre de cette ligue" });
     }
 
@@ -263,13 +272,14 @@ router.get("/:code", authenticateToken, (req, res) => {
 // ============================================
 // PATCH /api/leagues/:code - Modifier une ligue (admin only)
 // ============================================
-router.patch("/:code", authenticateToken, (req, res) => {
+router.patch("/:code", authenticateToken, async (req, res) => {
   const { code } = req.params;
   const { name, is_closed } = req.body;
 
   try {
     // RÃ©cupÃ©rer la ligue
-    const league = db.prepare("SELECT * FROM leagues WHERE code = ?").get(code.toUpperCase());
+    const leagueResult = await db.query("SELECT * FROM leagues WHERE code = $1", [code.toUpperCase()]);
+    const league = leagueResult.rows[0];
 
     if (!league) {
       return res.status(404).json({ error: "Ligue introuvable" });
@@ -285,7 +295,7 @@ router.patch("/:code", authenticateToken, (req, res) => {
       return res.status(400).json({ error: "La ligue officielle ne peut pas Ãªtre modifiÃ©e" });
     }
 
-    // Construire la requÃªte de mise Ã  jour
+    // Construire la requÃªte de mise Ã  jour
     const updates = [];
     const values = [];
 
@@ -297,12 +307,12 @@ router.patch("/:code", authenticateToken, (req, res) => {
       if (trimmedName.length < 3 || trimmedName.length > 50) {
         return res.status(400).json({ error: "Le nom doit contenir entre 3 et 50 caractÃ¨res" });
       }
-      updates.push("name = ?");
+      updates.push(`name = $${values.length + 1}`);
       values.push(trimmedName);
     }
 
     if (is_closed !== undefined) {
-      updates.push("is_closed = ?");
+      updates.push(`is_closed = $${values.length + 1}`);
       values.push(is_closed ? 1 : 0);
     }
 
@@ -312,11 +322,11 @@ router.patch("/:code", authenticateToken, (req, res) => {
 
     values.push(league.id);
 
-    db.prepare(`
+    await db.query(`
       UPDATE leagues
       SET ${updates.join(", ")}
-      WHERE id = ?
-    `).run(...values);
+      WHERE id = $${values.length}
+    `, values);
 
     res.json({ message: "Ligue modifiÃ©e avec succÃ¨s" });
   } catch (err) {
@@ -328,28 +338,30 @@ router.patch("/:code", authenticateToken, (req, res) => {
 // ============================================
 // GET /api/leagues/:code/leaderboard - Classement d'une ligue
 // ============================================
-router.get("/:code/leaderboard", authenticateToken, (req, res) => {
+router.get("/:code/leaderboard", authenticateToken, async (req, res) => {
   const { code } = req.params;
 
   try {
     // VÃ©rifier que la ligue existe
-    const league = db.prepare("SELECT id FROM leagues WHERE code = ?").get(code.toUpperCase());
+    const leagueResult = await db.query("SELECT id FROM leagues WHERE code = $1", [code.toUpperCase()]);
+    const league = leagueResult.rows[0];
 
     if (!league) {
       return res.status(404).json({ error: "Ligue introuvable" });
     }
 
     // VÃ©rifier que l'utilisateur est membre
-    const isMember = db
-      .prepare("SELECT id FROM league_members WHERE league_id = ? AND user_id = ?")
-      .get(league.id, req.user.id);
+    const isMember = await db.query(
+      "SELECT id FROM league_members WHERE league_id = $1 AND user_id = $2",
+      [league.id, req.user.id]
+    );
 
-    if (!isMember) {
+    if (!isMember.rows[0]) {
       return res.status(403).json({ error: "Vous n'Ãªtes pas membre de cette ligue" });
     }
 
     // RÃ©cupÃ©rer le classement
-    const leaderboard = db.prepare(`
+    const leaderboard = await db.query(`
       SELECT 
         u.id,
         u.username,
@@ -359,11 +371,11 @@ router.get("/:code/leaderboard", authenticateToken, (req, res) => {
       FROM league_scores ls
       JOIN users u ON ls.user_id = u.id
       JOIN league_members lm ON ls.league_id = lm.league_id AND ls.user_id = lm.user_id
-      WHERE ls.league_id = ?
+      WHERE ls.league_id = $1
       ORDER BY ls.total_points DESC
-    `).all(league.id);
+    `, [league.id]);
 
-    res.json(leaderboard);
+    res.json(leaderboard.rows);
   } catch (err) {
     console.error("[GET /api/leagues/:code/leaderboard ERROR]", err);
     res.status(500).json({ error: "Erreur lors de la rÃ©cupÃ©ration du classement" });
@@ -373,50 +385,56 @@ router.get("/:code/leaderboard", authenticateToken, (req, res) => {
 // ============================================
 // GET /api/leagues/:code/team/:userId - Voir la composition d'un membre
 // ============================================
-router.get("/:code/team/:userId", authenticateToken, (req, res) => {
+router.get("/:code/team/:userId", authenticateToken, async (req, res) => {
   const { code, userId } = req.params;
 
   try {
     // VÃ©rifier que la ligue existe
-    const league = db.prepare("SELECT id FROM leagues WHERE code = ?").get(code.toUpperCase());
+    const leagueResult = await db.query("SELECT id FROM leagues WHERE code = $1", [code.toUpperCase()]);
+    const league = leagueResult.rows[0];
 
     if (!league) {
       return res.status(404).json({ error: "Ligue introuvable" });
     }
 
     // VÃ©rifier que l'utilisateur demandeur est membre
-    const isMember = db
-      .prepare("SELECT id FROM league_members WHERE league_id = ? AND user_id = ?")
-      .get(league.id, req.user.id);
+    const isMember = await db.query(
+      "SELECT id FROM league_members WHERE league_id = $1 AND user_id = $2",
+      [league.id, req.user.id]
+    );
 
-    if (!isMember) {
+    if (!isMember.rows[0]) {
       return res.status(403).json({ error: "Vous n'Ãªtes pas membre de cette ligue" });
     }
 
     // VÃ©rifier que l'utilisateur cible est membre
-    const targetIsMember = db
-      .prepare("SELECT id FROM league_members WHERE league_id = ? AND user_id = ?")
-      .get(league.id, userId);
+    const targetIsMember = await db.query(
+      "SELECT id FROM league_members WHERE league_id = $1 AND user_id = $2",
+      [league.id, userId]
+    );
 
-    if (!targetIsMember) {
+    if (!targetIsMember.rows[0]) {
       return res.status(404).json({ error: "Cet utilisateur n'est pas membre de cette ligue" });
     }
 
     // RÃ©cupÃ©rer la fantasy team de l'utilisateur cible
-    const team = db.prepare(`
+    const teamResult = await db.query(`
       SELECT 
         ft.id,
         ft.name as team_name,
         u.username
       FROM fantasy_teams ft
       JOIN users u ON ft.user_id = u.id
-      WHERE ft.user_id = ? AND ft.league_id = ?
+      WHERE ft.user_id = $1 AND ft.league_id = $2
       LIMIT 1
-    `).get(userId, league.id);
+    `, [userId, league.id]);
+
+    const team = teamResult.rows[0];
 
     if (!team) {
+      const usernameResult = await db.query("SELECT username FROM users WHERE id = $1", [userId]);
       return res.json({
-        username: db.prepare("SELECT username FROM users WHERE id = ?").get(userId)?.username,
+        username: usernameResult.rows[0]?.username,
         team: null,
         constructors: [],
         drivers: [],
@@ -424,20 +442,20 @@ router.get("/:code/team/:userId", authenticateToken, (req, res) => {
     }
 
     // Récupérer les écuries (2)
-    const constructors = db.prepare(`
+    const constructors = await db.query(`
       SELECT 
         c.id,
         c.name,
         c.price
       FROM fantasy_constructors fc
       JOIN constructors c ON fc.constructor_id = c.id
-      WHERE fc.fantasy_team_id = ?
-    `).all(team.id);
+      WHERE fc.fantasy_team_id = $1
+    `, [team.id]);
 
     // Récupérer les pilotes (5)
     const season = 2026; // Ajouter cette ligne avant la requête
 
-    const drivers = db.prepare(`
+    const drivers = await db.query(`
       SELECT 
         d.id,
         d.name,
@@ -446,18 +464,18 @@ router.get("/:code/team/:userId", authenticateToken, (req, res) => {
         c.name as constructor_name
       FROM fantasy_picks fp
       JOIN drivers d ON fp.driver_id = d.id
-      JOIN driver_seasons ds ON ds.driver_id = d.id AND ds.season = ?
+      JOIN driver_seasons ds ON ds.driver_id = d.id AND ds.season = $1
       LEFT JOIN constructors c ON ds.constructor_id = c.id
-      WHERE fp.fantasy_team_id = ?
-    `).all(season, team.id);
+      WHERE fp.fantasy_team_id = $2
+    `, [season, team.id]);
 
     res.json({
       username: team.username,
       team: {
         name: team.team_name,
       },
-      constructors,
-      drivers,
+      constructors: constructors.rows,
+      drivers: drivers.rows,
     });
   } catch (err) {
     console.error("[GET /api/leagues/:code/team/:userId ERROR]", err);
@@ -468,12 +486,13 @@ router.get("/:code/team/:userId", authenticateToken, (req, res) => {
 // ============================================
 // DELETE /api/leagues/:code - Supprimer une ligue (admin only)
 // ============================================
-router.delete("/:code", authenticateToken, (req, res) => {
+router.delete("/:code", authenticateToken, async (req, res) => {
   const { code } = req.params;
 
   try {
     // RÃ©cupÃ©rer la ligue
-    const league = db.prepare("SELECT * FROM leagues WHERE code = ?").get(code.toUpperCase());
+    const leagueResult = await db.query("SELECT * FROM leagues WHERE code = $1", [code.toUpperCase()]);
+    const league = leagueResult.rows[0];
 
     if (!league) {
       return res.status(404).json({ error: "Ligue introuvable" });
@@ -491,13 +510,13 @@ router.delete("/:code", authenticateToken, (req, res) => {
 
     // Supprimer dans l'ordre (foreign keys)
     // 1. Scores
-    db.prepare("DELETE FROM league_scores WHERE league_id = ?").run(league.id);
+    await db.query("DELETE FROM league_scores WHERE league_id = $1", [league.id]);
     
     // 2. Membres
-    db.prepare("DELETE FROM league_members WHERE league_id = ?").run(league.id);
+    await db.query("DELETE FROM league_members WHERE league_id = $1", [league.id]);
     
     // 3. La ligue elle-mÃªme
-    db.prepare("DELETE FROM leagues WHERE id = ?").run(league.id);
+    await db.query("DELETE FROM leagues WHERE id = $1", [league.id]);
 
     console.log(`[DELETE LEAGUE] Ligue ${league.name} (${code}) supprimÃ©e par user ${req.user.id}`);
 

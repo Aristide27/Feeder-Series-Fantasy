@@ -22,4 +22,5 @@ VALUES
 (30, 11, 12, 19, 'OK', 0),   -- Victor Martins
 (33, 11, 22, NULL, 'DNF', 0),   -- Max Esterson
 (32, 11, 9, NULL, 'DNF', 0),   -- Sami Meguetounif
-(15, 11, 2, NULL, 'DNF', 0);   -- Kush Maini
+(15, 11, 2, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

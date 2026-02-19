@@ -21,4 +21,5 @@ VALUES
 (3, 12, 19, 'OK'),   -- Ritomo Miyata
 (21, 12, 20, 'OK'),   -- Laurens van Hoepen
 (18, 12, 21, 'OK'),   -- Cian Shields
-(31, 12, NULL, 'OK');   -- Amaury Cordeel (NC)
+(31, 12, NULL, 'OK')
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

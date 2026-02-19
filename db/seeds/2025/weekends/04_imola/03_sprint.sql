@@ -22,4 +22,5 @@ VALUES
 (22, 4, 21, 19, 'OK', 0),   -- John Bennett
 (31, 4, 20, 20, 'OK', 0),   -- Amaury Cordeel
 (32, 4, 16, 21, 'OK', 0),   -- Sami Meguetounif
-(27, 4, 19, NULL, 'DNF', 0);   -- Richard Verschoor
+(27, 4, 19, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

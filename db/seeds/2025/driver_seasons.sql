@@ -47,4 +47,5 @@ INSERT INTO driver_seasons (driver_id, season, constructor_id, rookie, price) VA
 (21, 2025, 11, 1, 2.4), -- Laurens van Hoepen
 (33, 2025, 11, 0, 2.2), -- Max Esterson
 (34, 2025, 11, 1, 2.0), -- James Wharton
-(16, 2025, 11, 1, 1.8); -- Tasanapol Inthraphuvasak
+(16, 2025, 11, 1, 1.8)  -- Tasanapol Inthraphuvasak
+ON CONFLICT (driver_id, season) DO NOTHING;

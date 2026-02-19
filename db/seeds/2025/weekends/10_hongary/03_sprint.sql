@@ -22,4 +22,5 @@ VALUES
 (33, 10, 17, 19, 'OK', 0),   -- Max Esterson
 (22, 10, 13, 20, 'OK', 0),   -- John Bennett
 (18, 10, 22, 21, 'OK', 0),   -- Cian Shields
-(11, 10, 18, NULL, 'DNF', 0);   -- Sebastián Montoya
+(11, 10, 18, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

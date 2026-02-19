@@ -22,4 +22,5 @@ VALUES
 (18, 6, 22, 19, 'OK', 0),   -- Cian Shields
 (28, 6, 12, 20, 'OK', 0),   -- Luke Browning
 (23, 6, 7, NULL, 'DNF', 0),   -- Leonardo Fornaroli
-(20, 6, 18, NULL, 'DNF', 0);   -- Rafael Villagómez
+(20, 6, 18, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

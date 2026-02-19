@@ -22,4 +22,5 @@ VALUES
 (3, 3, 16, 19, 'OK', 0),   -- Ritomo Miyata
 (22, 3, 21, 20, 'OK', 0),   -- John Bennett
 (29, 3, 1, NULL, 'DNF', 0),   -- Jak Crawford
-(18, 3, 22, NULL, 'DNF', 0);   -- Cian Shields
+(18, 3, 22, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

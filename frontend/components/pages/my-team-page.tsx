@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { getDriverSeasons, DriverSeasonRow } from "@/lib/api/fantasy.api";
 import { getConstructors, ConstructorRow } from "@/lib/api/constructors.api";
@@ -15,7 +15,7 @@ const SEASON_DEFAULT = 2026;
 const BUDGET_MAX = 200;
 const AUTOSAVE_DELAY = 0;
 
-export default function MyTeamPage() {
+export function MyTeamContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -637,6 +637,18 @@ export default function MyTeamPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function MyTeamPage() {
+  return (
+    <Suspense fallback={
+      <div className="h-screen bg-background flex items-center justify-center">
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-accent border-t-transparent"></div>
+      </div>
+    }>
+      <MyTeamContent />
+    </Suspense>
   );
 }
 

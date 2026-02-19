@@ -11,11 +11,14 @@ if (!JWT_SECRET) throw new Error("JWT_SECRET manquant dans .env");
 // ============================================
 // GET /users/me - Récupérer le profil
 // ============================================
-router.get("/me", authenticateToken, (req, res) => {
+router.get("/me", authenticateToken, async (req, res) => {
   try {
-    const user = db
-      .prepare("SELECT id, username, email, created_at FROM users WHERE id = ?")
-      .get(req.user.id);
+    const result = await db.query(
+      "SELECT id, username, email, created_at FROM users WHERE id = $1",
+      [req.user.id]
+    );
+
+    const user = result.rows[0];
 
     if (!user) {
       return res.status(404).json({ error: "Utilisateur non trouvé" });
@@ -50,16 +53,19 @@ router.patch("/me/username", authenticateToken, async (req, res) => {
 
   // Vérifier que le username n'est pas déjà pris par un autre utilisateur
   try {
-    const existingUser = db
-      .prepare("SELECT id FROM users WHERE username = ? AND id != ?")
-      .get(username, req.user.id);
+    const existingUserResult = await db.query(
+      "SELECT id FROM users WHERE username = $1 AND id != $2",
+      [username, req.user.id]
+    );
+
+    const existingUser = existingUserResult.rows[0];
 
     if (existingUser) {
       return res.status(400).json({ error: "Ce username est déjà utilisé" });
     }
 
     // Mettre à jour
-    db.prepare("UPDATE users SET username = ? WHERE id = ?").run(username, req.user.id);
+    await db.query("UPDATE users SET username = $1 WHERE id = $2", [username, req.user.id]);
 
     res.json({ message: "Username modifié avec succès", username });
   } catch (err) {
@@ -71,7 +77,7 @@ router.patch("/me/username", authenticateToken, async (req, res) => {
 // ============================================
 // PATCH /users/me/email - Modifier l'email
 // ============================================
-router.patch("/me/email", authenticateToken, (req, res) => {
+router.patch("/me/email", authenticateToken, async (req, res) => {
   let { email } = req.body;
   email = (email ?? "").trim();
 
@@ -85,16 +91,19 @@ router.patch("/me/email", authenticateToken, (req, res) => {
   try {
     // Vérifier que l'email n'est pas déjà pris par un autre utilisateur
     if (emailValue) {
-      const existingUser = db
-        .prepare("SELECT id FROM users WHERE email = ? AND id != ?")
-        .get(emailValue, req.user.id);
+      const existingUserResult = await db.query(
+        "SELECT id FROM users WHERE email = $1 AND id != $2",
+        [emailValue, req.user.id]
+      );
+
+      const existingUser = existingUserResult.rows[0];
 
       if (existingUser) {
         return res.status(400).json({ error: "Cet email est déjà utilisé" });
       }
     }
 
-    db.prepare("UPDATE users SET email = ? WHERE id = ?").run(emailValue, req.user.id);
+    await db.query("UPDATE users SET email = $1 WHERE id = $2", [emailValue, req.user.id]);
 
     res.json({ message: "Email modifié avec succès", email: emailValue });
   } catch (err) {
@@ -122,9 +131,12 @@ router.patch("/me/password", authenticateToken, async (req, res) => {
 
   try {
     // Récupérer l'utilisateur avec son mot de passe hashé
-    const user = db
-      .prepare("SELECT id, password_hash FROM users WHERE id = ?")
-      .get(req.user.id);
+    const userResult = await db.query(
+      "SELECT id, password_hash FROM users WHERE id = $1",
+      [req.user.id]
+    );
+
+    const user = userResult.rows[0];
 
     if (!user) {
       return res.status(404).json({ error: "Utilisateur non trouvé" });
@@ -140,7 +152,7 @@ router.patch("/me/password", authenticateToken, async (req, res) => {
     const newHash = await bcrypt.hash(newPassword, 10);
 
     // Mettre à jour
-    db.prepare("UPDATE users SET password_hash = ? WHERE id = ?").run(newHash, req.user.id);
+    await db.query("UPDATE users SET password_hash = $1 WHERE id = $2", [newHash, req.user.id]);
 
     res.json({ message: "Mot de passe modifié avec succès" });
   } catch (err) {

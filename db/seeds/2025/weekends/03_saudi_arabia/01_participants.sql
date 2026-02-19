@@ -21,4 +21,5 @@ VALUES
 (32, 3, 24, 11),   -- Sami Meguetounif, #24, Trident
 (33, 3, 25, 11),   -- Max Esterson, #25, Trident
 (22, 3, 22, 10),   -- John Bennett, #22, Van Amersfoort Racing
-(20, 3, 23, 10);   -- Rafael Villagómez, #23, Van Amersfoort Racing
+(20, 3, 23, 10)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

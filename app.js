@@ -53,96 +53,105 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "OK" });
 });
 
-app.post("/api/users", (req, res) => {
+app.post("/api/users", async (req, res) => {
   const { username, email } = req.body;
 
   try {
-    const stmt = db.prepare(`
+    const result = await db.query(`
       INSERT INTO users (username, email)
-      VALUES (?, ?)
-    `);
-    const info = stmt.run(username, email);
+      VALUES ($1, $2)
+      RETURNING id
+    `, [username, email]);
 
-    res.json({ id: info.lastInsertRowid, username, email });
+    res.json({ id: result.rows[0].id, username, email });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
 
-app.post("/api/fantasy-teams", (req, res) => {
+app.post("/api/fantasy-teams", async (req, res) => {
   const { user_id, constructor_id } = req.body;
 
   // Vérifier constructeur
-  const constructor = db
-    .prepare("SELECT id FROM constructors WHERE id = ?")
-    .get(constructor_id);
+  const constructorResult = await db.query(
+    "SELECT id FROM constructors WHERE id = $1",
+    [constructor_id]
+  );
+  const constructor = constructorResult.rows[0];
 
   if (!constructor) {
     return res.status(400).json({ error: "Constructor does not exist" });
   }
 
   // Vérifier que l'utilisateur n'a pas déjà une équipe
-  const existing = db
-    .prepare("SELECT id FROM fantasy_teams WHERE user_id = ?")
-    .get(user_id);
+  const existingResult = await db.query(
+    "SELECT id FROM fantasy_teams WHERE user_id = $1",
+    [user_id]
+  );
+  const existing = existingResult.rows[0];
 
   if (existing) {
     return res.status(400).json({ error: "User already has a fantasy team" });
   }
 
-  const result = db.prepare(`
+  const result = await db.query(`
     INSERT INTO fantasy_teams (user_id, constructor_id)
-    VALUES (?, ?)
-  `).run(user_id, constructor_id);
+    VALUES ($1, $2)
+    RETURNING id
+  `, [user_id, constructor_id]);
 
-  res.json({ fantasy_team_id: result.lastInsertRowid });
+  res.json({ fantasy_team_id: result.rows[0].id });
 });
 
-app.post("/api/fantasy-teams/:teamId/picks", (req, res) => {
+app.post("/api/fantasy-teams/:teamId/picks", async (req, res) => {
   const { teamId } = req.params;
   const { driver_id } = req.body;
 
   // Vérifier pilote
-  const driver = db
-    .prepare("SELECT id FROM drivers WHERE id = ?")
-    .get(driver_id);
+  const driverResult = await db.query(
+    "SELECT id FROM drivers WHERE id = $1",
+    [driver_id]
+  );
+  const driver = driverResult.rows[0];
 
   if (!driver) {
     return res.status(400).json({ error: "Driver does not exist" });
   }
 
   // Vérifier nombre de pilotes
-  const picks = db.prepare(`
+  const picksResult = await db.query(`
     SELECT COUNT(*) as count
     FROM fantasy_picks
-    WHERE fantasy_team_id = ?
-  `).get(teamId);
+    WHERE fantasy_team_id = $1
+  `, [teamId]);
+  const picks = picksResult.rows[0];
 
   if (picks.count >= 2) {
     return res.status(400).json({ error: "Maximum 2 drivers allowed" });
   }
 
   // Vérifier doublon
-  const alreadyPicked = db.prepare(`
+  const alreadyPickedResult = await db.query(`
     SELECT id FROM fantasy_picks
-    WHERE fantasy_team_id = ? AND driver_id = ?
-  `).get(teamId, driver_id);
+    WHERE fantasy_team_id = $1 AND driver_id = $2
+  `, [teamId, driver_id]);
+  const alreadyPicked = alreadyPickedResult.rows[0];
 
   if (alreadyPicked) {
     return res.status(400).json({ error: "Driver already picked" });
   }
 
   // Ajouter le pick
-  db.prepare(`
+  await db.query(`
     INSERT INTO fantasy_picks (fantasy_team_id, driver_id)
-    VALUES (?, ?)
-  `).run(teamId, driver_id);
+    VALUES ($1, $2)
+  `, [teamId, driver_id]);
 
   res.json({ success: true });
 });
 
-app.get("/api/drivers", (req, res) => {
-  const drivers = db.prepare(`
+app.get("/api/drivers", async (req, res) => {
+  const result = await db.query(`
     SELECT drivers.id,
            drivers.name,
            drivers.number,
@@ -150,46 +159,45 @@ app.get("/api/drivers", (req, res) => {
     FROM drivers
     LEFT JOIN constructors
       ON drivers.constructor_id = constructors.id
-  `).all();
-  res.json(drivers);
+  `);
+  res.json(result.rows);
 });
 
-app.get("/api/constructors", (req, res) => {
-  const constructors = db.prepare("SELECT * FROM constructors").all();
-  res.json(constructors);
+app.get("/api/constructors", async (req, res) => {
+  const result = await db.query("SELECT * FROM constructors");
+  res.json(result.rows);
 });
 
-app.get("/api/users", (req, res) => {
-  const users = db.prepare("SELECT * FROM users").all();
-  res.json(users);
+app.get("/api/users", async (req, res) => {
+  const result = await db.query("SELECT * FROM users");
+  res.json(result.rows);
 });
 
-app.get("/api/fantasy-teams", (req, res) => {
-  const teams = db.prepare(`
+app.get("/api/fantasy-teams", async (req, res) => {
+  const result = await db.query(`
     SELECT * FROM fantasy_teams
-  `).all();
-
-  res.json(teams);
+  `);
+  res.json(result.rows);
 });
 
-app.get("/api/fantasy-teams/:teamId", (req, res) => {
+app.get("/api/fantasy-teams/:teamId", async (req, res) => {
   const { teamId } = req.params;
 
-  const team = db.prepare(`
+  const teamResult = await db.query(`
     SELECT ft.id, c.name AS constructor
     FROM fantasy_teams ft
     JOIN constructors c ON ft.constructor_id = c.id
-    WHERE ft.id = ?
-  `).get(teamId);
+    WHERE ft.id = $1
+  `, [teamId]);
 
-  const drivers = db.prepare(`
+  const driversResult = await db.query(`
     SELECT d.name, d.number
     FROM fantasy_picks fp
     JOIN drivers d ON fp.driver_id = d.id
-    WHERE fp.fantasy_team_id = ?
-  `).all(teamId);
+    WHERE fp.fantasy_team_id = $1
+  `, [teamId]);
 
-  res.json({ team, drivers });
+  res.json({ team: teamResult.rows[0], drivers: driversResult.rows });
 });
 
 app.listen(PORT, () => {

@@ -22,4 +22,5 @@ VALUES
 (31, 8, 21, 19, 'OK', 0),   -- Amaury Cordeel
 (3, 8, 13, 20, 'OK', 0),   -- Ritomo Miyata
 (33, 8, 14, 21, 'OK', 0),   -- Max Esterson
-(14, 8, 2, NULL, 'DNF', 0);   -- Alexander Dunne
+(14, 8, 2, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

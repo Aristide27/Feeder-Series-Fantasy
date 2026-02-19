@@ -22,4 +22,5 @@ VALUES
 (32, 1, 15, NULL, 'OK', 0),   -- Sami Meguetounif (DNF)
 (33, 1, 22, NULL, 'OK', 0),   -- Max Esterson (DNF)
 (29, 1, 3, NULL, 'OK', 0),   -- Jak Crawford (DNF)
-(30, 1, 2, NULL, 'OK', 0);   -- Victor Martins (DNF)
+(30, 1, 2, NULL, 'OK', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

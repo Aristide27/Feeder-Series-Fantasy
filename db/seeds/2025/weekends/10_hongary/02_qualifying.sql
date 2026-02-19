@@ -21,4 +21,5 @@ VALUES
 (32, 10, 19, 'OK'),   -- Sami Meguetounif
 (15, 10, 20, 'OK'),   -- Kush Maini
 (33, 10, 21, 'OK'),   -- Max Esterson
-(18, 10, 22, 'OK');   -- Cian Shields
+(18, 10, 22, 'OK')
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

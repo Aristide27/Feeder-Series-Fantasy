@@ -22,4 +22,5 @@ VALUES
 (32, 9, 19, NULL, 'DNF', 0),   -- Sami Meguetounif
 (31, 9, 9, NULL, 'DNF', 0),   -- Amaury Cordeel
 (27, 9, 11, NULL, 'DNF', 0),   -- Richard Verschoor
-(28, 9, 12, NULL, 'DNF', 0);   -- Luke Browning
+(28, 9, 12, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

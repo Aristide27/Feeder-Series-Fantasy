@@ -21,4 +21,5 @@ VALUES
 (3, 2, 19, 'OK'),   -- Ritomo Miyata
 (15, 2, 20, 'OK'),   -- Kush Maini
 (31, 2, 21, 'OK'),   -- Amaury Cordeel
-(18, 2, 22, 'OK');   -- Cian Shields
+(18, 2, 22, 'OK')
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

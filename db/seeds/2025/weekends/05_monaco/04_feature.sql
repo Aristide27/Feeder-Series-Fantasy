@@ -22,4 +22,5 @@ VALUES
 (33, 5, 17, NULL, 'DNF', 0),   -- Max Esterson
 (25, 5, 6, NULL, 'DNF', 0),   -- Pepe Martí
 (9, 5, 8, NULL, 'DNF', 0),   -- Gabriele Minì
-(14, 5, 1, NULL, 'DNF', 0);   -- Alexander Dunne
+(14, 5, 1, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

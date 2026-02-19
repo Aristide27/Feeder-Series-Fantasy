@@ -9,4 +9,5 @@ INSERT INTO constructors (name, slug, nationality, price) VALUES
 ('ART Grand Prix', 'art', 'France', 10),
 ('AIX Racing', 'aix', 'United Arab Emirates', 8),
 ('Van Amersfoort Racing', 'var', 'Netherlands', 8),
-('Trident', 'trident', 'Italy', 8);
+('Trident', 'trident', 'Italy', 8)
+ON CONFLICT (slug) DO NOTHING;

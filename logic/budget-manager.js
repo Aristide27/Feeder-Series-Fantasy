@@ -6,13 +6,15 @@ const BUDGET_MAX = 200.0;
  * Calcule le budget actuel d'une équipe
  * Budget = Valeur actuelle équipe + Budget non dépensé initial
  */
-function calculateTeamBudget(teamId, season) {
+async function calculateTeamBudget(teamId, season) {
   // 1. Récupérer l'équipe et son budget non dépensé
-  const team = db.prepare(`
+  const teamResult = await db.query(`
     SELECT budget, initial_spent 
     FROM fantasy_teams 
-    WHERE id = ?
-  `).get(teamId);
+    WHERE id = $1
+  `, [teamId]);
+
+  const team = teamResult.rows[0];
 
   if (!team) {
     throw new Error(`Team ${teamId} not found`);
@@ -21,20 +23,24 @@ function calculateTeamBudget(teamId, season) {
   const budgetNonDepense = Math.round((100.0 - team.initial_spent) * 100) / 100;
 
   // 2. Récupérer les 5 pilotes de l'équipe
-  const drivers = db.prepare(`
+  const driversResult = await db.query(`
     SELECT ds.price
     FROM fantasy_picks fp
-    JOIN driver_seasons ds ON ds.driver_id = fp.driver_id AND ds.season = ?
-    WHERE fp.fantasy_team_id = ?
-  `).all(season, teamId);
+    JOIN driver_seasons ds ON ds.driver_id = fp.driver_id AND ds.season = $1
+    WHERE fp.fantasy_team_id = $2
+  `, [season, teamId]);
+
+  const drivers = driversResult.rows;
 
   // 3. Récupérer les 2 écuries de l'équipe
-  const constructors = db.prepare(`
+  const constructorsResult = await db.query(`
     SELECT c.price
     FROM fantasy_team_constructors ftc
     JOIN constructors c ON c.id = ftc.constructor_id
-    WHERE ftc.fantasy_team_id = ?
-  `).all(teamId);
+    WHERE ftc.fantasy_team_id = $1
+  `, [teamId]);
+
+  const constructors = constructorsResult.rows;
 
   // 4. Calculer la valeur actuelle de l'équipe
   const valeurPilotes = drivers.reduce((sum, d) => sum + d.price, 0);
@@ -63,14 +69,14 @@ function calculateTeamBudget(teamId, season) {
 /**
  * Met à jour le budget d'une équipe
  */
-function updateTeamBudget(teamId, season) {
-  const result = calculateTeamBudget(teamId, season);
+async function updateTeamBudget(teamId, season) {
+  const result = await calculateTeamBudget(teamId, season);
 
-  db.prepare(`
+  await db.query(`
     UPDATE fantasy_teams 
-    SET budget = ? 
-    WHERE id = ?
-  `).run(result.nouveauBudget, teamId);
+    SET budget = $1 
+    WHERE id = $2
+  `, [result.nouveauBudget, teamId]);
 
   return result;
 }
@@ -78,18 +84,20 @@ function updateTeamBudget(teamId, season) {
 /**
  * Met à jour tous les budgets pour une saison donnée
  */
-function updateAllTeamBudgets(season) {
-  const teams = db.prepare(`
+async function updateAllTeamBudgets(season) {
+  const teamsResult = await db.query(`
     SELECT id 
     FROM fantasy_teams 
-    WHERE season = ? AND is_validated = 1
-  `).all(season);
+    WHERE season = $1 AND is_validated = 1
+  `, [season]);
+
+  const teams = teamsResult.rows;
 
   const results = [];
 
   for (const team of teams) {
     try {
-      const result = updateTeamBudget(team.id, season);
+      const result = await updateTeamBudget(team.id, season);
       results.push(result);
       console.log(`Team ${team.id}: ${result.ancienBudget.toFixed(1)}M → ${result.nouveauBudget.toFixed(1)}M (${result.difference >= 0 ? '+' : ''}${result.difference.toFixed(1)}M)`);
     } catch (err) {
@@ -103,29 +111,36 @@ function updateAllTeamBudgets(season) {
 /**
  * Enregistre le coût initial d'une équipe lors de sa validation
  */
-function recordInitialSpent(teamId) {
-  const team = db.prepare(`SELECT id FROM fantasy_teams WHERE id = ?`).get(teamId);
+async function recordInitialSpent(teamId) {
+  const teamResult = await db.query(`SELECT id FROM fantasy_teams WHERE id = $1`, [teamId]);
+
+  const team = teamResult.rows[0];
   
   if (!team) {
     throw new Error(`Team ${teamId} not found`);
   }
 
   // Récupérer le coût actuel de l'équipe
-  const season = db.prepare(`SELECT season FROM fantasy_teams WHERE id = ?`).get(teamId).season;
+  const seasonResult = await db.query(`SELECT season FROM fantasy_teams WHERE id = $1`, [teamId]);
+  const season = seasonResult.rows[0].season;
   
-  const drivers = db.prepare(`
+  const driversResult = await db.query(`
     SELECT ds.price
     FROM fantasy_picks fp
-    JOIN driver_seasons ds ON ds.driver_id = fp.driver_id AND ds.season = ?
-    WHERE fp.fantasy_team_id = ?
-  `).all(season, teamId);
+    JOIN driver_seasons ds ON ds.driver_id = fp.driver_id AND ds.season = $1
+    WHERE fp.fantasy_team_id = $2
+  `, [season, teamId]);
 
-  const constructors = db.prepare(`
+  const drivers = driversResult.rows;
+
+  const constructorsResult = await db.query(`
     SELECT c.price
     FROM fantasy_team_constructors ftc
     JOIN constructors c ON c.id = ftc.constructor_id
-    WHERE ftc.fantasy_team_id = ?
-  `).all(teamId);
+    WHERE ftc.fantasy_team_id = $1
+  `, [teamId]);
+
+  const constructors = constructorsResult.rows;
 
   const totalCost = 
     drivers.reduce((sum, d) => sum + d.price, 0) +
@@ -134,11 +149,11 @@ function recordInitialSpent(teamId) {
   const totalCostRounded = Math.round(totalCost * 100) / 100;
 
   // Enregistrer le coût initial
-  db.prepare(`
+  await db.query(`
     UPDATE fantasy_teams 
-    SET initial_spent = ? 
-    WHERE id = ?
-  `).run(totalCostRounded, teamId);
+    SET initial_spent = $1 
+    WHERE id = $2
+  `, [totalCostRounded, teamId]);
 
   console.log(`Team ${teamId}: Coût initial enregistré = ${totalCostRounded.toFixed(1)}M`);
 

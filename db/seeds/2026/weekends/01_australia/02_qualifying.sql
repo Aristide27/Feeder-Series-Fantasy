@@ -21,4 +21,5 @@ VALUES
 (20, 15, 19, 'OK'),  -- Rafael Villagómez
 (17, 15, 20, 'OK'),  -- Emerson Fittipaldi Jr.
 (22, 15, 21, 'OK'),  -- John Bennett
-(18, 15, 22, 'OK');  -- Cian Shields
+(18, 15, 22, 'OK')
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

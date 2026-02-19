@@ -22,4 +22,5 @@ VALUES
 (28, 12, 5, 19, 'OK', 0),   -- Luke Browning
 (15, 12, 16, NULL, 'DNF', 0),   -- Kush Maini
 (14, 12, 4, NULL, 'DNF', 0),   -- Alexander Dunne
-(13, 12, 8, NULL, 'DNF', 0);   -- Martinius Stenshorne
+(13, 12, 8, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

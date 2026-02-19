@@ -22,4 +22,5 @@ VALUES
 (30, 8, 1, NULL, 'DNF', 0),   -- Victor Martins
 (2, 8, 6, NULL, 'DNF', 0),   -- Joshua Dürksen
 (24, 8, 4, NULL, 'DNF', 0),   -- Roman Staněk
-(9, 8, 16, NULL, 'DNF', 0);   -- Gabriele Minì
+(9, 8, 16, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

@@ -7,13 +7,13 @@ const { pointsQualifying, pointsSprint, pointsFeature } = require("../logic/poin
  * Calcule les statistiques d'un pilote pour le radar de performance
  * GET /api/driver-stats/:driverId
  */
-router.get("/:driverId", (req, res) => {
+router.get("/:driverId", async (req, res) => {
   const { driverId } = req.params;
   const season = 2026;
 
   try {
     // 1. Récupérer les infos de base du pilote
-    const driverInfo = db.prepare(`
+    const driverResult = await db.query(`
       SELECT 
         d.id as driver_id,
         d.name as driver_name,
@@ -24,28 +24,31 @@ router.get("/:driverId", (req, res) => {
         c.id as constructor_id,
         c.name as constructor_name
       FROM drivers d
-      JOIN driver_seasons ds ON ds.driver_id = d.id AND ds.season = ?
+      JOIN driver_seasons ds ON ds.driver_id = d.id AND ds.season = $1
       JOIN constructors c ON ds.constructor_id = c.id
-      WHERE d.id = ?
-    `).get(season, driverId);
+      WHERE d.id = $2
+    `, [season, driverId]);
+
+    const driverInfo = driverResult.rows[0];
 
     if (!driverInfo) {
       return res.status(404).json({ error: "Pilote non trouvé" });
     }
 
     // 2. Récupérer le dernier numéro de voiture utilisé
-    const lastCarNumber = db.prepare(`
+    const lastCarNumberResult = await db.query(`
       SELECT car_number
       FROM weekend_participants
-      WHERE driver_id = ?
+      WHERE driver_id = $1
       ORDER BY race_weekend_id DESC
       LIMIT 1
-    `).get(driverId);
+    `, [driverId]);
 
+    const lastCarNumber = lastCarNumberResult.rows[0];
     driverInfo.driver_number = lastCarNumber?.car_number || null;
 
     // 3. Récupérer les 5 derniers weekends (2026 puis 2025)
-    const last5Weekends = db.prepare(`
+    const last5Result = await db.query(`
       SELECT 
         rw.id as weekend_id,
         rw.season,
@@ -64,10 +67,12 @@ router.get("/:driverId", (req, res) => {
       LEFT JOIN qualifying_results q ON q.driver_id = wp.driver_id AND q.race_weekend_id = rw.id
       LEFT JOIN sprint_results s ON s.driver_id = wp.driver_id AND s.race_weekend_id = rw.id
       LEFT JOIN feature_results f ON f.driver_id = wp.driver_id AND f.race_weekend_id = rw.id
-      WHERE wp.driver_id = ?
+      WHERE wp.driver_id = $1
       ORDER BY rw.season DESC, rw.round DESC
       LIMIT 5
-    `).all(driverId);
+    `, [driverId]);
+
+    const last5Weekends = last5Result.rows;
 
     // 4. Calculer les points pour les 5 derniers weekends
     const weekendsWithPoints = last5Weekends.map(w => {
@@ -108,7 +113,7 @@ router.get("/:driverId", (req, res) => {
     }
 
     // 6. Récupérer TOUS les weekends du pilote pour les statistiques globales
-    const allWeekends = db.prepare(`
+    const allWeekendsResult = await db.query(`
       SELECT 
         rw.id as weekend_id,
         q.position as quali_position,
@@ -124,8 +129,10 @@ router.get("/:driverId", (req, res) => {
       LEFT JOIN qualifying_results q ON q.driver_id = wp.driver_id AND q.race_weekend_id = rw.id
       LEFT JOIN sprint_results s ON s.driver_id = wp.driver_id AND s.race_weekend_id = rw.id
       LEFT JOIN feature_results f ON f.driver_id = wp.driver_id AND f.race_weekend_id = rw.id
-      WHERE wp.driver_id = ?
-    `).all(driverId);
+      WHERE wp.driver_id = $1
+    `, [driverId]);
+
+    const allWeekends = allWeekendsResult.rows;
 
     if (allWeekends.length === 0) {
       return res.json({
@@ -184,17 +191,19 @@ router.get("/:driverId", (req, res) => {
     const bestWeekend = Math.max(0, ...Object.values(weekendTotals));
 
     // 11. Normalisation - récupérer tous les pilotes ayant fait au moins 1 course en 2026
-    const allDrivers2026 = db.prepare(`
+    const allDrivers2026Result = await db.query(`
       SELECT DISTINCT wp.driver_id, ds.price
       FROM weekend_participants wp
       JOIN race_weekends rw ON rw.id = wp.race_weekend_id
       JOIN driver_seasons ds ON ds.driver_id = wp.driver_id AND ds.season = rw.season
-      WHERE rw.season = ?
-    `).all(season);
+      WHERE rw.season = $1
+    `, [season]);
+
+    const allDrivers2026 = allDrivers2026Result.rows;
 
     // 12. Calculer les stats de tous les pilotes 2026 pour la normalisation
-    const allDriversStats = allDrivers2026.map(driver => {
-      const driverWeekends = db.prepare(`
+    const allDriversStats = await Promise.all(allDrivers2026.map(async (driver) => {
+      const driverWeekendsResult = await db.query(`
         SELECT 
           q.position as quali_position,
           q.status as quali_status,
@@ -210,8 +219,10 @@ router.get("/:driverId", (req, res) => {
         LEFT JOIN qualifying_results q ON q.driver_id = wp.driver_id AND q.race_weekend_id = rw.id
         LEFT JOIN sprint_results s ON s.driver_id = wp.driver_id AND s.race_weekend_id = rw.id
         LEFT JOIN feature_results f ON f.driver_id = wp.driver_id AND f.race_weekend_id = rw.id
-        WHERE wp.driver_id = ? AND rw.season = ?
-      `).all(driver.driver_id, season);
+        WHERE wp.driver_id = $1 AND rw.season = $2
+      `, [driver.driver_id, season]);
+
+      const driverWeekends = driverWeekendsResult.rows;
 
       const qPos = driverWeekends
         .filter(w => w.quali_position && !['DNS', 'DNF', 'DSQ'].includes(w.quali_status))
@@ -257,7 +268,7 @@ router.get("/:driverId", (req, res) => {
         points_per_million: pts / driver.price,
         best_weekend: bestWE
       };
-    });
+    }));
 
     // 13. Valeurs max pour la normalisation
     const pointsPerMillionValues = allDriversStats

@@ -10,30 +10,34 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // ============================================
 // GET /api/teams/:leagueId - Récupérer l'équipe
 // ============================================
-router.get("/:leagueId", authenticateToken, (req, res) => {
+router.get("/:leagueId", authenticateToken, async (req, res) => {
   const { leagueId } = req.params;
   const season = 2026;
 
   try {
     // Vérifier membre
-    const member = db.prepare(`
+    const member = await db.query(`
       SELECT id FROM league_members 
-      WHERE league_id = ? AND user_id = ?
-    `).get(leagueId, req.user.id);
+      WHERE league_id = $1 AND user_id = $2
+    `, [leagueId, req.user.id]);
 
-    if (!member) {
+    if (!member.rows[0]) {
       return res.status(403).json({ error: "Vous n'êtes pas membre" });
     }
 
-    const league = db.prepare(`
-      SELECT id, name FROM leagues WHERE id = ?
-    `).get(leagueId);
+    const leagueResult = await db.query(`
+      SELECT id, name FROM leagues WHERE id = $1
+    `, [leagueId]);
+
+    const league = leagueResult.rows[0];
 
     // Récupérer l'équipe
-    const team = db.prepare(`
+    const teamResult = await db.query(`
       SELECT id, name, budget FROM fantasy_teams
-      WHERE user_id = ? AND league_id = ? AND season = ?
-    `).get(req.user.id, leagueId, season);
+      WHERE user_id = $1 AND league_id = $2 AND season = $3
+    `, [req.user.id, leagueId, season]);
+
+    const team = teamResult.rows[0];
 
     // Si pas d'équipe, renvoyer structure vide
     if (!team) {
@@ -46,15 +50,15 @@ router.get("/:leagueId", authenticateToken, (req, res) => {
     }
 
     // Récupérer les écuries
-    const constructors = db.prepare(`
+    const constructorsResult = await db.query(`
       SELECT fc.constructor_id, c.name, c.price
       FROM fantasy_constructors fc
       JOIN constructors c ON c.id = fc.constructor_id
-      WHERE fc.fantasy_team_id = ?
-    `).all(team.id);
+      WHERE fc.fantasy_team_id = $1
+    `, [team.id]);
 
     // Récupérer les pilotes
-    const drivers = db.prepare(`
+    const driversResult = await db.query(`
       SELECT 
         fp.driver_id,
         d.name as driver_name,
@@ -62,10 +66,10 @@ router.get("/:leagueId", authenticateToken, (req, res) => {
         c.name as constructor_name
       FROM fantasy_picks fp
       JOIN drivers d ON d.id = fp.driver_id
-      JOIN driver_seasons ds ON ds.driver_id = fp.driver_id AND ds.season = ?
+      JOIN driver_seasons ds ON ds.driver_id = fp.driver_id AND ds.season = $1
       JOIN constructors c ON c.id = ds.constructor_id
-      WHERE fp.fantasy_team_id = ?
-    `).all(season, team.id);
+      WHERE fp.fantasy_team_id = $2
+    `, [season, team.id]);
 
     res.json({
       team: {
@@ -74,8 +78,8 @@ router.get("/:leagueId", authenticateToken, (req, res) => {
         budget: team.budget || 100 // ✅ 28: Budget dynamique
       },
       league: league ? { id: league.id, name: league.name } : null, // ✅ 19
-      constructors,
-      drivers
+      constructors: constructorsResult.rows,
+      drivers: driversResult.rows
     });
 
   } catch (err) {
@@ -87,7 +91,7 @@ router.get("/:leagueId", authenticateToken, (req, res) => {
 // ============================================
 // POST /api/teams/:leagueId/validate - Valider
 // ============================================
-router.post("/:leagueId/validate", authenticateToken, (req, res) => {
+router.post("/:leagueId/validate", authenticateToken, async (req, res) => {
   const { leagueId } = req.params;
   const { teamName, constructorIds, driverIds } = req.body;
   const season = 2026;
@@ -105,12 +109,12 @@ router.post("/:leagueId/validate", authenticateToken, (req, res) => {
     }
     
     // Vérifier membre
-    const member = db.prepare(`
+    const member = await db.query(`
       SELECT id FROM league_members 
-      WHERE league_id = ? AND user_id = ?
-    `).get(leagueId, req.user.id);
+      WHERE league_id = $1 AND user_id = $2
+    `, [leagueId, req.user.id]);
     
-    if (!member) {
+    if (!member.rows[0]) {
       return res.status(403).json({ error: "Vous n'êtes pas membre" });
     }
     
@@ -119,7 +123,8 @@ router.post("/:leagueId/validate", authenticateToken, (req, res) => {
     
     // Prix des écuries
     for (const cId of constructorIds) {
-      const constructor = db.prepare("SELECT price FROM constructors WHERE id = ?").get(cId);
+      const constructorResult = await db.query("SELECT price FROM constructors WHERE id = $1", [cId]);
+      const constructor = constructorResult.rows[0];
       if (!constructor) {
         return res.status(400).json({ error: `Écurie ${cId} introuvable` });
       }
@@ -128,9 +133,10 @@ router.post("/:leagueId/validate", authenticateToken, (req, res) => {
     
     // Prix des pilotes
     for (const dsId of driverIds) {
-      const driver = db.prepare(`
-        SELECT price FROM driver_seasons WHERE driver_id = ? AND season = ?
-      `).get(dsId, season);
+      const driverResult = await db.query(`
+        SELECT price FROM driver_seasons WHERE driver_id = $1 AND season = $2
+      `, [dsId, season]);
+      const driver = driverResult.rows[0];
       if (!driver) {
         return res.status(400).json({ error: `Pilote ${dsId} introuvable` });
       }
@@ -145,53 +151,52 @@ router.post("/:leagueId/validate", authenticateToken, (req, res) => {
     }
     
     // Créer ou mettre à jour l'équipe + VALIDER
-    let team = db.prepare(`
+    let teamResult = await db.query(`
       SELECT id FROM fantasy_teams
-      WHERE user_id = ? AND league_id = ? AND season = ?
-    `).get(req.user.id, leagueId, season);
+      WHERE user_id = $1 AND league_id = $2 AND season = $3
+    `, [req.user.id, leagueId, season]);
+
+    let team = teamResult.rows[0];
     
     const now = new Date().toISOString();
     
     if (team) {
       // Mise à jour
-      db.prepare(`
+      await db.query(`
         UPDATE fantasy_teams
-        SET name = ?, is_validated = 1, validated_at = ?
-        WHERE id = ?
-      `).run(teamName.trim(), now, team.id);
+        SET name = $1, is_validated = 1, validated_at = $2
+        WHERE id = $3
+      `, [teamName.trim(), now, team.id]);
       
       // Supprimer anciennes sélections
-      db.prepare("DELETE FROM fantasy_constructors WHERE fantasy_team_id = ?").run(team.id);
-      db.prepare("DELETE FROM fantasy_picks WHERE fantasy_team_id = ?").run(team.id);
+      await db.query("DELETE FROM fantasy_constructors WHERE fantasy_team_id = $1", [team.id]);
+      await db.query("DELETE FROM fantasy_picks WHERE fantasy_team_id = $1", [team.id]);
     } else {
       // Création
-      const result = db.prepare(`
+      const result = await db.query(`
         INSERT INTO fantasy_teams 
           (user_id, league_id, season, name, is_validated, validated_at)
-        VALUES (?, ?, ?, ?, 1, ?)
-      `).run(req.user.id, leagueId, season, teamName.trim(), now);
+        VALUES ($1, $2, $3, $4, 1, $5)
+        RETURNING id
+      `, [req.user.id, leagueId, season, teamName.trim(), now]);
       
-      team = { id: result.lastInsertRowid };
+      team = { id: result.rows[0].id };
     }
     
     // Ajouter les écuries
-    const insertConstructor = db.prepare(`
-      INSERT INTO fantasy_constructors (fantasy_team_id, constructor_id)
-      VALUES (?, ?)
-    `);
-    
     for (const cId of constructorIds) {
-      insertConstructor.run(team.id, cId);
+      await db.query(`
+        INSERT INTO fantasy_constructors (fantasy_team_id, constructor_id)
+        VALUES ($1, $2)
+      `, [team.id, cId]);
     }
     
     // Ajouter les pilotes
-    const insertPick = db.prepare(`
-      INSERT INTO fantasy_picks (fantasy_team_id, driver_id, season)
-      VALUES (?, ?, ?)
-    `);
-    
     for (const driverId of driverIds) {
-      insertPick.run(team.id, driverId, season);
+      await db.query(`
+        INSERT INTO fantasy_picks (fantasy_team_id, driver_id, season)
+        VALUES ($1, $2, $3)
+      `, [team.id, driverId, season]);
     }
     
     recordInitialSpent(team.id);    
@@ -212,7 +217,7 @@ router.post("/:leagueId/validate", authenticateToken, (req, res) => {
 // ============================================
 // PATCH /api/teams/:leagueId/name - Modifier le nom
 // ============================================
-router.patch("/:leagueId/name", authenticateToken, (req, res) => {
+router.patch("/:leagueId/name", authenticateToken, async (req, res) => {
   const { leagueId } = req.params;
   let { name } = req.body;
   const season = 2026;
@@ -236,12 +241,12 @@ router.patch("/:leagueId/name", authenticateToken, (req, res) => {
     // Vérifier membre
     console.log(`[PATCH /name] Step 1: Checking membership - User ${req.user.id}, League ${leagueId}`);
     
-    const member = db.prepare(`
+    const member = await db.query(`
       SELECT id FROM league_members 
-      WHERE league_id = ? AND user_id = ?
-    `).get(leagueId, req.user.id);
+      WHERE league_id = $1 AND user_id = $2
+    `, [leagueId, req.user.id]);
 
-    if (!member) {
+    if (!member.rows[0]) {
       console.log(`[PATCH /name] User not member of league ${leagueId}`);
       return res.status(403).json({ error: "Vous n'êtes pas membre de cette ligue" });
     }
@@ -251,15 +256,17 @@ router.patch("/:leagueId/name", authenticateToken, (req, res) => {
     // Vérifier que le nom n'est pas déjà pris dans cette ligue (insensible à la casse)
     console.log(`[PATCH /name] Step 3: Checking for duplicate name`);
     
-    const existingTeam = db.prepare(`
+    const existingTeamResult = await db.query(`
       SELECT ft.id, u.username
       FROM fantasy_teams ft
       JOIN users u ON ft.user_id = u.id
-      WHERE ft.league_id = ? 
-        AND ft.season = ? 
-        AND LOWER(ft.name) = LOWER(?) 
-        AND ft.user_id != ?
-    `).get(leagueId, season, name, req.user.id);
+      WHERE ft.league_id = $1 
+        AND ft.season = $2 
+        AND LOWER(ft.name) = LOWER($3) 
+        AND ft.user_id != $4
+    `, [leagueId, season, name, req.user.id]);
+
+    const existingTeam = existingTeamResult.rows[0];
 
     if (existingTeam) {
       console.log(`[PATCH /name] Nom déjà pris par ${existingTeam.username}`);
@@ -271,22 +278,25 @@ router.patch("/:leagueId/name", authenticateToken, (req, res) => {
     // Vérifier si l'équipe existe
     console.log(`[PATCH /name] Step 4: Checking if team exists`);
     
-    let team = db.prepare(`
+    let teamResult = await db.query(`
       SELECT id FROM fantasy_teams
-      WHERE user_id = ? AND league_id = ? AND season = ?
-    `).get(req.user.id, leagueId, season);
+      WHERE user_id = $1 AND league_id = $2 AND season = $3
+    `, [req.user.id, leagueId, season]);
+
+    let team = teamResult.rows[0];
 
     if (!team) {
       // Créer l'équipe si elle n'existe pas
       console.log(`[PATCH /name] Step 5: Creating new team`);
       
       try {
-        const result = db.prepare(`
+        const result = await db.query(`
           INSERT INTO fantasy_teams (user_id, league_id, season, name)
-          VALUES (?, ?, ?, ?)
-        `).run(req.user.id, leagueId, season, name);
+          VALUES ($1, $2, $3, $4)
+          RETURNING id
+        `, [req.user.id, leagueId, season, name]);
         
-        team = { id: result.lastInsertRowid };
+        team = { id: result.rows[0].id };
         console.log(`[CREATE TEAM] ✅ User ${req.user.id} - League ${leagueId} - Team ${team.id} created with name: "${name}"`);
       } catch (insertErr) {
         console.error(`[CREATE TEAM] ❌ SQL INSERT ERROR:`, insertErr);
@@ -297,11 +307,11 @@ router.patch("/:leagueId/name", authenticateToken, (req, res) => {
       console.log(`[PATCH /name] Step 5: Updating existing team ${team.id}`);
       
       try {
-        db.prepare(`
+        await db.query(`
           UPDATE fantasy_teams
-          SET name = ?
-          WHERE id = ?
-        `).run(name, team.id);
+          SET name = $1
+          WHERE id = $2
+        `, [name, team.id]);
         
         console.log(`[UPDATE NAME] ✅ User ${req.user.id} - League ${leagueId} - Team ${team.id} - New name: "${name}"`);
       } catch (updateErr) {
@@ -326,7 +336,7 @@ router.patch("/:leagueId/name", authenticateToken, (req, res) => {
 // ============================================
 // POST /api/teams/:leagueId/save - Sauvegarde automatique
 // ============================================
-router.post("/:leagueId/save", authenticateToken, (req, res) => {
+router.post("/:leagueId/save", authenticateToken, async (req, res) => {
   const { leagueId } = req.params;
   const { teamName, constructorIds, driverIds } = req.body;
   const season = 2026;
@@ -346,74 +356,75 @@ router.post("/:leagueId/save", authenticateToken, (req, res) => {
 
   try {
     // Vérifier membre
-    const member = db.prepare(`
+    const member = await db.query(`
       SELECT id FROM league_members 
-      WHERE league_id = ? AND user_id = ?
-    `).get(leagueId, req.user.id);
+      WHERE league_id = $1 AND user_id = $2
+    `, [leagueId, req.user.id]);
 
-    if (!member) {
+    if (!member.rows[0]) {
       return res.status(403).json({ error: "Vous n'êtes pas membre de cette ligue" });
     }
 
     // Vérifier que l'équipe existe
-    let team = db.prepare(`
+    let teamResult = await db.query(`
       SELECT id FROM fantasy_teams
-      WHERE user_id = ? AND league_id = ? AND season = ?
-    `).get(req.user.id, leagueId, season);
+      WHERE user_id = $1 AND league_id = $2 AND season = $3
+    `, [req.user.id, leagueId, season]);
+
+    let team = teamResult.rows[0];
 
     if (!team) {
       // Créer l'équipe
-      const result = db.prepare(`
+      const result = await db.query(`
         INSERT INTO fantasy_teams (user_id, league_id, season, name, is_validated, validated_at)
-        VALUES (?, ?, ?, ?, 0, NULL)
-      `).run(req.user.id, leagueId, season, teamName.trim());
+        VALUES ($1, $2, $3, $4, 0, NULL)
+        RETURNING id
+      `, [req.user.id, leagueId, season, teamName.trim()]);
       
-      team = { id: result.lastInsertRowid };
+      team = { id: result.rows[0].id };
     } else {
       // Mettre à jour le nom
-      db.prepare(`
-        UPDATE fantasy_teams SET name = ? WHERE id = ?
-      `).run(teamName.trim(), team.id);
+      await db.query(`
+        UPDATE fantasy_teams SET name = $1 WHERE id = $2
+      `, [teamName.trim(), team.id]);
     }
 
     // Supprimer anciennes sélections
-    db.prepare(`DELETE FROM fantasy_constructors WHERE fantasy_team_id = ?`).run(team.id);
-    db.prepare(`DELETE FROM fantasy_picks WHERE fantasy_team_id = ?`).run(team.id);
+    await db.query(`DELETE FROM fantasy_constructors WHERE fantasy_team_id = $1`, [team.id]);
+    await db.query(`DELETE FROM fantasy_picks WHERE fantasy_team_id = $1`, [team.id]);
 
     // Insérer les nouvelles écuries
-    const insertConstructor = db.prepare(`
-      INSERT INTO fantasy_constructors (fantasy_team_id, constructor_id)
-      VALUES (?, ?)
-    `);
     for (const cId of constructorIds) {
-      insertConstructor.run(team.id, cId);
+      await db.query(`
+        INSERT INTO fantasy_constructors (fantasy_team_id, constructor_id)
+        VALUES ($1, $2)
+      `, [team.id, cId]);
     }
 
     // Insérer les nouveaux pilotes
-    const insertPick = db.prepare(`
-      INSERT INTO fantasy_picks (fantasy_team_id, driver_id, season)
-      VALUES (?, ?, ?)
-    `);
     for (const driverId of driverIds) {
-      insertPick.run(team.id, driverId, season);
+      await db.query(`
+        INSERT INTO fantasy_picks (fantasy_team_id, driver_id, season)
+        VALUES ($1, $2, $3)
+      `, [team.id, driverId, season]);
     }
 
     // Calculer le coût total
-    const constructorsCost = db.prepare(`
+    const constructorsCostResult = await db.query(`
       SELECT SUM(c.price) as total
       FROM fantasy_constructors fc
       JOIN constructors c ON fc.constructor_id = c.id
-      WHERE fc.fantasy_team_id = ?
-    `).get(team.id);
+      WHERE fc.fantasy_team_id = $1
+    `, [team.id]);
 
-    const driversCost = db.prepare(`
+    const driversCostResult = await db.query(`
       SELECT SUM(ds.price) as total
       FROM fantasy_picks fp
-      JOIN driver_seasons ds ON fp.driver_id = ds.driver_id AND ds.season = ?
-      WHERE fp.fantasy_team_id = ?
-    `).get(season, team.id);
+      JOIN driver_seasons ds ON fp.driver_id = ds.driver_id AND ds.season = $1
+      WHERE fp.fantasy_team_id = $2
+    `, [season, team.id]);
 
-    const totalCost = (constructorsCost?.total || 0) + (driversCost?.total || 0);
+    const totalCost = (constructorsCostResult.rows[0]?.total || 0) + (driversCostResult.rows[0]?.total || 0);
 
     console.log(`[SAVE] User ${req.user.id} - League ${leagueId} - Team ${team.id} - Cost ${totalCost.toFixed(1)}M`);
 
@@ -432,30 +443,32 @@ router.post("/:leagueId/save", authenticateToken, (req, res) => {
 // ============================================
 // GET /api/teams/:leagueId/deadline-status - Statut de la deadline
 // ============================================
-router.get("/:leagueId/deadline-status", authenticateToken, (req, res) => {
+router.get("/:leagueId/deadline-status", authenticateToken, async (req, res) => {
   const { leagueId } = req.params;
   const season = 2026;
 
   try {
     // Vérifier membre
-    const member = db.prepare(`
+    const member = await db.query(`
       SELECT id FROM league_members 
-      WHERE league_id = ? AND user_id = ?
-    `).get(leagueId, req.user.id);
+      WHERE league_id = $1 AND user_id = $2
+    `, [leagueId, req.user.id]);
 
-    if (!member) {
+    if (!member.rows[0]) {
       return res.status(403).json({ error: "Vous n'êtes pas membre de cette ligue" });
     }
 
     // Récupérer le prochain weekend
     const now = new Date().toISOString();
-    const nextWeekend = db.prepare(`
+    const nextWeekendResult = await db.query(`
       SELECT id, round, name, lock_deadline
       FROM race_weekends
-      WHERE season = ? AND lock_deadline > ?
+      WHERE season = $1 AND lock_deadline > $2
       ORDER BY lock_deadline ASC
       LIMIT 1
-    `).get(season, now);
+    `, [season, now]);
+
+    const nextWeekend = nextWeekendResult.rows[0];
 
     if (!nextWeekend || !nextWeekend.lock_deadline) {
       // Pas de deadline à venir

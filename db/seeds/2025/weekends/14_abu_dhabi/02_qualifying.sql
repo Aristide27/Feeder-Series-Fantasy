@@ -21,4 +21,5 @@ VALUES
 (21, 14, 19, 'OK'),   -- Laurens van Hoepen
 (15, 14, 20, 'OK'),   -- Kush Maini
 (18, 14, 21, 'OK'),   -- Cian Shields
-(16, 14, 22, 'OK');   -- Tasanapol Inthraphuvasak
+(16, 14, 22, 'OK')
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

@@ -22,4 +22,5 @@ VALUES
 (18, 9, 22, 19, 'OK', 0),   -- Cian Shields
 (15, 9, 20, 20, 'OK', 0),   -- Kush Maini
 (11, 9, 16, NULL, 'DNF', 0),   -- Sebastián Montoya
-(26, 9, 5, NULL, 'DSQ', 0);   -- Arvid Lindblad
+(26, 9, 5, NULL, 'DSQ', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

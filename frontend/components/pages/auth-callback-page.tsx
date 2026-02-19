@@ -1,10 +1,9 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { saveAuth } from "@/lib/auth/token";
 
-export default function AuthCallbackPage() {
+function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
@@ -49,7 +48,6 @@ export default function AuthCallbackPage() {
             <p className="text-slate-400">Veuillez patienter</p>
           </>
         )}
-
         {status === "success" && (
           <>
             <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -61,7 +59,6 @@ export default function AuthCallbackPage() {
             <p className="text-slate-400">Redirection en cours...</p>
           </>
         )}
-
         {status === "error" && (
           <>
             <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -75,5 +72,17 @@ export default function AuthCallbackPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-accent border-t-transparent"></div>
+      </div>
+    }>
+      <AuthCallbackContent />
+    </Suspense>
   );
 }

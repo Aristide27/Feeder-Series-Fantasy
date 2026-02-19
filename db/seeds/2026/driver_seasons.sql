@@ -42,4 +42,5 @@ INSERT INTO driver_seasons (driver_id, season, constructor_id, rookie, price) VA
 
 /* ========= TRIDENT ========= */
 (21, 2026, 11, 1, 10.0), -- Laurens van Hoepen
-(22, 2026, 11, 0, 7.0);  -- John Bennett
+(22, 2026, 11, 0, 7.0)   -- John Bennett
+ON CONFLICT (driver_id, season) DO NOTHING;

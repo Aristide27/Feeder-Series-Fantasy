@@ -22,4 +22,5 @@ VALUES
 (15, 12, 16, NULL, 'DNF', 0),   -- Kush Maini
 (25, 12, 6, NULL, 'DNF', 0),   -- Pepe Martí
 (20, 12, 10, NULL, 'DNF', 0),   -- Rafael Villagómez
-(10, 12, 18, NULL, 'DNF', 0);   -- Oliver Goethe
+(10, 12, 18, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

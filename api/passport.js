@@ -18,10 +18,10 @@ passport.serializeUser((user, done) => {
 });
 
 // Désérialiser l'utilisateur depuis la session
-passport.deserializeUser((id, done) => {
+passport.deserializeUser(async (id, done) => {
   try {
-    const user = db.prepare("SELECT id, username, email FROM users WHERE id = ?").get(id);
-    done(null, user);
+    const result = await db.query("SELECT id, username, email FROM users WHERE id = $1", [id]);
+    done(null, result.rows[0]);
   } catch (err) {
     done(err, null);
   }
@@ -51,7 +51,8 @@ if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
           }
 
           // Vérifier si un utilisateur existe avec ce Google ID
-          let user = db.prepare("SELECT * FROM users WHERE google_id = ?").get(googleId);
+          let userResult = await db.query("SELECT * FROM users WHERE google_id = $1", [googleId]);
+          let user = userResult.rows[0];
 
           if (user) {
             // Utilisateur existe avec ce Google ID → connexion
@@ -60,11 +61,12 @@ if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
           }
 
           // Vérifier si un utilisateur existe avec cet email
-          user = db.prepare("SELECT * FROM users WHERE email = ?").get(email);
+          userResult = await db.query("SELECT * FROM users WHERE email = $1", [email]);
+          user = userResult.rows[0];
 
           if (user) {
             // Email existe → lier le compte Google au compte existant
-            db.prepare("UPDATE users SET google_id = ? WHERE id = ?").run(googleId, user.id);
+            await db.query("UPDATE users SET google_id = $1 WHERE id = $2", [googleId, user.id]);
             console.log(`[GOOGLE AUTH] Compte lié : ${user.username} (${email})`);
             return done(null, user);
           }
@@ -79,7 +81,7 @@ if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
           // Vérifier l'unicité du username
           let uniqueUsername = username;
           let counter = 1;
-          while (db.prepare("SELECT id FROM users WHERE username = ?").get(uniqueUsername)) {
+          while ((await db.query("SELECT id FROM users WHERE username = $1", [uniqueUsername])).rows[0]) {
             uniqueUsername = `${username}${counter}`;
             counter++;
           }
@@ -89,27 +91,28 @@ if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
           const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
           // Insérer le nouvel utilisateur
-          const result = db.prepare(`
+          const result = await db.query(`
             INSERT INTO users (username, email, password_hash, google_id)
-            VALUES (?, ?, ?, ?)
-          `).run(uniqueUsername, email, hashedPassword, googleId);
+            VALUES ($1, $2, $3, $4)
+            RETURNING id
+          `, [uniqueUsername, email, hashedPassword, googleId]);
 
-          const userId = result.lastInsertRowid;
+          const userId = result.rows[0].id;
 
           // Auto-inscription à la ligue FSF
           try {
-            const fsfLeague = db.prepare("SELECT id FROM leagues WHERE code = 'FSF'").get();
+            const fsfLeague = await db.query("SELECT id FROM leagues WHERE code = 'FSF'");
             
-            if (fsfLeague) {
-              db.prepare(`
+            if (fsfLeague.rows[0]) {
+              await db.query(`
                 INSERT INTO league_members (league_id, user_id)
-                VALUES (?, ?)
-              `).run(fsfLeague.id, userId);
+                VALUES ($1, $2)
+              `, [fsfLeague.rows[0].id, userId]);
 
-              db.prepare(`
+              await db.query(`
                 INSERT INTO league_scores (league_id, user_id, total_points)
-                VALUES (?, ?, 0)
-              `).run(fsfLeague.id, userId);
+                VALUES ($1, $2, 0)
+              `, [fsfLeague.rows[0].id, userId]);
 
               console.log(`[GOOGLE AUTH] User ${uniqueUsername} auto-inscrit à la ligue FSF`);
             }
@@ -118,7 +121,8 @@ if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
           }
 
           // Récupérer l'utilisateur créé
-          user = db.prepare("SELECT * FROM users WHERE id = ?").get(userId);
+          userResult = await db.query("SELECT * FROM users WHERE id = $1", [userId]);
+          user = userResult.rows[0];
           
           console.log(`[GOOGLE AUTH] Nouveau compte créé : ${uniqueUsername} (${email})`);
           return done(null, user);

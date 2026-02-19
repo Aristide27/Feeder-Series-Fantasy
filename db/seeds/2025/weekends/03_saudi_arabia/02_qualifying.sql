@@ -21,4 +21,5 @@ VALUES
 (33, 3, 19, 'OK'),   -- Max Esterson
 (20, 3, 20, 'OK'),   -- Rafael Villagómez
 (22, 3, 21, 'OK'),   -- John Bennett
-(18, 3, 22, 'OK');   -- Cian Shields
+(18, 3, 22, 'OK')
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

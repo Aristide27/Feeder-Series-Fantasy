@@ -20,4 +20,5 @@ VALUES
 (20, 1, 18, 'OK'),   -- Rafael Villagómez
 (10, 1, 19, 'OK'),   -- Oliver Goethe
 (22, 1, 20, 'OK'),   -- John Bennett
-(18, 1, 21, 'OK');   -- Cian Shields
+(18, 1, 21, 'OK')
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

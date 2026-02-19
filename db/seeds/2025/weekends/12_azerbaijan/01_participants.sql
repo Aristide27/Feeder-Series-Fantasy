@@ -21,4 +21,5 @@ VALUES
 (21, 12, 24, 11),   -- Laurens van Hoepen, #24, Trident
 (13, 12, 25, 11),   -- Martinius Stenshorne, #25, Trident
 (22, 12, 22, 10),   -- John Bennett, #22, Van Amersfoort Racing
-(20, 12, 23, 10);   -- Rafael Villagómez, #23, Van Amersfoort Racing
+(20, 12, 23, 10)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

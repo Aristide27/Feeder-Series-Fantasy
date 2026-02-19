@@ -22,4 +22,5 @@ VALUES
 (26, 11, 6, NULL, 'DNF', 0),   -- Arvid Lindblad
 (24, 11, 3, NULL, 'DNF', 0),   -- Roman Staněk
 (18, 11, 19, NULL, 'DNF', 0),   -- Cian Shields
-(14, 11, 5, NULL, 'DNF', 0);   -- Alexander Dunne
+(14, 11, 5, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

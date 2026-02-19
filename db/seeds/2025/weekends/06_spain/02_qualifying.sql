@@ -21,4 +21,5 @@ VALUES
 (32, 6, 19, 'OK'),   -- Sami Meguetounif
 (18, 6, 20, 'OK'),   -- Cian Shields
 (22, 6, 21, 'OK'),   -- John Bennett
-(20, 6, 22, 'OK');   -- Rafael Villagómez
+(20, 6, 22, 'OK')
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

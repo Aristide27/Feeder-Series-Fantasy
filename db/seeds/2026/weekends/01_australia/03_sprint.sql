@@ -22,4 +22,5 @@ VALUES
 (20, 15, 19, 18, 'OK', 0),  -- Rafael Villagómez (start 19 -> finish 18)
 (17, 15, 20, 20, 'OK', 0),  -- Emerson Fittipaldi Jr. (start 20 -> finish 20)
 (22, 15, 21, 22, 'OK', 0),  -- John Bennett (start 21 -> finish 22)
-(18, 15, 22, 21, 'OK', 0);  -- Cian Shields (start 22 -> finish 21)
+(18, 15, 22, 21, 'OK', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

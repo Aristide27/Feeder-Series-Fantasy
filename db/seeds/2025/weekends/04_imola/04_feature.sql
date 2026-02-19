@@ -22,4 +22,5 @@ VALUES
 (33, 4, 18, 19, 'OK', 0),   -- Max Esterson
 (22, 4, 21, 20, 'OK', 0),   -- John Bennett
 (15, 4, 13, 21, 'OK', 0),   -- Kush Maini
-(20, 4, 17, NULL, 'DNF', 0);   -- Rafael Villagómez
+(20, 4, 17, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

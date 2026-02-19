@@ -22,4 +22,5 @@ VALUES
 (30, 14, 7, NULL, 'DNF', 0),   -- Victor Martins
 (18, 14, 21, NULL, 'DNF', 0),   -- Cian Shields
 (14, 14, 11, NULL, 'DNF', 0),   -- Alexander Dunne
-(21, 14, NULL, NULL, 'DNS', 0);   -- Laurens van Hoepen
+(21, 14, NULL, NULL, 'DNS', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

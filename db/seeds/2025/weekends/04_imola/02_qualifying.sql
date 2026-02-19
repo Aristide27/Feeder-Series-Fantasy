@@ -21,4 +21,5 @@ VALUES
 (27, 4, 19, 'OK'),   -- Richard Verschoor
 (31, 4, 20, 'OK'),   -- Amaury Cordeel
 (22, 4, 21, 'OK'),   -- John Bennett
-(18, 4, 22, 'OK');   -- Cian Shields
+(18, 4, 22, 'OK')
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

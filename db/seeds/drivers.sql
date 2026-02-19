@@ -39,4 +39,5 @@ INSERT INTO drivers (id, name, nationality) VALUES
 (31, 'Amaury Cordeel', 'Belgium'),
 (32, 'Sami Meguetounif', 'France'),
 (33, 'Max Esterson', 'USA'),
-(34, 'James Wharton', 'Australia');
+(34, 'James Wharton', 'Australia')
+ON CONFLICT (id) DO NOTHING;

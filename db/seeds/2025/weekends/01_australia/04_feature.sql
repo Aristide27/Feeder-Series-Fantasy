@@ -22,4 +22,5 @@ VALUES
 (32, 1, 19, 19, 'CANCELLED', 0),   -- Sami Meguetounif
 (33, 1, 20, 20, 'CANCELLED', 0),   -- Max Esterson
 (29, 1, 21, 21, 'CANCELLED', 0),   -- Jak Crawford
-(30, 1, 22, 22, 'CANCELLED', 0);   -- Victor Martins
+(30, 1, 22, 22, 'CANCELLED', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

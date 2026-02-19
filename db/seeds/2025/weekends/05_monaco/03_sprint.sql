@@ -22,4 +22,5 @@ VALUES
 (25, 5, 6, NULL, 'DNF', 0),   -- Pepe Martí
 (2, 5, 21, NULL, 'DNF', 0),   -- Joshua Dürksen
 (22, 5, 15, NULL, 'DNF', 0),   -- John Bennett
-(18, 5, 22, NULL, 'DNF', 0);   -- Cian Shields
+(18, 5, 22, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

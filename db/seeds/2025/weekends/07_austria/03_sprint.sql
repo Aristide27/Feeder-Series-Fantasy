@@ -22,4 +22,5 @@ VALUES
 (33, 7, 19, 10, 'OK', 0),  -- Max Esterson
 (20, 7, 20, 9,  'OK', 0),  -- Rafael Villagómez
 (7,  7, 21, NULL, 'DNF', 0), -- Dino Beganovic
-(18, 7, 22, 12, 'OK', 0);  -- Cian Shields
+(18, 7, 22, 12, 'OK', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

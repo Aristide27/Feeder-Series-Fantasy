@@ -22,4 +22,5 @@ VALUES
 (18, 7, 22, NULL, 'DNF', 0),   -- Cian Shields
 (31, 7, 5, NULL, 'DNF', 0),   -- Amaury Cordeel
 (3, 7, 13, NULL, 'DNF', 0),   -- Ritomo Miyata
-(9, 7, 4, NULL, 'DNF', 0);   -- Gabriele Minì
+(9, 7, 4, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

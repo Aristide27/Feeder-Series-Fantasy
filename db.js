@@ -1,9 +1,9 @@
-const path = require("path");
-const Database = require("better-sqlite3");
-const dbPath = path.join(__dirname, "database.sqlite");
+require("dotenv").config();
+const { Pool } = require("pg");
 
-const db = new Database(dbPath);
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
 
-db.pragma("foreign_keys = ON");
-
-module.exports = db;
+module.exports = pool;

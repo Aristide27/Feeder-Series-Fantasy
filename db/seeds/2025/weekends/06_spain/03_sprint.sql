@@ -22,4 +22,5 @@ VALUES
 (33, 6, 17, 19, 'OK', 0),   -- Max Esterson
 (2, 6, 21, 20, 'OK', 0),   -- Joshua Dürksen
 (9, 6, 8, NULL, 'DNF', 0),   -- Gabriele Minì
-(22, 6, 15, NULL, 'DNF', 0);   -- John Bennett
+(22, 6, 15, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

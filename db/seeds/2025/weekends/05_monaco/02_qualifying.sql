@@ -20,4 +20,5 @@ VALUES
 (25, 5, 18, 'OK'),   -- Pepe Martí
 (33, 5, 19, 'OK'),   -- Max Esterson
 (22, 5, 20, 'OK'),   -- John Bennett
-(18, 5, 21, 'OK');   -- Cian Shields
+(18, 5, 21, 'OK')
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

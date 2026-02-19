@@ -22,4 +22,5 @@ VALUES
 (34, 13, 21, 19, 'OK', 0),   -- James Wharton
 (18, 13, 19, 20, 'OK', 0),   -- Cian Shields
 (10, 13, 1, NULL, 'DNF', 0),   -- Oliver Goethe
-(3, 13, 16, NULL, 'DNF', 0);   -- Ritomo Miyata
+(3, 13, 16, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

@@ -20,25 +20,25 @@ const PRIX_PLAFOND = 30.0;    // Prix maximum absolu
 /**
  * Récupère la position finale en Feature Race
  */
-function getFeaturePosition(driver_id, weekendId) {
-  const result = db.prepare(`
+async function getFeaturePosition(driver_id, weekendId) {
+  const result = await db.query(`
     SELECT finish_position 
     FROM feature_results 
-    WHERE driver_id = ? AND race_weekend_id = ?
-  `).get(driver_id, weekendId);
+    WHERE driver_id = $1 AND race_weekend_id = $2
+  `, [driver_id, weekendId]);
   
-  return result?.finish_position || 22; // Si pas de résultat, dernière position
+  return result.rows[0]?.finish_position || 22; // Si pas de résultat, dernière position
 }
 
 /**
  * Calcule le Score de Performance (S_perf)
  * S_perf = Points_F2 + Bonus (uniquement si Points_F2 == 0)
  */
-function calculateSPerf(driver_id, weekendId) {
+async function calculateSPerf(driver_id, weekendId) {
   // 1. Calcul des Points F2 officiels (Qualif + Sprint + Feature)
-  const qualPoints = getQualifyingPoints(weekendId).find(p => p.driver_id === driver_id)?.points || 0;
-  const sprintPoints = getSprintPoints(weekendId).find(p => p.driver_id === driver_id)?.points || 0;
-  const featurePoints = getFeaturePoints(weekendId).find(p => p.driver_id === driver_id)?.points || 0;
+  const qualPoints = (await getQualifyingPoints(weekendId)).find(p => p.driver_id === driver_id)?.points || 0;
+  const sprintPoints = (await getSprintPoints(weekendId)).find(p => p.driver_id === driver_id)?.points || 0;
+  const featurePoints = (await getFeaturePoints(weekendId)).find(p => p.driver_id === driver_id)?.points || 0;
   
   const pointsF2 = qualPoints + sprintPoints + featurePoints;
   
@@ -47,7 +47,7 @@ function calculateSPerf(driver_id, weekendId) {
 
   // Condition : Le bonus ne s'applique QUE si le pilote n'a pas marqué de points F2
   if (pointsF2 === 0) {
-    const posFeature = getFeaturePosition(driver_id, weekendId);
+    const posFeature = await getFeaturePosition(driver_id, weekendId);
     // On garde ta formule originale pour valoriser les "proches du top 10"
     bonusPosition = ((22 - posFeature) / 22) * 1.5;
   }
@@ -58,7 +58,7 @@ function calculateSPerf(driver_id, weekendId) {
   return {
     sPerf,
     pointsF2,
-    posFeature: pointsF2 === 0 ? getFeaturePosition(driver_id, weekendId) : null,
+    posFeature: pointsF2 === 0 ? await getFeaturePosition(driver_id, weekendId) : null,
     bonusPosition
   };
 }
@@ -108,14 +108,16 @@ function calculateNewPrice(prixActuel, deltaBrute, deltaBrutePrecedente, isFirst
 /**
  * Met à jour le prix d'un pilote après un week-end
  */
-function updateDriverPrice(driver_id, season, weekendId) {
+async function updateDriverPrice(driver_id, season, weekendId) {
   // 1. Récupérer le prix actuel et delta précédent
-  const driverData = db.prepare(`
+  const driverDataResult = await db.query(`
     SELECT price, last_delta 
     FROM driver_seasons 
-    WHERE driver_id = ? AND season = ?
-  `).get(driver_id, season);
+    WHERE driver_id = $1 AND season = $2
+  `, [driver_id, season]);
   
+  const driverData = driverDataResult.rows[0];
+
   if (!driverData) {
     throw new Error(`Driver ${driver_id} not found for season ${season}`);
   }
@@ -124,14 +126,15 @@ function updateDriverPrice(driver_id, season, weekendId) {
   const deltaBrutePrecedente = driverData.last_delta || 0;
   
   // 2. Vérifier si c'est le premier round de la saison
-  const weekend = db.prepare(`
-    SELECT round FROM race_weekends WHERE id = ?
-  `).get(weekendId);
+  const weekendResult = await db.query(`
+    SELECT round FROM race_weekends WHERE id = $1
+  `, [weekendId]);
   
+  const weekend = weekendResult.rows[0];
   const isFirstRound = weekend.round === 1;
   
   // 3. Calculer S_perf
-  const { sPerf, pointsF2, posFeature, bonusPosition } = calculateSPerf(driver_id, weekendId);
+  const { sPerf, pointsF2, posFeature, bonusPosition } = await calculateSPerf(driver_id, weekendId);
   
   // 4. Calculer l'attente E
   const attente = calculateAttente(prixActuel);
@@ -143,18 +146,18 @@ function updateDriverPrice(driver_id, season, weekendId) {
   const nouveauPrix = calculateNewPrice(prixActuel, deltaBrute, deltaBrutePrecedente, isFirstRound);
   
   // 7. Mettre à jour la base de données
-  db.prepare(`
+  await db.query(`
     UPDATE driver_seasons 
-    SET price = ?, last_delta = ? 
-    WHERE driver_id = ? AND season = ?
-  `).run(nouveauPrix, deltaBrute, driver_id, season);
+    SET price = $1, last_delta = $2 
+    WHERE driver_id = $3 AND season = $4
+  `, [nouveauPrix, deltaBrute, driver_id, season]);
   
   // 8. Enregistrer dans l'historique
-  db.prepare(`
+  await db.query(`
     INSERT INTO price_history 
       (driver_id, season, race_weekend_id, price_before, price_after, delta_brute, s_perf, attente)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(driver_id, season, weekendId, prixActuel, nouveauPrix, deltaBrute, sPerf, attente);
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+  `, [driver_id, season, weekendId, prixActuel, nouveauPrix, deltaBrute, sPerf, attente]);
   
   return {
     driver_id,
@@ -174,18 +177,18 @@ function updateDriverPrice(driver_id, season, weekendId) {
 /**
  * Met à jour tous les prix des pilotes pour un week-end
  */
-function updateAllDriverPrices(season, weekendId) {
-  const drivers = db.prepare(`
+async function updateAllDriverPrices(season, weekendId) {
+  const driversResult = await db.query(`
     SELECT driver_id 
     FROM driver_seasons 
-    WHERE season = ?
-  `).all(season);
+    WHERE season = $1
+  `, [season]);
   
   const results = [];
   
-  for (const d of drivers) {
+  for (const d of driversResult.rows) {
     try {
-      const result = updateDriverPrice(d.driver_id, season, weekendId);
+      const result = await updateDriverPrice(d.driver_id, season, weekendId);
       results.push(result);
     } catch (err) {
       console.error(`❌ Erreur driver ${d.driver_id}:`, err.message);
@@ -198,24 +201,25 @@ function updateAllDriverPrices(season, weekendId) {
 /**
  * Met à jour les prix des constructeurs (moyenne des 2 pilotes)
  */
-function updateConstructorPrices(season) {
-  const constructors = db.prepare(`SELECT id FROM constructors`).all();
+async function updateConstructorPrices(season) {
+  const constructorsResult = await db.query(`SELECT id FROM constructors`);
   const result = [];
   
-  for (const c of constructors) {
-    const pilots = db.prepare(`
+  for (const c of constructorsResult.rows) {
+    const pilotsResult = await db.query(`
       SELECT price FROM driver_seasons
-      WHERE constructor_id = ? AND season = ?
+      WHERE constructor_id = $1 AND season = $2
       ORDER BY driver_id
       LIMIT 2
-    `).all(c.id, season);
+    `, [c.id, season]);
     
+    const pilots = pilotsResult.rows;
     if (pilots.length === 0) continue;
     
     const prix = pilots.reduce((sum, p) => sum + p.price, 0) / pilots.length;
     const prixArrondi = Math.round(prix * 100) / 100; // Arrondi au centième
     
-    db.prepare(`UPDATE constructors SET price = ? WHERE id = ?`).run(prixArrondi, c.id);
+    await db.query(`UPDATE constructors SET price = $1 WHERE id = $2`, [prixArrondi, c.id]);
     result.push({ constructor_id: c.id, price: prixArrondi });
   }
   
@@ -225,17 +229,18 @@ function updateConstructorPrices(season) {
 /**
  * Obtenir l'historique des prix d'un pilote
  */
-function getDriverPriceHistory(driver_id, season) {
-  return db.prepare(`
+async function getDriverPriceHistory(driver_id, season) {
+  const result = await db.query(`
     SELECT 
       ph.*,
       rw.round,
       rw.name as weekend_name
     FROM price_history ph
     JOIN race_weekends rw ON rw.id = ph.race_weekend_id
-    WHERE ph.driver_id = ? AND ph.season = ?
+    WHERE ph.driver_id = $1 AND ph.season = $2
     ORDER BY rw.round ASC
-  `).all(driver_id, season);
+  `, [driver_id, season]);
+  return result.rows;
 }
 
 module.exports = {

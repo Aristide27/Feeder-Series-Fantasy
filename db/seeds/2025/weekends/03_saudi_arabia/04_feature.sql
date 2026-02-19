@@ -22,4 +22,5 @@ VALUES
 (18, 3, 22, 19, 'OK', 0),   -- Cian Shields
 (22, 3, 21, 20, 'OK', 0),   -- John Bennett
 (11, 3, 17, NULL, 'DNF', 0),   -- Sebastián Montoya
-(32, 3, 15, NULL, 'DNF', 0);   -- Sami Meguetounif
+(32, 3, 15, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

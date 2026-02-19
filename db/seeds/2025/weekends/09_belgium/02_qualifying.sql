@@ -21,4 +21,5 @@ VALUES
 (32, 9, 19, 'OK'),   -- Sami Meguetounif
 (15, 9, 20, 'OK'),   -- Kush Maini
 (2, 9, 21, 'OK'),   -- Joshua Dürksen
-(18, 9, 22, 'OK');   -- Cian Shields
+(18, 9, 22, 'OK')
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

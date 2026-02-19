@@ -21,4 +21,5 @@ VALUES
 (19, 15, 22, 10),   -- Nicolás Varrone,         #22, Van Amersfoort Racing
 (20, 15, 23, 10),   -- Rafael Villagómez,       #23, Van Amersfoort Racing
 (21, 15, 24, 11),   -- Laurens van Hoepen,      #24, Trident
-(22, 15, 25, 11);   -- John Bennett,            #25, Trident
+(22, 15, 25, 11)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

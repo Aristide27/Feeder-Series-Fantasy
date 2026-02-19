@@ -22,4 +22,5 @@ VALUES
 (18, 14, 21, 19, 'OK', 0),   -- Cian Shields
 (28, 14, 17, 20, 'OK', 1),   -- Luke Browning (fastest lap)
 (13, 14, 18, NULL, 'DNF', 0),   -- Martinius Stenshorne
-(22, 14, 15, NULL, 'DNF', 0);   -- John Bennett
+(22, 14, 15, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

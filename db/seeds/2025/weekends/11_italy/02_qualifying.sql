@@ -21,4 +21,5 @@ VALUES
 (18, 11, 19, 'OK'),   -- Cian Shields
 (31, 11, 20, 'OK'),   -- Amaury Cordeel
 (11, 11, 21, 'OK'),   -- Sebastián Montoya
-(33, 11, 22, 'OK');   -- Max Esterson
+(33, 11, 22, 'OK')
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

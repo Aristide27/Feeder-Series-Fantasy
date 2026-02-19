@@ -22,4 +22,5 @@ VALUES
 (14, 2, 4, 19, 'OK', 0),   -- Alexander Dunne
 (2, 2, 10, 20, 'DQ', 0),   -- Joshua Dürksen
 (33, 2, 17, 21, 'DNF', 0),   -- Max Esterson
-(11, 2, 18, 22, 'DNF', 0);   -- Sebastián Montoya
+(11, 2, 18, 22, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

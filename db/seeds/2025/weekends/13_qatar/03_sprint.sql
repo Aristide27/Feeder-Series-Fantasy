@@ -22,4 +22,5 @@ VALUES
 (21, 13, 22, 19, 'OK', 0),   -- Laurens van Hoepen
 (18, 13, 19, NULL, 'DNF', 0),   -- Cian Shields
 (15, 13, 20, NULL, 'DNF', 0),   -- Kush Maini
-(34, 13, 21, NULL, 'DNF', 0);   -- James Wharton
+(34, 13, 21, NULL, 'DNF', 0)
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

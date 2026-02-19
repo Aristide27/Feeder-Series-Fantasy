@@ -20,4 +20,5 @@ VALUES
 (10, 8, 18, 'OK'),   -- Oliver Goethe
 (25, 8, 19, 'OK'),   -- Pepe Martí
 (18, 8, 20, 'OK'),   -- Cian Shields
-(31, 8, 21, 'OK');   -- Amaury Cordeel
+(31, 8, 21, 'OK')
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;

@@ -21,4 +21,5 @@ VALUES
 (18, 13, 19, 'OK'),   -- Cian Shields
 (15, 13, 20, 'OK'),   -- Kush Maini
 (34, 13, 21, 'OK'),   -- James Wharton
-(21, 13, 22, 'OK');   -- Laurens van Hoepen
+(21, 13, 22, 'OK')
+ON CONFLICT (driver_id, race_weekend_id) DO NOTHING;
