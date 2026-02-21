@@ -40,8 +40,8 @@ async function init() {
         league_id INTEGER NOT NULL,
         user_id INTEGER NOT NULL,
         joined_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (league_id) REFERENCES leagues(id),
-        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (league_id) REFERENCES leagues(id) ON DELETE CASCADE,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         UNIQUE(league_id, user_id)
       );
 
@@ -52,11 +52,10 @@ async function init() {
         user_id INTEGER NOT NULL,
         total_points INTEGER DEFAULT 0,
         last_updated TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (league_id) REFERENCES leagues(id),
-        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (league_id) REFERENCES leagues(id) ON DELETE CASCADE,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         UNIQUE(league_id, user_id)
       );
-
       /* ========= DRIVERS ========= */
       CREATE TABLE IF NOT EXISTS drivers (
         id INTEGER PRIMARY KEY,
@@ -79,14 +78,14 @@ async function init() {
         user_id INTEGER NOT NULL,
         league_id INTEGER NOT NULL,
         season INTEGER NOT NULL,
-        name TEXT NOT NULL,
+        name TEXT,
         is_validated INTEGER DEFAULT 0,
         validated_at TIMESTAMPTZ,
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         budget REAL DEFAULT 100.0,
         initial_spent REAL DEFAULT 0.0,
-        FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (league_id) REFERENCES leagues(id),
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (league_id) REFERENCES leagues(id) ON DELETE CASCADE,
         UNIQUE(user_id, league_id, season)
       );
 
@@ -95,7 +94,7 @@ async function init() {
         id SERIAL PRIMARY KEY,
         fantasy_team_id INTEGER NOT NULL,
         constructor_id INTEGER NOT NULL,
-        FOREIGN KEY (fantasy_team_id) REFERENCES fantasy_teams(id),
+        FOREIGN KEY (fantasy_team_id) REFERENCES fantasy_teams(id) ON DELETE CASCADE,
         FOREIGN KEY (constructor_id) REFERENCES constructors(id),
         UNIQUE(fantasy_team_id, constructor_id)
       );
@@ -106,7 +105,8 @@ async function init() {
         fantasy_team_id INTEGER NOT NULL,
         driver_id INTEGER NOT NULL,
         season INTEGER NOT NULL,
-        FOREIGN KEY (fantasy_team_id) REFERENCES fantasy_teams(id),
+        is_captain INTEGER DEFAULT 0,
+        FOREIGN KEY (fantasy_team_id) REFERENCES fantasy_teams(id) ON DELETE CASCADE,
         FOREIGN KEY (driver_id) REFERENCES drivers(id),
         UNIQUE(fantasy_team_id, driver_id, season)
       );

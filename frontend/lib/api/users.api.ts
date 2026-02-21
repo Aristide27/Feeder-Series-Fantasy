@@ -11,7 +11,7 @@ export type UserProfile = {
  * Récupère le profil de l'utilisateur connecté
  */
 export async function getUserProfile(token: string): Promise<UserProfile> {
-  const res = await fetch(`${API_BASE}/users/me`, {
+  const res = await fetch(`${API_BASE}/api/users/me`, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   });
@@ -25,7 +25,7 @@ export async function getUserProfile(token: string): Promise<UserProfile> {
  * Modifie le username de l'utilisateur connecté
  */
 export async function updateUsername(token: string, username: string): Promise<{ message: string; username: string }> {
-  const res = await fetch(`${API_BASE}/users/me/username`, {
+  const res = await fetch(`${API_BASE}/api/users/me/username`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ export async function updateUsername(token: string, username: string): Promise<{
  * Modifie l'email de l'utilisateur connecté
  */
 export async function updateEmail(token: string, email: string): Promise<{ message: string; email: string | null }> {
-  const res = await fetch(`${API_BASE}/users/me/email`, {
+  const res = await fetch(`${API_BASE}/api/users/me/email`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ export async function updatePassword(
   oldPassword: string,
   newPassword: string
 ): Promise<{ message: string }> {
-  const res = await fetch(`${API_BASE}/users/me/password`, {
+  const res = await fetch(`${API_BASE}/api/users/me/password`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,

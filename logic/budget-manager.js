@@ -35,7 +35,7 @@ async function calculateTeamBudget(teamId, season) {
   // 3. Récupérer les 2 écuries de l'équipe
   const constructorsResult = await db.query(`
     SELECT c.price
-    FROM fantasy_team_constructors ftc
+    FROM fantasy_constructors ftc
     JOIN constructors c ON c.id = ftc.constructor_id
     WHERE ftc.fantasy_team_id = $1
   `, [teamId]);
@@ -135,7 +135,7 @@ async function recordInitialSpent(teamId) {
 
   const constructorsResult = await db.query(`
     SELECT c.price
-    FROM fantasy_team_constructors ftc
+    FROM fantasy_constructors ftc
     JOIN constructors c ON c.id = ftc.constructor_id
     WHERE ftc.fantasy_team_id = $1
   `, [teamId]);

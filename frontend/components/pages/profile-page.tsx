@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { getToken, getUsername as getStoredUsername, clearAuth } from "@/lib/auth/token";
 import { getUserProfile, updateUsername, updateEmail, updatePassword, UserProfile } from "@/lib/api/users.api";
 
-export default function ProfilePage() {
+export function ProfileContent() {
   const router = useRouter();
   const pathname = usePathname();
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -499,5 +499,17 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-accent border-t-transparent"></div>
+      </div>
+    }>
+      <ProfileContent />
+    </Suspense>
   );
 }

@@ -12,6 +12,7 @@ import DriverStatsPopup from "@/components/driver-stats-popup";
 import { Info, ArrowUpDown } from "lucide-react";
 
 const SEASON_DEFAULT = 2026;
+const BUDGET_INITIAL = 100;
 const BUDGET_MAX = 200;
 const AUTOSAVE_DELAY = 0;
 
@@ -54,6 +55,7 @@ export function MyTeamContent() {
   // Sélections
   const [selectedConstructorsIds, setselectedConstructorsIds] = useState<(number | null)[]>([null, null]);
   const [selectedDriverSeasonIds, setSelectedDriverSeasonIds] = useState<(number | null)[]>([null, null, null, null, null]);
+  const [captainDriverId, setCaptainDriverId] = useState<number | null>(null);
 
   // État pour l'apparition progressive du message
   const [showUnsavedMessage, setShowUnsavedMessage] = useState(false);
@@ -80,45 +82,60 @@ export function MyTeamContent() {
     // Charger l'équipe depuis le backend
     getTeam(token, parseInt(leagueId))
       .then((data) => {
-        console.log("Données reçues:", data); // DEBUG
+        console.log("Données reçues:", data);
 
-        if (data.team) {
-          const name = data.team.name?.trim() || "";
-          setTeamName(name);
-          
+        // Si pas d'équipe du tout, afficher la popup
+        if (!data.team) {
+          console.log("🔴 Aucune équipe trouvée, popup affichée");
+          setShowNamePopup(true);
           setLeagueName(data.league?.name || "");
-          console.log("Nom de la ligue:", data.league?.name); // DEBUG
-          setTeamBudget(data.team.budget || BUDGET_MAX);
-          
-          // Afficher popup si pas de nom
-          if (!name) {
-            setShowNamePopup(true);
-          }
-          
-          // Charger les écuries
-          if (data.constructors && data.constructors.length > 0) {
-            // On type explicitement le tableau pour éviter l'erreur TypeScript
-            const cSlots: (number | null)[] = [null, null]; 
-            data.constructors.forEach((c, i) => {
-              if (i < 2) cSlots[i] = c.constructor_id;
-            });
-            setselectedConstructorsIds(cSlots);
-          } else {
-            setselectedConstructorsIds([null, null]);
-          }
+          setTeamBudget(BUDGET_INITIAL);
+          return; // Sortir ici
+        }
 
-          // Charger les pilotes
-          if (data.drivers && data.drivers.length > 0) {
-            // const slots = [null, null, null, null, null];
-            const slots: (number | null)[] = [null, null, null, null, null];
-            data.drivers.forEach((d, i) => {
-              if (i < 5) slots[i] = d.driver_id;
-            });
-            setSelectedDriverSeasonIds(slots);
-          } else {
-            // Si aucune équipe n'existe encore, on initialise 5 slots vides
-            setSelectedDriverSeasonIds([null, null, null, null, null]);
-          }}
+        // Si équipe existe
+        const name = data.team.name?.trim() || "";
+        setTeamName(name);
+        setLeagueName(data.league?.name || "");
+        setTeamBudget(data.team.budget || BUDGET_MAX);
+        
+        // Afficher popup si nom vide
+        if (!name || name.length === 0) {
+          console.log("🔴 Équipe sans nom, popup affichée");
+          setShowNamePopup(true);
+        }
+        
+        // Charger les écuries
+        if (data.constructors && data.constructors.length > 0) {
+          const cSlots: (number | null)[] = [null, null]; 
+          data.constructors.forEach((c, i) => {
+            if (i < 2) cSlots[i] = c.constructor_id;
+          });
+          setselectedConstructorsIds(cSlots);
+        } else {
+          setselectedConstructorsIds([null, null]);
+        }
+
+        // Charger les pilotes
+        if (data.drivers && data.drivers.length > 0) {
+          const slots: (number | null)[] = [null, null, null, null, null];
+          let captain: number | null = null;
+          
+          data.drivers.forEach((d, i) => {
+            if (i < 5) {
+              slots[i] = d.driver_id;
+              if (d.is_captain === 1) {
+                captain = d.driver_id;
+              }
+            }
+          });
+          
+          setSelectedDriverSeasonIds(slots);
+          setCaptainDriverId(captain);
+        } else {
+          setSelectedDriverSeasonIds([null, null, null, null, null]);
+          setCaptainDriverId(null);
+        }
       })
       .catch((err) => {
         console.error("Erreur chargement équipe:", err);
@@ -202,24 +219,26 @@ export function MyTeamContent() {
     if (!isValidTeam) return;
 
     setSaveStatus('saving');
+    setSaveError(null); // Réinitialiser l'erreur avant de sauvegarder
 
-    // ON FILTRE ICI : on enlève les null pour n'envoyer que les vrais IDs
     const driverIdsToSave = selectedDriverSeasonIds.filter((id): id is number => id !== null);
     const constructorIdsToSave = selectedConstructorsIds.filter((id): id is number => id !== null);
 
     try {
       await saveTeam(token, parseInt(leagueId), {
         teamName: teamName.trim(),
-        constructorIds: constructorIdsToSave, // Version nettoyée
-        driverIds: driverIdsToSave,           // Version nettoyée
+        constructorIds: constructorIdsToSave,
+        driverIds: driverIdsToSave,
+        captainDriverId: captainDriverId,
       });
       
+      setSaveError(null); // Réinitialiser après succès
       setTimeout(() => { setSaveStatus('saved'); }, 1000);
     } catch (err: any) {
       setSaveStatus('error');
       setSaveError(err?.message ?? "Erreur sauvegarde");
     }
-  }, [leagueId, teamName, selectedConstructorsIds, selectedDriverSeasonIds, isValidTeam]);
+  }, [leagueId, teamName, selectedConstructorsIds, selectedDriverSeasonIds, captainDriverId, isValidTeam]);
   
   useEffect(() => {
     // Ne déclencher le timer que si l'équipe est valide
@@ -269,14 +288,16 @@ export function MyTeamContent() {
       const currentIndex = prev.indexOf(driverSeasonId);
 
       if (currentIndex !== -1) {
-        // Désélection : on remplace par null
         const next = [...prev];
         next[currentIndex] = null;
+        
+        if (captainDriverId === driverSeasonId) {
+          setCaptainDriverId(null);
+        }
+        
         return next;
       } else {
-        // Sélection : on cherche la 1ère place libre
         const firstEmptySlot = prev.indexOf(null);
-        // On vérifie aussi que le pilote n'est pas déjà dans le tableau (sécurité)
         if (firstEmptySlot !== -1 && !prev.includes(driverSeasonId)) {
           const next = [...prev];
           next[firstEmptySlot] = driverSeasonId;
@@ -285,6 +306,18 @@ export function MyTeamContent() {
         return prev;
       }
     });
+  }
+
+  function toggleCaptain(driverId: number) {
+    if (!canEdit) return;
+    
+    // Si on clique sur le capitaine actuel, on le désélectionne
+    if (captainDriverId === driverId) {
+      setCaptainDriverId(null);
+    } else {
+      // Sinon, on définit le nouveau capitaine
+      setCaptainDriverId(driverId);
+    }
   }
 
   // Retry sauvegarde en cas d'erreur
@@ -325,6 +358,28 @@ export function MyTeamContent() {
       setTeamName(name);
       setShowNamePopup(false);
       setTempName("");
+      
+      // Si l'équipe est complète, déclencher une sauvegarde pour calculer initial_spent
+      const driverIdsToSave = selectedDriverSeasonIds.filter((id): id is number => id !== null);
+      const constructorIdsToSave = selectedConstructorsIds.filter((id): id is number => id !== null);
+      
+      if (driverIdsToSave.length === 5 && constructorIdsToSave.length === 2) {
+        console.log("🔄 Sauvegarde automatique après validation du nom...");
+        await saveTeam(token, parseInt(leagueId), {
+          teamName: name,
+          constructorIds: constructorIdsToSave,
+          driverIds: driverIdsToSave,
+          captainDriverId: captainDriverId,
+        });
+        console.log("✅ Équipe sauvegardée avec initial_spent calculé");
+        
+        // Recharger l'équipe pour obtenir le nouveau budget
+        const updatedTeam = await getTeam(token, parseInt(leagueId));
+        if (updatedTeam.team) {
+          setTeamBudget(updatedTeam.team.budget);
+        }
+      }
+      
     } catch (err: any) {
       setNameError(err?.message ?? "Erreur lors de la validation");
     } finally {
@@ -536,9 +591,13 @@ export function MyTeamContent() {
                               teamName: driverAtSlot.constructor_name,
                               price: driverAtSlot.driver_price,
                             }
-                          : undefined // Si pas de pilote à cet index, le slot reste vide
+                          : undefined
                       }
                       avatarIndex={i}
+                      isCaptain={driverAtSlot?.driver_id === captainDriverId}
+                      onToggleCaptain={driverAtSlot ? () => toggleCaptain(driverAtSlot.driver_id) : undefined}
+                      canEdit={canEdit}
+                      showBadge={captainDriverId === null || driverAtSlot?.driver_id === captainDriverId} // ✅ Nouveau : afficher seulement si pas de capitaine OU si c'est lui
                     />
                   </div>
                 );

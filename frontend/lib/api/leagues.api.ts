@@ -138,16 +138,20 @@ export async function updateLeague(
  * Supprimer une ligue (admin only)
  */
 export async function deleteLeague(token: string, code: string): Promise<{ message: string }> {
-  const res = await fetch(`${API_BASE}/api/leagues/${code}`, {
+  const res = await fetch(`${API_BASE}/api/leagues/${code}`, { // ✅ Parenthèses, pas backticks
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
   });
-
+  
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data?.error ?? "Erreur lors de la suppression de la ligue");
+  
+  if (!res.ok) {
+    throw new Error(data?.error ?? "Erreur lors de la suppression de la ligue");
+  }
+  
   return data;
 }
 

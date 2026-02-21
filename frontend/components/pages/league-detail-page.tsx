@@ -148,12 +148,13 @@ export default function LeagueDetailPage() {
 
     try {
       await deleteLeague(token, code);
-      router.push("/leagues?deleted=true");
+      router.push("/leagues");
     } catch (err: any) {
       alert(err?.message ?? "Erreur lors de la suppression");
       setShowDeleteModal(false);
     } finally {
       setIsDeleting(false);
+      setShowDeleteModal(false);
     }
   }
 

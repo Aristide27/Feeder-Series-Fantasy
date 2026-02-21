@@ -17,6 +17,7 @@ export type TeamDriver = {
   driver_price: number;
   rookie: number;
   constructor_name: string;
+  is_captain: number; // ✅ Ajout du capitaine
 };
 
 export type TeamConstructor = {
@@ -42,7 +43,7 @@ export type TeamData = {
 
 /* Récupérer l'équipe de l'utilisateur pour une ligue */
 export async function getTeam(token: string, leagueId: number): Promise<TeamData> {
-  const res = await fetch(`${API_BASE}/api/teams/${leagueId}`, {  // ✅ Corrigé les backticks
+  const res = await fetch(`${API_BASE}/api/teams/${leagueId}`, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   });
@@ -59,9 +60,10 @@ export async function saveTeam(
     teamName: string;
     constructorIds: number[];
     driverIds: number[];
+    captainDriverId: number | null;
   }
 ): Promise<{ message: string; teamId: number; totalCost: string }> {
-  const res = await fetch(`${API_BASE}/api/teams/${leagueId}/save`, {  // ✅ Corrigé les backticks
+  const res = await fetch(`${API_BASE}/api/teams/${leagueId}/save`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -87,7 +89,7 @@ export async function getDeadlineStatus(
   round?: number;
   timeRemaining: string | null;
 }> {
-  const res = await fetch(`${API_BASE}/api/teams/${leagueId}/deadline-status`, {  // ✅ Corrigé les backticks
+  const res = await fetch(`${API_BASE}/api/teams/${leagueId}/deadline-status`, {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   });
@@ -102,7 +104,7 @@ export async function updateTeamName(
   leagueId: number,
   name: string
 ): Promise<{ message: string; name: string }> {
-  const res = await fetch(`${API_BASE}/api/teams/${leagueId}/name`, {  // ✅ Corrigé les backticks
+  const res = await fetch(`${API_BASE}/api/teams/${leagueId}/name`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,

@@ -61,6 +61,7 @@ router.get("/:leagueId", authenticateToken, async (req, res) => {
     const driversResult = await db.query(`
       SELECT 
         fp.driver_id,
+        fp.is_captain,
         d.name as driver_name,
         ds.price as driver_price,
         c.name as constructor_name
@@ -75,9 +76,9 @@ router.get("/:leagueId", authenticateToken, async (req, res) => {
       team: {
         id: team.id,
         name: team.name,
-        budget: team.budget || 100 // ✅ 28: Budget dynamique
+        budget: team.budget || 100
       },
-      league: league ? { id: league.id, name: league.name } : null, // ✅ 19
+      league: league ? { id: league.id, name: league.name } : null,
       constructors: constructorsResult.rows,
       drivers: driversResult.rows
     });
@@ -338,7 +339,7 @@ router.patch("/:leagueId/name", authenticateToken, async (req, res) => {
 // ============================================
 router.post("/:leagueId/save", authenticateToken, async (req, res) => {
   const { leagueId } = req.params;
-  const { teamName, constructorIds, driverIds } = req.body;
+  const { teamName, constructorIds, driverIds, captainDriverId } = req.body;
   const season = 2026;
 
   // Validation basique
@@ -401,12 +402,14 @@ router.post("/:leagueId/save", authenticateToken, async (req, res) => {
       `, [team.id, cId]);
     }
 
-    // Insérer les nouveaux pilotes
+    // Insérer les nouveaux pilotes avec capitaine
     for (const driverId of driverIds) {
+      const isCaptain = driverId === captainDriverId ? 1 : 0;
+      
       await db.query(`
-        INSERT INTO fantasy_picks (fantasy_team_id, driver_id, season)
-        VALUES ($1, $2, $3)
-      `, [team.id, driverId, season]);
+        INSERT INTO fantasy_picks (fantasy_team_id, driver_id, season, is_captain)
+        VALUES ($1, $2, $3, $4)
+      `, [team.id, driverId, season, isCaptain]);
     }
 
     // Calculer le coût total
@@ -426,7 +429,16 @@ router.post("/:leagueId/save", authenticateToken, async (req, res) => {
 
     const totalCost = (constructorsCostResult.rows[0]?.total || 0) + (driversCostResult.rows[0]?.total || 0);
 
-    console.log(`[SAVE] User ${req.user.id} - League ${leagueId} - Team ${team.id} - Cost ${totalCost.toFixed(1)}M`);
+    const checkInitialResult = await db.query(`
+      SELECT initial_spent FROM fantasy_teams WHERE id = $1
+    `, [team.id]);
+
+    if (!checkInitialResult.rows[0]?.initial_spent || checkInitialResult.rows[0].initial_spent === 0) {
+      await recordInitialSpent(team.id);
+      console.log(`[SAVE] initial_spent enregistré pour team ${team.id}: ${totalCost.toFixed(1)}M`); // ✅ Parenthèses
+    }
+
+    console.log(`[SAVE] User ${req.user.id} - League ${leagueId} - Team ${team.id} - Cost ${totalCost.toFixed(1)}M`); // ✅ Parenthèses, pas de duplication
 
     res.json({ 
       message: "Équipe sauvegardée",
