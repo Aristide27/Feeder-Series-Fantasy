@@ -24,7 +24,6 @@ async function calculateScores() {
   console.log("=".repeat(60));
 
   try {
-    // Vérifier que le weekend existe
     const weekendResult = await db.query(`
       SELECT id, name, round 
       FROM race_weekends 
@@ -39,7 +38,6 @@ async function calculateScores() {
 
     console.log(`Weekend: ${weekend.name} (Round ${weekend.round})\n`);
 
-    // ✅ Calculer les points des écuries (valables pour tout le monde)
     console.log("📊 Calcul des points constructeurs...");
     const constructorPoints = await getConstructorPoints(weekendId);
     const constructorMap = Object.fromEntries(
@@ -47,7 +45,6 @@ async function calculateScores() {
     );
     console.log(`✅ ${constructorPoints.length} écuries calculées\n`);
 
-    // Récupérer toutes les équipes de la saison
     const teamsResult = await db.query(`
       SELECT 
         ft.id as team_id,
@@ -67,14 +64,12 @@ async function calculateScores() {
 
     for (const team of teams) {
       try {
-        // Récupérer les pilotes de l'équipe
         const driversResult = await db.query(`
           SELECT driver_id, is_captain 
           FROM fantasy_picks 
           WHERE fantasy_team_id = $1
         `, [team.team_id]);
 
-        // Récupérer les écuries de l'équipe
         const constructorsResult = await db.query(`
           SELECT constructor_id 
           FROM fantasy_constructors 
@@ -86,17 +81,14 @@ async function calculateScores() {
           continue;
         }
 
-        // ✅ Calculer les points des pilotes avec le capitaine
         const qualPoints = await getQualifyingPoints(weekendId, team.team_id);
         const sprintPoints = await getSprintPoints(weekendId, team.team_id);
         const featurePoints = await getFeaturePoints(weekendId, team.team_id);
 
-        // Créer des maps pour lookup rapide
         const qualMap = Object.fromEntries(qualPoints.map(p => [p.driver_id, p.points]));
         const sprintMap = Object.fromEntries(sprintPoints.map(p => [p.driver_id, p.points]));
         const featureMap = Object.fromEntries(featurePoints.map(p => [p.driver_id, p.points]));
 
-        // Calculer le total des pilotes
         let driversTotal = 0;
         driversResult.rows.forEach(driver => {
           const driverTotal = (qualMap[driver.driver_id] || 0) +
@@ -105,7 +97,6 @@ async function calculateScores() {
           driversTotal += driverTotal;
         });
 
-        // ✅ Calculer le total des écuries
         let constructorsTotal = 0;
         constructorsResult.rows.forEach(constructor => {
           constructorsTotal += constructorMap[constructor.constructor_id] || 0;
@@ -113,7 +104,6 @@ async function calculateScores() {
 
         const weekendTotal = driversTotal + constructorsTotal;
 
-        // Mettre à jour le score dans league_scores
         await db.query(`
           INSERT INTO league_scores (league_id, user_id, total_points)
           VALUES ($1, $2, $3)
@@ -121,7 +111,7 @@ async function calculateScores() {
           DO UPDATE SET total_points = league_scores.total_points + $3
         `, [team.league_id, team.user_id, weekendTotal]);
 
-        console.log(`✅ ${team.username} (${team.team_name}): +${weekendTotal} points (Pilotes: ${driversTotal} | Écuries: ${constructorsTotal})`);
+        console.log(`✅ ${team.username} (${team.team_name || 'Sans nom'}): +${weekendTotal} points (Pilotes: ${driversTotal} | Écuries: ${constructorsTotal})`);
         processedCount++;
 
       } catch (err) {
