@@ -460,7 +460,6 @@ router.get("/:leagueId/deadline-status", authenticateToken, async (req, res) => 
   const season = 2026;
 
   try {
-    // Vérifier membre
     const member = await db.query(`
       SELECT id FROM league_members 
       WHERE league_id = $1 AND user_id = $2
@@ -470,20 +469,55 @@ router.get("/:leagueId/deadline-status", authenticateToken, async (req, res) => 
       return res.status(403).json({ error: "Vous n'êtes pas membre de cette ligue" });
     }
 
-    // Récupérer le prochain weekend
-    const now = new Date().toISOString();
+    const now = new Date();
+    
+    // Chercher le weekend ACTIF (lock passé, mais unlock pas encore passé)
+    const activeWeekendResult = await db.query(`
+      SELECT id, round, name, lock_deadline, unlock_at
+      FROM race_weekends
+      WHERE season = $1 
+        AND lock_deadline <= $2
+        AND unlock_at > $2
+      ORDER BY round ASC
+      LIMIT 1
+    `, [season, now.toISOString()]);
+
+    const activeWeekend = activeWeekendResult.rows[0];
+
+    if (activeWeekend) {
+      // Weekend EN COURS = LOCKED
+      const unlockDate = new Date(activeWeekend.unlock_at);
+      const hoursUntilUnlock = (unlockDate.getTime() - now.getTime()) / (1000 * 60 * 60);
+
+      const formatTime = (hours) => {
+        if (hours < 1) return `${Math.floor(hours * 60)}min`;
+        if (hours < 24) return `${Math.floor(hours)}h`;
+        return `${Math.floor(hours / 24)}j`;
+      };
+
+      return res.json({
+        state: "locked",
+        canEdit: false,
+        deadline: activeWeekend.lock_deadline,
+        unlockAt: activeWeekend.unlock_at,
+        weekendName: activeWeekend.name,
+        round: activeWeekend.round,
+        timeRemaining: formatTime(hoursUntilUnlock)
+      });
+    }
+
+    // Sinon, chercher le PROCHAIN weekend
     const nextWeekendResult = await db.query(`
       SELECT id, round, name, lock_deadline
       FROM race_weekends
       WHERE season = $1 AND lock_deadline > $2
       ORDER BY lock_deadline ASC
       LIMIT 1
-    `, [season, now]);
+    `, [season, now.toISOString()]);
 
     const nextWeekend = nextWeekendResult.rows[0];
 
-    if (!nextWeekend || !nextWeekend.lock_deadline) {
-      // Pas de deadline à venir
+    if (!nextWeekend) {
       return res.json({
         state: "open",
         canEdit: true,
@@ -495,42 +529,25 @@ router.get("/:leagueId/deadline-status", authenticateToken, async (req, res) => 
     }
 
     const deadline = new Date(nextWeekend.lock_deadline);
-    const nowDate = new Date();
-    const hoursUntilDeadline = (deadline.getTime() - nowDate.getTime()) / (1000 * 60 * 60);
+    const hoursUntilDeadline = (deadline.getTime() - now.getTime()) / (1000 * 60 * 60);
 
-    // Déterminer l'état
     let state = "open";
-    let canEdit = true;
+    if (hoursUntilDeadline < 24) state = "urgent";
 
-    if (hoursUntilDeadline < 0) {
-      // Deadline passée = locked
-      state = "locked";
-      canEdit = false;
-    } else if (hoursUntilDeadline < 24) {
-      // Moins de 24h = urgent
-      state = "urgent";
-      canEdit = true;
-    }
-
-    // Calculer le temps restant
-    const formatTimeRemaining = (hours) => {
-      if (hours < 1) {
-        return `${Math.floor(hours * 60)}min`;
-      } else if (hours < 24) {
-        return `${Math.floor(hours)}h`;
-      } else {
-        return `${Math.floor(hours / 24)}j`;
-      }
+    const formatTime = (hours) => {
+      if (hours < 1) return `${Math.floor(hours * 60)}min`;
+      if (hours < 24) return `${Math.floor(hours)}h`;
+      return `${Math.floor(hours / 24)}j`;
     };
 
     res.json({
       state,
-      canEdit,
+      canEdit: true,
       deadline: nextWeekend.lock_deadline,
-      unlockAt: null, // TODO: implémenter unlock_at si besoin
+      unlockAt: null,
       weekendName: nextWeekend.name,
       round: nextWeekend.round,
-      timeRemaining: hoursUntilDeadline > 0 ? formatTimeRemaining(hoursUntilDeadline) : null
+      timeRemaining: formatTime(hoursUntilDeadline)
     });
 
   } catch (err) {
