@@ -7,7 +7,7 @@ export default function GoogleButton({ mode }: GoogleButtonProps) {
   
   const handleGoogleAuth = () => {
     // Rediriger vers l'endpoint Google OAuth du backend
-    window.location.href = `${API_BASE}/auth/google`;
+    window.location.href = `${API_BASE}/api/auth/google`;
   };
 
   return (

@@ -45,6 +45,12 @@ export type TeamComposition = {
     price: number;
     rookie: number;
     constructor_name: string;
+    is_captain: number;
+  }>;
+  constructors: Array<{
+    id: number;
+    name: string;
+    price: number;
   }>;
 };
 

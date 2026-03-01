@@ -161,4 +161,17 @@ router.patch("/me/password", authenticateToken, async (req, res) => {
   }
 });
 
+// ============================================
+// DELETE /users/me - Supprimer le compte
+// ============================================
+router.delete("/me", authenticateToken, async (req, res) => {
+  try {
+    await db.query("DELETE FROM users WHERE id = $1", [req.user.id]);
+    res.json({ message: "Compte supprimé avec succès" });
+  } catch (err) {
+    console.error("[DELETE /users/me ERROR]", err);
+    res.status(500).json({ error: "Erreur lors de la suppression du compte" });
+  }
+});
+
 module.exports = router;

@@ -5,16 +5,27 @@ const bcrypt = require("bcrypt");
 console.log("=== AJOUT D'UTILISATEURS DE TEST ===\n");
 
 const testUsers = [
-  { username: "ChampionMax", email: "max@test.com", points: 1500 },
-  { username: "SpeedRacer", email: "speed@test.com", points: 1350 },
-  { username: "PolePosition", email: "pole@test.com", points: 1200 },
-  { username: "FastLap", email: "fast@test.com", points: 1050 },
-  { username: "RocketStart", email: "rocket@test.com", points: 950 },
-  { username: "TyreWhisperer", email: "tyre@test.com", points: 890 },
-  { username: "ApexHunter", email: "apex@test.com", points: 820 },
-  { username: "OvertakingKing", email: "overtake@test.com", points: 750 },
-  { username: "GridMaster", email: "grid@test.com", points: 680 },
-  { username: "PitPerfect", email: "pit@test.com", points: 620 },
+{ username: "LucasMartin", email: "lucas.martin@test.com", points: 0 },
+{ username: "TheoRacing22", email: "theo22@test.com", points: 0 },
+{ username: "Enzo_Dubois", email: "enzo.dubois@test.com", points: 0 },
+{ username: "MaximeLefevre7", email: "maxime7@test.com", points: 0 },
+{ username: "HugoBernard", email: "hugo.bernard@test.com", points: 0 },
+{ username: "RomainGiraud", email: "romain.g@test.com", points: 0 },
+{ username: "NicolasRoux", email: "nicolas.roux@test.com", points: 0 },
+{ username: "JulienMorel_91", email: "julien91@test.com", points: 0 },
+{ username: "AntoinePetit", email: "antoine.p@test.com", points: 0 },
+{ username: "AlexandreLemaire", email: "alex.lemaire@test.com", points: 0 },
+
+{ username: "ApexAddict", email: "apex.addict@test.com", points: 0 },
+{ username: "DRS_Master", email: "drs.master@test.com", points: 0 },
+{ username: "LateBraker", email: "late.braker@test.com", points: 0 },
+{ username: "ChicaneHunter", email: "chicane@test.com", points: 0 },
+{ username: "FullThrottleX", email: "throttle@test.com", points: 0 },
+{ username: "PitlanePro", email: "pitlane@test.com", points: 0 },
+{ username: "TurboVictor", email: "turbo.v@test.com", points: 0 },
+{ username: "SafetyCarSam", email: "safety.sam@test.com", points: 0 },
+{ username: "SlipstreamSeb", email: "slipstream@test.com", points: 0 },
+{ username: "GridLegend44", email: "grid44@test.com", points: 0 },
 ];
 
 async function addTestUsers() {

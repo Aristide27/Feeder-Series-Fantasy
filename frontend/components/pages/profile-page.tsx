@@ -33,6 +33,8 @@ export function ProfileContent() {
   const [passwordMessage, setPasswordMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   
   const [submitting, setSubmitting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   // Charger le profil au montage
   useEffect(() => {
@@ -155,6 +157,30 @@ export function ProfileContent() {
       setShowConfirmPassword(false);
     } catch (err: any) {
       setPasswordMessage({ type: "error", text: err?.message ?? "Erreur lors de la modification" });
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function handleDeleteAccount() {
+    const token = getToken();
+    if (!token) return;
+
+    setSubmitting(true);
+    try {
+      const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
+      const res = await fetch(`${API_BASE}/api/users/me`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) throw new Error("Erreur lors de la suppression");
+
+      clearAuth();
+      router.push("/");
+    } catch (err: any) {
+      setDeleteMessage({ type: "error", text: err?.message ?? "Erreur lors de la suppression" });
+      setShowDeleteConfirm(false);
     } finally {
       setSubmitting(false);
     }
@@ -480,7 +506,7 @@ export function ProfileContent() {
         </div>
 
         {/* Section Déconnexion */}
-        <div className="bg-slate-900/60 border border-white/10 rounded-2xl p-8">
+        <div className="bg-slate-900/60 border border-white/10 rounded-2xl p-8 mb-6">
           <h2 className="text-2xl font-bold text-white mb-4">Déconnexion</h2>
           <p className="text-slate-400 mb-6">
             Déconnectez-vous de votre compte sur cet appareil.
@@ -491,6 +517,52 @@ export function ProfileContent() {
           >
             Se déconnecter
           </button>
+        </div>
+
+        {/* Section Supprimer le compte */}
+        <div className="bg-slate-900/60 border border-red-500/20 rounded-2xl p-8">
+          <h2 className="text-2xl font-bold text-red-400 mb-4">Supprimer le compte</h2>
+          <p className="text-slate-400 mb-6">
+            La suppression de votre compte est définitive et irréversible. Toutes vos données seront perdues.
+          </p>
+
+          {deleteMessage && (
+            <div className="mb-4 rounded-lg border border-red-500 bg-red-500/15 px-4 py-3 text-sm text-red-500">
+              {deleteMessage.text}
+            </div>
+          )}
+
+          {!showDeleteConfirm ? (
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="px-6 py-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-500 font-semibold hover:bg-red-500/20 transition-colors"
+            >
+              Supprimer mon compte
+            </button>
+          ) : (
+            <div className="bg-red-950/30 border border-red-500/30 rounded-xl p-6">
+              <p className="text-white font-semibold mb-2">Êtes-vous vraiment sûr ?</p>
+              <p className="text-slate-400 text-sm mb-6">
+                Cette action est irréversible. Votre compte et toutes vos données seront définitivement supprimés.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={handleDeleteAccount}
+                  disabled={submitting}
+                  className="px-6 py-3 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 disabled:opacity-50 transition-colors"
+                >
+                  {submitting ? "Suppression..." : "Oui, supprimer définitivement"}
+                </button>
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  disabled={submitting}
+                  className="px-6 py-3 rounded-lg bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors"
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Informations compte */}

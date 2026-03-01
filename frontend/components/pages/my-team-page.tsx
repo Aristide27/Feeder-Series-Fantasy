@@ -26,6 +26,7 @@ export function MyTeamContent() {
   const [season] = useState(SEASON_DEFAULT);
   const [teamName, setTeamName] = useState("");
   const [leagueName, setLeagueName] = useState("");
+  const [leagueCode, setLeagueCode] = useState<string | null>(null);
   const [teamBudget, setTeamBudget] = useState(BUDGET_MAX);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -89,6 +90,7 @@ export function MyTeamContent() {
           console.log("🔴 Aucune équipe trouvée, popup affichée");
           setShowNamePopup(true);
           setLeagueName(data.league?.name || "");
+          setLeagueCode(data.league?.code || null);
           setTeamBudget(BUDGET_INITIAL);
           return; // Sortir ici
         }
@@ -97,6 +99,7 @@ export function MyTeamContent() {
         const name = data.team.name?.trim() || "";
         setTeamName(name);
         setLeagueName(data.league?.name || "");
+        setLeagueCode(data.league?.code || null);
         setTeamBudget(data.team.budget || BUDGET_MAX);
         
         // Afficher popup si nom vide
@@ -425,13 +428,39 @@ export function MyTeamContent() {
       {/* HUD global */}
       <div className="h-16 px-6 flex items-center justify-between gap-6 border-b border-white/10">
         
-        {/* GAUCHE : Identité */}
-        <div className="ml-20">
-          <div className="justify-right text-lg font-semibold text-white/90">
-            {teamName || "Sans nom"}
-          </div>
-          <div className="text-xs text-white/60">
-            {leagueName || "FSF Officiel"} • Saison {season}
+        {/* GAUCHE : Bouton retour + Identité */}
+        <div className="flex items-center gap-4">
+          {/* Bouton retour à la ligue */}
+          {leagueId && leagueCode && (
+            <button
+              onClick={() => router.push(`/leagues/${leagueCode}`)}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white/90 hover:bg-white/10 hover:border-white/20 hover:text-white transition-all text-sm font-medium"
+            >
+              <svg 
+                className="w-4 h-4" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18" 
+                />
+              </svg>
+              <span>Retour à la ligue</span>
+            </button>
+          )}
+
+          {/* Identité */}
+          <div className="ml-4">
+            <div className="text-lg font-semibold text-white/90">
+              {teamName || "Sans nom"}
+            </div>
+            <div className="text-xs text-white/60">
+              {leagueName || "FSF Officiel"} • Saison {season}
+            </div>
           </div>
         </div>
 

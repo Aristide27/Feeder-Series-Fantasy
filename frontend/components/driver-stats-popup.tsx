@@ -185,7 +185,7 @@ export default function DriverStatsPopup({ driverId, onClose }: Props) {
                 <div className="rounded-xl border border-slate-700/40 bg-slate-900/30 p-5 space-y-6">
                   <div>
                     <div className="text-slate-400 text-m font-bold mb-3 text-center">
-                      Moyennes
+                      Moyennes saison 2026
                     </div>
                     <div className="grid grid-cols-3 gap-4 text-center">
                       <div>
@@ -211,7 +211,7 @@ export default function DriverStatsPopup({ driverId, onClose }: Props) {
 
                   <div>
                     <div className="text-slate-400 text-m font-bold mb-3 text-center">
-                      Performance
+                      Performance saison 2026
                     </div>
                     <div className="grid grid-cols-3 gap-4 text-center">
                       <div>

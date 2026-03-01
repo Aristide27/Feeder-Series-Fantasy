@@ -3,16 +3,11 @@ const router = express.Router();
 const db = require("../db");
 const { pointsQualifying, pointsSprint, pointsFeature } = require("../logic/points");
 
-/**
- * Calcule les statistiques d'un pilote pour le radar de performance
- * GET /api/driver-stats/:driverId
- */
 router.get("/:driverId", async (req, res) => {
   const { driverId } = req.params;
   const season = 2026;
 
   try {
-    // 1. Récupérer les infos de base du pilote
     const driverResult = await db.query(`
       SELECT 
         d.id as driver_id,
@@ -35,7 +30,6 @@ router.get("/:driverId", async (req, res) => {
       return res.status(404).json({ error: "Pilote non trouvé" });
     }
 
-    // 2. Récupérer le dernier numéro de voiture utilisé
     const lastCarNumberResult = await db.query(`
       SELECT car_number
       FROM weekend_participants
@@ -47,7 +41,6 @@ router.get("/:driverId", async (req, res) => {
     const lastCarNumber = lastCarNumberResult.rows[0];
     driverInfo.driver_number = lastCarNumber?.car_number || null;
 
-    // 3. Récupérer les 5 derniers weekends (2026 puis 2025)
     const last5Result = await db.query(`
       SELECT 
         rw.id as weekend_id,
@@ -74,7 +67,6 @@ router.get("/:driverId", async (req, res) => {
 
     const last5Weekends = last5Result.rows;
 
-    // 4. Calculer les points pour les 5 derniers weekends
     const weekendsWithPoints = last5Weekends.map(w => {
       const qualiPoints = pointsQualifying(w.quali_position, w.quali_status);
       const sprintPoints = pointsSprint(w.sprint_position, w.sprint_status, w.sprint_fastest_lap);
@@ -95,7 +87,6 @@ router.get("/:driverId", async (req, res) => {
       };
     });
 
-    // 5. Remplir avec des slots vides si moins de 5 weekends
     while (weekendsWithPoints.length < 5) {
       weekendsWithPoints.push({
         weekend_id: null,
@@ -112,7 +103,6 @@ router.get("/:driverId", async (req, res) => {
       });
     }
 
-    // 6. Récupérer TOUS les weekends du pilote pour les statistiques globales
     const allWeekendsResult = await db.query(`
       SELECT 
         rw.id as weekend_id,
@@ -129,8 +119,8 @@ router.get("/:driverId", async (req, res) => {
       LEFT JOIN qualifying_results q ON q.driver_id = wp.driver_id AND q.race_weekend_id = rw.id
       LEFT JOIN sprint_results s ON s.driver_id = wp.driver_id AND s.race_weekend_id = rw.id
       LEFT JOIN feature_results f ON f.driver_id = wp.driver_id AND f.race_weekend_id = rw.id
-      WHERE wp.driver_id = $1
-    `, [driverId]);
+      WHERE wp.driver_id = $1 AND rw.season = $2
+    `, [driverId, season]);
 
     const allWeekends = allWeekendsResult.rows;
 
@@ -142,7 +132,6 @@ router.get("/:driverId", async (req, res) => {
       });
     }
 
-    // 7. Calculer les moyennes de positions (en excluant DNS/DNF/DSQ)
     const qualiPositions = allWeekends
       .filter(w => w.quali_position && !['DNS', 'DNF', 'DSQ'].includes(w.quali_status))
       .map(w => w.quali_position);
@@ -167,30 +156,36 @@ router.get("/:driverId", async (req, res) => {
       ? featurePositions.reduce((a, b) => a + b, 0) / featurePositions.length 
       : null;
 
-    // 8. Calculer les points totaux
     const totalPoints = allWeekends.reduce((sum, w) => {
       const qPts = pointsQualifying(w.quali_position, w.quali_status);
       const sPts = pointsSprint(w.sprint_position, w.sprint_status, w.sprint_fastest_lap);
       const fPts = pointsFeature(w.feature_position, w.feature_status, w.feature_fastest_lap);
-      return sum + qPts + sPts + fPts;
+      
+      const qClean = qPts < 0 ? 0 : qPts;
+      const sClean = sPts < 0 ? 0 : sPts;
+      const fClean = fPts < 0 ? 0 : fPts;
+      
+      return sum + qClean + sClean + fClean;
     }, 0);
 
-    // 9. Ratio Points/M
     const pointsPerMillion = totalPoints / driverInfo.driver_price;
 
-    // 10. Meilleur weekend (grouper par weekend_id)
     const weekendTotals = {};
     allWeekends.forEach(w => {
       if (!weekendTotals[w.weekend_id]) weekendTotals[w.weekend_id] = 0;
       const qPts = pointsQualifying(w.quali_position, w.quali_status);
       const sPts = pointsSprint(w.sprint_position, w.sprint_status, w.sprint_fastest_lap);
       const fPts = pointsFeature(w.feature_position, w.feature_status, w.feature_fastest_lap);
-      weekendTotals[w.weekend_id] += qPts + sPts + fPts;
+      
+      const qClean = qPts < 0 ? 0 : qPts;
+      const sClean = sPts < 0 ? 0 : sPts;
+      const fClean = fPts < 0 ? 0 : fPts;
+      
+      weekendTotals[w.weekend_id] += qClean + sClean + fClean;
     });
 
     const bestWeekend = Math.max(0, ...Object.values(weekendTotals));
 
-    // 11. Normalisation - récupérer tous les pilotes ayant fait au moins 1 course en 2026
     const allDrivers2026Result = await db.query(`
       SELECT DISTINCT wp.driver_id, ds.price
       FROM weekend_participants wp
@@ -201,7 +196,6 @@ router.get("/:driverId", async (req, res) => {
 
     const allDrivers2026 = allDrivers2026Result.rows;
 
-    // 12. Calculer les stats de tous les pilotes 2026 pour la normalisation
     const allDriversStats = await Promise.all(allDrivers2026.map(async (driver) => {
       const driverWeekendsResult = await db.query(`
         SELECT 
@@ -241,19 +235,29 @@ router.get("/:driverId", async (req, res) => {
       const avgF = fPos.length > 0 ? fPos.reduce((a, b) => a + b, 0) / fPos.length : null;
 
       const pts = driverWeekends.reduce((sum, w) => {
-        return sum + 
-          pointsQualifying(w.quali_position, w.quali_status) +
-          pointsSprint(w.sprint_position, w.sprint_status, w.sprint_fastest_lap) +
-          pointsFeature(w.feature_position, w.feature_status, w.feature_fastest_lap);
+        const qPts = pointsQualifying(w.quali_position, w.quali_status);
+        const sPts = pointsSprint(w.sprint_position, w.sprint_status, w.sprint_fastest_lap);
+        const fPts = pointsFeature(w.feature_position, w.feature_status, w.feature_fastest_lap);
+        
+        const qClean = qPts < 0 ? 0 : qPts;
+        const sClean = sPts < 0 ? 0 : sPts;
+        const fClean = fPts < 0 ? 0 : fPts;
+        
+        return sum + qClean + sClean + fClean;
       }, 0);
 
       const weekendTotals = {};
       driverWeekends.forEach(w => {
         if (!weekendTotals[w.weekend_id]) weekendTotals[w.weekend_id] = 0;
-        weekendTotals[w.weekend_id] += 
-          pointsQualifying(w.quali_position, w.quali_status) +
-          pointsSprint(w.sprint_position, w.sprint_status, w.sprint_fastest_lap) +
-          pointsFeature(w.feature_position, w.feature_status, w.feature_fastest_lap);
+        const qPts = pointsQualifying(w.quali_position, w.quali_status);
+        const sPts = pointsSprint(w.sprint_position, w.sprint_status, w.sprint_fastest_lap);
+        const fPts = pointsFeature(w.feature_position, w.feature_status, w.feature_fastest_lap);
+        
+        const qClean = qPts < 0 ? 0 : qPts;
+        const sClean = sPts < 0 ? 0 : sPts;
+        const fClean = fPts < 0 ? 0 : fPts;
+        
+        weekendTotals[w.weekend_id] += qClean + sClean + fClean;
       });
 
       const bestWE = Math.max(0, ...Object.values(weekendTotals));
@@ -270,7 +274,6 @@ router.get("/:driverId", async (req, res) => {
       };
     }));
 
-    // 13. Valeurs max pour la normalisation
     const pointsPerMillionValues = allDriversStats
       .map(d => d.points_per_million)
       .filter(v => !isNaN(v) && isFinite(v));
@@ -282,7 +285,6 @@ router.get("/:driverId", async (req, res) => {
     const maxPointsPerMillion = Math.max(...pointsPerMillionValues, 1);
     const maxBestWeekend = Math.max(...bestWeekendValues, 1);
 
-    // 14. Normalisation (0-1) avec inversion pour les positions
     const normalizePosition = (avgPos) => {
       if (!avgPos || isNaN(avgPos)) return 0;
       return Math.max(0, Math.min(1, (22 - avgPos) / 21));
@@ -296,7 +298,6 @@ router.get("/:driverId", async (req, res) => {
       best_weekend: Math.min(1, bestWeekend / maxBestWeekend)
     };
 
-    // 15. Valeurs brutes pour affichage
     const uniqueWeekends = new Set(allWeekends.map(w => w.weekend_id));
     const rawStats = {
       avg_quali: avgQuali ? parseFloat(avgQuali.toFixed(1)) : null,

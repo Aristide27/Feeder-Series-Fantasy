@@ -561,48 +561,77 @@ export default function LeagueDetailPage() {
               </h2>
 
               {selectedTeam.team ? (
-                <>
-                  <div className="mb-6">
+                <div className="space-y-6">
+                  <div>
                     <p className="text-slate-400 mb-1">Nom de l'équipe</p>
                     <p className="text-xl font-bold text-white">{selectedTeam.team.name}</p>
                   </div>
 
-                  <div className="mb-6">
-                    <p className="text-slate-400 mb-1">Constructeur</p>
-                    <p className="text-xl font-bold text-white">{selectedTeam.team.constructor}</p>
+                  <div>
+                    <p className="text-slate-400 mb-3">Constructeurs ({selectedTeam.constructors?.length || 0}/2)</p>
+                    <div className="space-y-3">
+                      {selectedTeam.constructors && selectedTeam.constructors.length > 0 ? (
+                        selectedTeam.constructors.map((constructor) => (
+                          <div
+                            key={constructor.id}
+                            className="bg-black/20 border border-slate-800/50 rounded-xl p-4"
+                          >
+                            <div className="flex items-center justify-between gap-3">
+                              <div className="min-w-0">
+                                <p className="font-bold text-white truncate">{constructor.name}</p>
+                              </div>
+                              <p className="text-lg font-bold text-accent whitespace-nowrap">
+                                {constructor.price}M
+                              </p>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-sm text-slate-400 text-center py-2">Aucun constructeur sélectionné</p>
+                      )}
+                    </div>
                   </div>
 
                   <div>
-                    <p className="text-slate-400 mb-3">Pilotes</p>
+                    <p className="text-slate-400 mb-3">Pilotes ({selectedTeam.drivers?.length || 0}/5)</p>
                     <div className="space-y-3">
-                      {selectedTeam.drivers.map((driver) => (
-                        <div
-                          key={driver.id}
-                          className="bg-black/20 border border-slate-800/50 rounded-xl p-4"
-                        >
-                          <div className="flex items-center justify-between gap-3">
-                            <div className="min-w-0">
-                              <p className="font-bold text-white truncate">
-                                {driver.name}
-                                {driver.rookie === 1 && (
-                                  <span className="ml-2 text-xs bg-accent/20 text-accent px-2 py-1 rounded">
-                                    Rookie
-                                  </span>
-                                )}
-                              </p>
-                              <p className="text-sm text-slate-400 truncate">
-                                {driver.constructor_name}
+                      {selectedTeam.drivers && selectedTeam.drivers.length > 0 ? (
+                        selectedTeam.drivers.map((driver) => (
+                          <div
+                            key={driver.id}
+                            className="bg-black/20 border border-slate-800/50 rounded-xl p-4"
+                          >
+                            <div className="flex items-center justify-between gap-3">
+                              <div className="min-w-0">
+                                <p className="font-bold text-white truncate">
+                                  {driver.name}
+                                  {driver.rookie === 1 && (
+                                    <span className="ml-2 text-xs bg-accent/20 text-accent px-2 py-1 rounded">
+                                      Rookie
+                                    </span>
+                                  )}
+                                  {driver.is_captain === 1 && (
+                                    <span className="ml-2 text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded font-bold">
+                                      C
+                                    </span>
+                                  )}
+                                </p>
+                                <p className="text-sm text-slate-400 truncate">
+                                  {driver.constructor_name}
+                                </p>
+                              </div>
+                              <p className="text-lg font-bold text-accent whitespace-nowrap">
+                                {driver.price}M
                               </p>
                             </div>
-                            <p className="text-lg font-bold text-accent whitespace-nowrap">
-                              {driver.price}M
-                            </p>
                           </div>
-                        </div>
-                      ))}
+                        ))
+                      ) : (
+                        <p className="text-sm text-slate-400 text-center py-2">Aucun pilote sélectionné</p>
+                      )}
                     </div>
                   </div>
-                </>
+                </div>
               ) : (
                 <p className="text-center text-slate-400 py-8">
                   {selectedTeam.username} n'a pas encore créé d'équipe

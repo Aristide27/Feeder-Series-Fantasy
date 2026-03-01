@@ -26,7 +26,7 @@ router.get("/:leagueId", authenticateToken, async (req, res) => {
     }
 
     const leagueResult = await db.query(`
-      SELECT id, name FROM leagues WHERE id = $1
+      SELECT id, name, code FROM leagues WHERE id = $1
     `, [leagueId]);
 
     const league = leagueResult.rows[0];
@@ -43,7 +43,7 @@ router.get("/:leagueId", authenticateToken, async (req, res) => {
     if (!team) {
       return res.json({
         team: null,
-        league: league ? { id: league.id, name: league.name } : null,
+        league: league ? { id: league.id, name: league.name, code: league.code } : null,
         constructors: [],
         drivers: []
       });
@@ -78,7 +78,7 @@ router.get("/:leagueId", authenticateToken, async (req, res) => {
         name: team.name,
         budget: team.budget || 100
       },
-      league: league ? { id: league.id, name: league.name } : null,
+      league: league ? { id: league.id, name: league.name, code: league.code } : null,
       constructors: constructorsResult.rows,
       drivers: driversResult.rows
     });

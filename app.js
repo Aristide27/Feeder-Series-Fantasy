@@ -22,7 +22,11 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors({
-  origin: "http://localhost:3001",
+  origin: [
+    "http://localhost:3001",
+    "https://feederseriesfantasy.com",
+    "https://www.feederseriesfantasy.com"
+  ],
   credentials: true
 }));
 app.use(express.json());

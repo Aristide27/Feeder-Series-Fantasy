@@ -36,6 +36,7 @@ export type TeamData = {
   league: {
     id: number;
     name: string;
+    code: string;
   } | null;
   constructors: TeamConstructor[];
   drivers: TeamDriver[];
