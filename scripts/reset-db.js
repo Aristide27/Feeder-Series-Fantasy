@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 require('dotenv').config();
 const { Pool } = require('pg');
+const { exec } = require('child_process');
+const { promisify } = require('util');
+
+const execPromise = promisify(exec);
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -13,7 +17,6 @@ async function resetDatabase() {
   try {
     console.log("🗑️  Suppression de toutes les données...\n");
     
-    // Supprimer les tables dans le bon ordre (dépendances)
     const tables = [
       'price_history',
       'feature_results',
@@ -48,12 +51,27 @@ async function resetDatabase() {
     await pool.end();
   }
   
-  // Maintenant lancer init et seed
+  // Lancer init.js
   console.log("🔄 Réinitialisation du schéma...\n");
-  await require('../db/init')();
+  try {
+    const { stdout, stderr } = await execPromise('node db/init.js');
+    if (stdout) console.log(stdout);
+    if (stderr) console.error(stderr);
+  } catch (err) {
+    console.error("❌ Erreur init:", err.message);
+    throw err;
+  }
   
+  // Lancer seed.js
   console.log("\n🌱 Insertion des données...\n");
-  await require('../db/seed')();
+  try {
+    const { stdout, stderr } = await execPromise('node db/seed.js');
+    if (stdout) console.log(stdout);
+    if (stderr) console.error(stderr);
+  } catch (err) {
+    console.error("❌ Erreur seed:", err.message);
+    throw err;
+  }
   
   console.log("\n✅ Reset complet terminé !");
 }
