@@ -13,38 +13,35 @@ async function resetDatabase() {
   try {
     console.log("🗑️  Suppression de toutes les données...\n");
     
-    // Désactiver les contraintes temporairement
-    await client.query('SET session_replication_role = replica;');
+    // Supprimer les tables dans le bon ordre (dépendances)
+    const tables = [
+      'price_history',
+      'feature_results',
+      'sprint_results',
+      'qualifying_results',
+      'weekend_participants',
+      'fantasy_picks',
+      'fantasy_constructors',
+      'fantasy_teams',
+      'league_scores',
+      'league_members',
+      'leagues',
+      'driver_seasons',
+      'race_weekends',
+      'constructors',
+      'drivers',
+      'users'
+    ];
     
-    // Supprimer toutes les tables
-    await client.query(`
-      DROP TABLE IF EXISTS 
-        price_history,
-        feature_results,
-        sprint_results,
-        qualifying_results,
-        weekend_participants,
-        fantasy_picks,
-        fantasy_constructors,
-        fantasy_teams,
-        league_scores,
-        league_members,
-        leagues,
-        driver_seasons,
-        race_weekends,
-        constructors,
-        drivers,
-        users
-      CASCADE;
-    `);
+    for (const table of tables) {
+      await client.query(`DROP TABLE IF EXISTS ${table} CASCADE;`);
+      console.log(`  ✓ ${table} supprimée`);
+    }
     
-    // Réactiver les contraintes
-    await client.query('SET session_replication_role = DEFAULT;');
-    
-    console.log("✅ Toutes les tables supprimées\n");
+    console.log("\n✅ Toutes les tables supprimées\n");
     
   } catch (err) {
-    console.error("❌ Erreur:", err);
+    console.error("❌ Erreur:", err.message);
     throw err;
   } finally {
     client.release();
@@ -62,6 +59,6 @@ async function resetDatabase() {
 }
 
 resetDatabase().catch(err => {
-  console.error("Erreur fatale:", err);
+  console.error("Erreur fatale:", err.message);
   process.exit(1);
 });
