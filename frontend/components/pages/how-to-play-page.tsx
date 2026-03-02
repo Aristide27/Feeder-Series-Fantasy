@@ -57,6 +57,10 @@ export default function HowToPlayPage() {
                   description="Compose ton line-up avec cinq pilotes de ton choix."
                 />
                 <InfoItem 
+                  label="1 capitaine (x2 points)"
+                  description="Désigne un capitaine parmi tes pilotes : ses points seront doublés !"
+                />
+                <InfoItem 
                   label="Budget à respecter"
                   description="Optimise ta composition dans la limite du budget alloué."
                 />
@@ -120,8 +124,8 @@ export default function HowToPlayPage() {
                   description="Les points sont calculés à partir des résultats officiels à la fin du week-end."
                 />
                 <InfoItem 
-                  label="Suivi en temps réel"
-                  description="Classements et totaux mis à jour le lundi matin."
+                  label="Calcul automatique"
+                  description="Les points sont calculés automatiquement après chaque week-end et les prix évoluent en fonction des performances."
                 />
               </div>
             </StepCard>
@@ -142,8 +146,8 @@ export default function HowToPlayPage() {
                   description="Certains pilotes excellent sur des tracés spécifiques."
                 />
                 <InfoItem 
-                  label="Arbitrages budget"
-                  description="Achète bas, revends haut pour augmenter le budget de ton équipe."
+                  label="Évolution des prix"
+                  description="Le prix des pilotes augmente ou diminue selon leurs performances. Ton budget s'ajuste automatiquement."
                 />
               </div>
             </StepCard>
@@ -178,7 +182,7 @@ export default function HowToPlayPage() {
           <div className="w-80 space-y-6">
             <SidebarCard title="Raccourcis rapides">
               <div className="space-y-3">
-                <QuickLink label="Créer mon équipe" href="/my-team" />
+                <QuickLink label="Créer mon équipe" href="/leagues" />
                 <QuickLink label="Rejoindre une ligue" href="/leagues" />
                 <QuickLink label="Voir le barème des points" href="/rules#points" />
                 <QuickLink label="Règles complètes" href="/rules" />
@@ -204,10 +208,10 @@ export default function HowToPlayPage() {
                 Tout est clair ? Lance-toi dans l'aventure et construis l'équipe qui dominera la saison.
               </p>
               <Link 
-                href="/team/create"
+                href="/leagues"
                 className="block w-full px-4 py-2.5 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg shadow-red-900/30 text-center"
               >
-                Créer mon équipe
+                Rejoindre une ligue
               </Link>
             </SidebarCard>
           </div>

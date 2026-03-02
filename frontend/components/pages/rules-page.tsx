@@ -49,6 +49,10 @@ export default function RulesPage() {
               description="Compose ton line-up avec cinq pilotes de ton choix."
             />
             <RuleItem 
+              label="1 capitaine"
+              description="Désigne un capitaine parmi tes 5 pilotes : tous ses points seront doublés (x2) !"
+            />
+            <RuleItem 
               label="Budget fixe"
               description="Respecte la limite budgétaire imposée pour l'ensemble de ta composition."
             />
@@ -75,26 +79,10 @@ export default function RulesPage() {
               description="Les prix sont ajustés automatiquement en fonction des performances réelles du week-end précédent."
             />
             <RuleItem 
-              label="Équipe verrouillée"
-              description="Une fois ton équipe validée et le week-end de course lancé, les prix des pilotes et des écuries restent figés. Ils n’évoluent qu’à l’issue du week-end complet."
+              label="Budget dynamique"
+              description="Ton budget évolue automatiquement : il augmente si tes pilotes/écuries prennent de la valeur, et diminue s'ils en perdent. Pas besoin de vendre !"
             />
-            
-            <div className="mt-6 p-4 bg-blue-950/30 border border-blue-900/40 rounded-lg">
-              <div className="flex items-start gap-3">
-                <div className="mt-0.5">
-                  <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-blue-200 mb-1">Stratégie de marché</p>
-                  <p className="text-sm text-blue-300/80">
-                    Anticipe les hausses et baisses de prix. Un pilote performant verra son prix augmenter, 
-                    tandis qu'un pilote en difficulté deviendra plus accessible.
-                  </p>
-                </div>
-              </div>
-            </div>
+          
           </div>
         </RuleSection>
 
@@ -216,18 +204,18 @@ export default function RulesPage() {
         >
           <div className="space-y-4">
             <RuleItem 
-              label="Somme des deux pilotes"
-              description="Les écuries marquent le total combiné de leurs deux pilotes pour chaque session (qualifications, sprint, feature race)."
+              label="Points de l'écurie"
+              description="Une écurie marque le total des points de ses deux pilotes officiels pour chaque session (qualifications, sprint, feature race), plus les bonus/malus qualifications."
             />
             
             <div className="space-y-3 mt-6">
               <h4 className="text-sm font-semibold text-white">Bonus/Malus qualifications uniquement</h4>
               <div className="grid grid-cols-2 gap-3">
-                <PointItem position="Les deux pilotes ≥ P10" points={10} />
-                <PointItem position="Un pilote ≥ P10" points={5} />
-                <PointItem position="Les deux pilotes ≥ P16" points={3} />
-                <PointItem position="Un pilote ≥ P16" points={1} />
-                <PointItem position="Les deux pilotes < P16" points={-1} negative />
+                <PointItem position="Les deux pilotes dans le Top 10" points={10} />
+                <PointItem position="Un pilote dans le Top 10" points={5} />
+                <PointItem position="Les deux pilotes dans le Top 16" points={3} />
+                <PointItem position="Un pilote dans le Top 16" points={1} />
+                <PointItem position="Les deux pilotes hors Top 16" points={-1} negative />
               </div>
             </div>
           </div>
@@ -239,6 +227,21 @@ export default function RulesPage() {
           title="Classements"
           badge="Compétition"
         >
+          <div className="mb-6 p-4 bg-yellow-950/30 border border-yellow-900/40 rounded-lg">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5">
+                <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-yellow-200 mb-1">Bonus Capitaine</p>
+                <p className="text-sm text-yellow-300/80">
+                  Le pilote désigné comme capitaine rapporte le double de ses points. Choisis judicieusement !
+                </p>
+              </div>
+            </div>
+          </div>
           <div className="space-y-4">
             <RuleItem 
               label="Classement du week-end"

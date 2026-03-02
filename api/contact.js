@@ -14,12 +14,23 @@ if (!EMAIL_USER || !EMAIL_PASS) {
 }
 
 // Configurer le transporteur
+// const transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: EMAIL_USER,
+//     pass: EMAIL_PASS,
+//   },
+// });
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
   auth: {
     user: EMAIL_USER,
     pass: EMAIL_PASS,
   },
+  connectionTimeout: 10000, // 10 secondes max
+  greetingTimeout: 5000,
 });
 
 // POST /api/contact - Envoyer un message de contact

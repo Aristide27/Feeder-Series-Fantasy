@@ -295,12 +295,25 @@ export default function LeagueDetailPage() {
               )}
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            {/* <div className="flex flex-wrap gap-2">
               <Link
                 href={`/my-team?leagueId=${league.id}`}
                 className="h-10 px-5 inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-accent to-accent/80 text-white font-semibold shadow-lg shadow-blue-900/30 hover:shadow-blue-900/50 transition-all"
               >
                 Mon équipe
+              </Link> */}
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href={`/my-team?leagueId=${league.id}`}
+                className="group relative h-12 px-8 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white font-bold text-lg shadow-2xl shadow-red-900/50 hover:shadow-red-900/70 transition-all duration-200 animate-pulse-subtle"
+              >
+                <svg className="w-6 h-6 mr-2 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                <span>Gérer mon équipe</span>
+                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
               </Link>
 
               {league.is_creator && league.is_official === 0 && !isEditing && (

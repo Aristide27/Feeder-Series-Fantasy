@@ -69,7 +69,7 @@ export default function FaqPage() {
             >
               <FaqItem
                 question="Combien d'équipes puis-je créer ?"
-                answer="Une seule équipe fantasy par utilisateur."
+                answer="Une seule équipe par ligue, mais tu peux participer à plusieurs ligues en même temps."
               />
               
               <FaqItem
@@ -81,46 +81,22 @@ export default function FaqPage() {
                 question="Puis-je modifier mon équipe pendant la saison ?"
                 answer="Oui, tant que la période de sélection du prochain week-end est ouverte."
               />
+
+              <FaqItem
+                question="Qu'est-ce que le capitaine ?"
+                answer="Le capitaine est un pilote de ton équipe dont tous les points seront doublés (x2). Tu peux changer ton capitaine à chaque week-end tant que ton équipe n'est pas verrouillée."
+              />
             </FaqSection>
 
             {/* Section: Transferts */}
             <FaqSection 
-              title="Transferts" 
-              badge="A faire"
-              comingSoon
+              title="Modifications d'équipe" 
+              badge="Stratégie"
             >
               <FaqItem
-                question="Comment fonctionnent les transferts ?"
-                answer="Fonctionnalité en cours de développement."
-                isComingSoon
+                question="Puis-je changer mes pilotes et écuries ?"
+                answer="Oui, tu peux modifier librement ta composition (pilotes, écuries, capitaine) entre chaque week-end, tant que la période de verrouillage n'a pas commencé. Il n'y a pas de limite de changements pour le moment."
               />
-              
-              <div className="mt-4 p-5 bg-blue-950/20 border border-blue-900/30 rounded-lg space-y-3">
-                <h4 className="text-sm font-semibold text-blue-300 flex items-center gap-2">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                  Règles prévues
-                </h4>
-                <ul className="text-sm text-slate-300 space-y-2">
-                  <li className="flex gap-2">
-                    <span className="text-blue-400">•</span>
-                    <span>Tu disposeras de 2 transferts gratuits avant chaque week-end de course</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="text-blue-400">•</span>
-                    <span>Chaque transfert supplémentaire entraînera une pénalité de -10 points</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="text-blue-400">•</span>
-                    <span>1 transfert gratuit non utilisé sera reporté au week-end suivant</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="text-blue-400">•</span>
-                    <span>Les transferts reportés ne s'accumulent pas sur plusieurs courses</span>
-                  </li>
-                </ul>
-              </div>
             </FaqSection>
 
             {/* Section: Budget & Prix */}
@@ -144,13 +120,13 @@ export default function FaqPage() {
               />
               
               <FaqItem
-                question="Les changements de prix affectent-ils un week-end déjà commencé ?"
-                answer="Non. Une fois ton équipe verrouillée pour un week-end, les prix restent fixes jusqu'à la fin de ce week-end."
-              />
-              
-              <FaqItem
                 question="Pourquoi les prix changent-ils ?"
                 answer="Les variations de prix reflètent la forme des pilotes et des écuries afin d'encourager une stratégie dynamique tout au long de la saison."
+              />
+
+              <FaqItem
+                question="Comment évolue mon budget ?"
+                answer="Ton budget s'ajuste automatiquement en fonction de l'évolution des prix de tes pilotes et écuries. Si leur valeur augmente, ton budget augmente aussi. Si elle baisse, ton budget diminue. Pas besoin de vendre pour récupérer la plus-value !"
               />
             </FaqSection>
 
@@ -298,7 +274,7 @@ export default function FaqPage() {
               <div className="space-y-3">
                 <QuickLink label="Comment jouer" href="/how-to-play" />
                 <QuickLink label="Règles du jeu" href="/rules" />
-                <QuickLink label="Créer mon équipe" href="/my-team" />
+                <QuickLink label="Rejoindre une ligue" href="/leagues" />
               </div>
             </SidebarCard>
           </div>
