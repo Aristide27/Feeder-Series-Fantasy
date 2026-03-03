@@ -143,34 +143,57 @@ async function getConstructorPoints(weekendId) {
     constructors[d.constructor_id].push(d);
   });
   
-return Object.entries(constructors).map(([constructor_id, drs]) => {
-  const d1 = drs[0];
-  const d2 = drs[1];
-  const totalPointsPilotes = (d1?.points || 0) + (d2?.points || 0);
-  
-  const positions = drs.map(d => d.qualPosition);
-  let bonus = 0;
-  
-  const top10count = positions.filter(p => p <= 10).length;
-  const p16count = positions.filter(p => p <= 16).length;
-  
-  if (top10count === 2) {
-    bonus = 10;  // Les deux ≥ P10
-  } else if (top10count === 1) {
-    bonus = 5;   // Un pilote ≥ P10
-  } else if (p16count === 2) {
-    bonus = 3;   // Les deux ≥ P16
-  } else if (p16count === 1) {
-    bonus = 1;   // Un pilote ≥ P16
-  } else {
-    bonus = -1;  // Les deux < P16
-  }
-  
-  return {
-    constructor_id: Number(constructor_id),
-    points: totalPointsPilotes + bonus
-  };
-});
+  return Object.entries(constructors).map(([constructor_id, drs]) => {
+    const d1 = drs[0];
+    const d2 = drs[1];
+    const totalPointsPilotes = (d1?.points || 0) + (d2?.points || 0);
+    
+    const positions = drs.map(d => d.qualPosition);
+    
+    // 🔍 DEBUG : Afficher les valeurs
+    if (constructor_id == 1) { // Invicta
+      console.log('🔍 DEBUG INVICTA:');
+      console.log('  Positions:', positions);
+      console.log('  Points pilotes:', totalPointsPilotes);
+    }
+    
+    let bonus = 0;
+    
+    const top10count = positions.filter(p => p <= 10).length;
+    const p16count = positions.filter(p => p <= 16).length;
+    
+    // 🔍 DEBUG : Afficher les compteurs
+    if (constructor_id == 1) {
+      console.log('  top10count:', top10count);
+      console.log('  p16count:', p16count);
+    }
+    
+    if (top10count === 2) {
+      bonus = 10;
+      if (constructor_id == 1) console.log('  ✅ Bonus: +10');
+    } else if (top10count === 1) {
+      bonus = 5;
+      if (constructor_id == 1) console.log('  ✅ Bonus: +5');
+    } else if (p16count === 2) {
+      bonus = 3;
+      if (constructor_id == 1) console.log('  ✅ Bonus: +3');
+    } else if (p16count === 1) {
+      bonus = 1;
+      if (constructor_id == 1) console.log('  ✅ Bonus: +1');
+    } else {
+      bonus = -1;
+      if (constructor_id == 1) console.log('  ❌ Malus: -1');
+    }
+    
+    if (constructor_id == 1) {
+      console.log('  Total final:', totalPointsPilotes + bonus);
+    }
+    
+    return {
+      constructor_id: Number(constructor_id),
+      points: totalPointsPilotes + bonus
+    };
+  });
 }
 
 module.exports = {
