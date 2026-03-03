@@ -143,28 +143,34 @@ async function getConstructorPoints(weekendId) {
     constructors[d.constructor_id].push(d);
   });
   
-  return Object.entries(constructors).map(([constructor_id, drs]) => {
-    const d1 = drs[0];
-    const d2 = drs[1];
-    const totalPointsPilotes = (d1?.points || 0) + (d2?.points || 0);
-    
-    const positions = drs.map(d => d.qualPosition);
-    let bonus = 0;
-    
-    const p16count = positions.filter(p => p <= 16).length;
-    if (p16count === 0) bonus = -1;
-    else if (p16count === 1) bonus = 1;
-    else if (p16count === 2) bonus = 3;
-    
-    const top10count = positions.filter(p => p <= 10).length;
-    if (top10count === 1) bonus += 5;
-    else if (top10count === 2) bonus += 10;
-    
-    return {
-      constructor_id: Number(constructor_id),
-      points: totalPointsPilotes + bonus
-    };
-  });
+return Object.entries(constructors).map(([constructor_id, drs]) => {
+  const d1 = drs[0];
+  const d2 = drs[1];
+  const totalPointsPilotes = (d1?.points || 0) + (d2?.points || 0);
+  
+  const positions = drs.map(d => d.qualPosition);
+  let bonus = 0;
+  
+  const top10count = positions.filter(p => p <= 10).length;
+  const p16count = positions.filter(p => p <= 16).length;
+  
+  if (top10count === 2) {
+    bonus = 10;  // Les deux ≥ P10
+  } else if (top10count === 1) {
+    bonus = 5;   // Un pilote ≥ P10
+  } else if (p16count === 2) {
+    bonus = 3;   // Les deux ≥ P16
+  } else if (p16count === 1) {
+    bonus = 1;   // Un pilote ≥ P16
+  } else {
+    bonus = -1;  // Les deux < P16
+  }
+  
+  return {
+    constructor_id: Number(constructor_id),
+    points: totalPointsPilotes + bonus
+  };
+});
 }
 
 module.exports = {

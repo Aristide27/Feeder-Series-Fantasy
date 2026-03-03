@@ -175,7 +175,7 @@ router.post("/", async (req, res) => {
     const subjectLabel = subjectLabels[subject] || "Message";
 
     await resend.emails.send({
-      from: 'FSF Contact <onboarding@resend.dev>', // Email par défaut Resend
+      from: 'FSF Contact <contact@feederseriesfantasy.com>', // Email par défaut Resend
       to: EMAIL_TO,
       replyTo: email,
       subject: `[FSF Contact] ${subjectLabel} - ${firstName}`,
