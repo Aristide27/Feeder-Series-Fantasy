@@ -200,7 +200,7 @@ router.post("/:leagueId/validate", authenticateToken, async (req, res) => {
       `, [team.id, driverId, season]);
     }
     
-    recordInitialSpent(team.id);    
+    await recordInitialSpent(team.id);    
     console.log(`[VALIDATE] User ${req.user.id} - League ${leagueId} - Team ${team.id} - Cost ${totalCost.toFixed(1)}M`);
     
     res.json({ 
@@ -378,7 +378,7 @@ router.post("/:leagueId/save", authenticateToken, async (req, res) => {
       // Créer l'équipe
       const result = await db.query(`
         INSERT INTO fantasy_teams (user_id, league_id, season, name, is_validated, validated_at)
-        VALUES ($1, $2, $3, $4, 0, NULL)
+        VALUES ($1, $2, $3, $4, 1, NOW())
         RETURNING id
       `, [req.user.id, leagueId, season, teamName.trim()]);
       
@@ -386,7 +386,7 @@ router.post("/:leagueId/save", authenticateToken, async (req, res) => {
     } else {
       // Mettre à jour le nom
       await db.query(`
-        UPDATE fantasy_teams SET name = $1 WHERE id = $2
+        UPDATE fantasy_teams SET name = $1, is_validated = 1, validated_at = NOW() WHERE id = $2
       `, [teamName.trim(), team.id]);
     }
 
