@@ -114,7 +114,7 @@ async function getConstructorPoints(weekendId) {
     SELECT 
       wp.driver_id, 
       ds.constructor_id,
-      qr.position as qualPosition
+      qr.position as qualposition
     FROM weekend_participants wp
     JOIN driver_seasons ds ON ds.driver_id = wp.driver_id AND ds.season = $1
     LEFT JOIN qualifying_results qr ON qr.driver_id = wp.driver_id AND qr.race_weekend_id = wp.race_weekend_id
@@ -134,7 +134,7 @@ async function getConstructorPoints(weekendId) {
     points: (qualPoints[d.driver_id] || 0) +
             (sprintPoints[d.driver_id] || 0) +
             (featurePoints[d.driver_id] || 0),
-    qualPosition: d.qualPosition ?? 22
+    qualposition: d.qualposition ?? 22
   }));
   
   const constructors = {};
@@ -148,7 +148,7 @@ async function getConstructorPoints(weekendId) {
     const d2 = drs[1];
     const totalPointsPilotes = (d1?.points || 0) + (d2?.points || 0);
     
-    const positions = drs.map(d => d.qualPosition);
+    const positions = drs.map(d => d.qualposition);
     
     // 🔍 DEBUG : Afficher les valeurs
     if (constructor_id == 1) { // Invicta
