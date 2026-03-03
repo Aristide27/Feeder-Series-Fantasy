@@ -203,7 +203,9 @@ export default function HomePage() {
 
   useEffect(() => {
     setLoadingFsf(true);
-    fetch("http://localhost:3000/api/leagues/public/fsf")
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    
+    fetch(`${API_URL}/api/leagues/public/fsf`)
       .then((res) => res.json())
       .then((fsfLeague) => {
         if (fsfLeague && fsfLeague.id) setFsfLeagueId(fsfLeague.id);
