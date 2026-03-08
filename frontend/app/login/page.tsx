@@ -5,8 +5,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { loginUser } from "@/lib/api/auth";
 import { saveAuth } from "@/lib/auth/token";
 import GoogleButton from "@/components/GoogleButton";
+import { useTranslations } from "next-intl";
 
 function LoginContent() {
+  const t = useTranslations("login");
   const router = useRouter();
   const searchParams = useSearchParams();
   const [username, setUsername] = useState("");
@@ -38,8 +40,8 @@ function LoginContent() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 px-8 py-16">
       <div className="max-w-lg mx-auto bg-slate-900/60 border border-white/10 rounded-2xl p-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Connexion</h1>
-        <p className="text-slate-300 mb-6">Connecte-toi pour gérer ton équipe.</p>
+        <h1 className="text-3xl font-bold text-white mb-2">{t("title")}</h1>
+        <p className="text-slate-300 mb-6">{t("description")}</p>
 
         {err && (
         <div className="mb-6 rounded-lg border border-red-500 bg-red-500/15 px-4 py-3 text-red-500 text-base font-semibold">
@@ -54,12 +56,12 @@ function LoginContent() {
             <div className="w-full border-t border-white/10"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-slate-900/60 text-slate-400">ou</span>
+            <span className="px-4 bg-slate-900/60 text-slate-400">{t("or")}</span>
           </div>
         </div>
         <form onSubmit={onSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm text-slate-300 mb-1">Username</label>
+            <label className="block text-sm text-slate-300 mb-1">{t("username")}</label>
             <input
               className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-white outline-none focus:ring-2 focus:ring-accent"
               value={username}
@@ -69,7 +71,7 @@ function LoginContent() {
           </div>
 
           <div>
-            <label className="block text-sm text-slate-300 mb-1">Mot de passe</label>
+            <label className="block text-sm text-slate-300 mb-1">{t("password")}</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -104,7 +106,7 @@ function LoginContent() {
             disabled={loading || !username || !password}
             className="w-full px-4 py-3 rounded-lg bg-accent text-accent-foreground font-semibold hover:bg-accent/90 disabled:opacity-50"
           >
-            {loading ? "Connexion…" : "Se connecter"}
+            {loading ? t("submitting") : t("submit")}
           </button>
 
           <button
@@ -112,7 +114,7 @@ function LoginContent() {
             onClick={() => router.push("/register")}
             className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white/80 hover:bg-white/10"
           >
-            Créer un compte
+            {t("register")}
           </button>
         </form>
       </div>

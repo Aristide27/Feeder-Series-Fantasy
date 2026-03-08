@@ -1,0 +1,817 @@
+{
+  "authCallback": {
+    "loading": {
+      "title": "Anmeldung läuft...",
+      "subtitle": "Bitte warten"
+    },
+    "success": {
+      "title": "Anmeldung erfolgreich!",
+      "subtitle": "Weiterleitung..."
+    },
+    "error": {
+      "title": "Anmeldefehler",
+      "subtitle": "Weiterleitung zur Anmeldeseite..."
+    }
+  },
+  "contact": {
+    "badge": "Kontakt",
+    "title": "Kontakt",
+    "description": "Du kannst uns schreiben, um Fehler zu melden, Verbesserungen vorzuschlagen, Feedback zum Spielerlebnis zu geben oder eine Frage zu stellen.",
+    "success": {
+      "title": "Nachricht gesendet!",
+      "description": "Danke für deine Nachricht. Wir melden uns so schnell wie möglich unter",
+      "newMessage": "Weitere Nachricht senden"
+    },
+    "form": {
+      "messageType": "Nachrichtentyp",
+      "subjects": {
+        "improvement": "Verbesserung",
+        "bug": "Fehler",
+        "feedback": "Feedback",
+        "question": "Frage"
+      },
+      "firstName": {
+        "label": "Vorname",
+        "placeholder": "Dein Vorname"
+      },
+      "email": {
+        "label": "E-Mail",
+        "placeholder": "deine@email.com"
+      },
+      "message": {
+        "label": "Nachricht",
+        "placeholders": {
+          "bug": "Beschreibe den Fehler: welche Seite, welche Aktion und welches unerwartete Ergebnis...",
+          "improvement": "Beschreibe deine Verbesserungsidee und wie sie das Spiel bereichern würde...",
+          "feedback": "Teile deine Gedanken zum Spielerlebnis mit, was dir gefällt oder was du gerne sehen würdest...",
+          "question": "Stelle deine Frage klar und präzise...",
+          "default": "Deine Nachricht..."
+        },
+        "tipBug": "Tipp: Gib die Seite, die durchgeführte Aktion und was statt des erwarteten Ergebnisses angezeigt wird an.",
+        "tipDefault": "Je genauer du bist, desto schneller können wir dir helfen!"
+      },
+      "submit": "Nachricht senden",
+      "submitting": "Wird gesendet..."
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "description": "Schau in unsere FAQ, bevor du schreibst – deine Antwort könnte schon dort sein!",
+      "link": "Ansehen"
+    }
+  },
+  "faq": {
+    "badge": "Häufig gestellte Fragen",
+    "title": "FAQ",
+    "description": "Hier findest du Antworten auf die häufigsten Fragen zur Funktionsweise des Spiels, den Regeln, Transfers und vielem mehr.",
+    "comingSoon": "Demnächst",
+    "sections": {
+      "general": {
+        "title": "Allgemein",
+        "badge": "Grundlagen",
+        "q1": {
+          "question": "Was ist Feeder Series Fantasy F2?",
+          "answer": "Feeder Series Fantasy F2 ist ein Fantasy-Spiel basierend auf der Formel-2-Meisterschaft. Du erstellst ein Team aus Fahrern und Konstrukteuren und sammelst Punkte basierend auf echten Streckenleistungen."
+        },
+        "q2": {
+          "question": "Ist das Spiel offiziell?",
+          "answer": "Nein. Feeder Series Fantasy F2 ist ein unabhängiges Fan-Projekt ohne Verbindung zur FIA, Formel 1, Formel 2, Formel 3 oder F1 Academy."
+        },
+        "q3": {
+          "question": "Ist das Spiel kostenlos?",
+          "answer": "Ja, Feeder Series Fantasy F2 ist völlig kostenlos."
+        },
+        "q4": {
+          "question": "Kann ich mitspielen, wenn die Saison bereits begonnen hat?",
+          "answer": "Ja. Du kannst jederzeit während der Saison einsteigen. Falls ein Wochenende bereits läuft oder beendet ist, beginnt dein Team beim nächsten Rennwochenende Punkte zu sammeln."
+        }
+      },
+      "team": {
+        "title": "Team & Auswahl",
+        "badge": "Zusammenstellung",
+        "q1": {
+          "question": "Wie viele Teams kann ich erstellen?",
+          "answer": "Ein Team pro Liga, aber du kannst gleichzeitig an mehreren Ligen teilnehmen."
+        },
+        "q2": {
+          "question": "Wann wird mein Team gesperrt?",
+          "answer": "Dein Team wird zu Beginn des offiziellen Rennwochenendes gesperrt. Danach sind bis zum nächsten Wochenende keine Änderungen mehr möglich."
+        },
+        "q3": {
+          "question": "Kann ich mein Team während der Saison ändern?",
+          "answer": "Ja, solange der Auswahlzeitraum für das nächste Wochenende offen ist."
+        },
+        "q4": {
+          "question": "Was ist der Kapitän?",
+          "answer": "Der Kapitän ist ein Fahrer in deinem Team, dessen Punkte verdoppelt werden (x2). Du kannst deinen Kapitän jedes Wochenende wechseln, solange dein Team nicht gesperrt ist."
+        }
+      },
+      "transfers": {
+        "title": "Teamänderungen",
+        "badge": "Strategie",
+        "q1": {
+          "question": "Kann ich meine Fahrer und Konstrukteure wechseln?",
+          "answer": "Ja, du kannst deine Zusammenstellung (Fahrer, Konstrukteure, Kapitän) zwischen jedem Wochenende frei ändern, solange die Sperrphase noch nicht begonnen hat. Derzeit gibt es kein Änderungslimit."
+        }
+      },
+      "budget": {
+        "title": "Budget & Preise",
+        "badge": "Wirtschaft",
+        "q1": {
+          "question": "Was ist das Startbudget?",
+          "answer": "Jeder Spieler hat ein Startbudget von 100 Millionen, um sein Team zusammenzustellen."
+        },
+        "q2": {
+          "question": "Wie werden die Preise für Fahrer und Konstrukteure festgelegt?",
+          "answer": "Die Preise werden automatisch anhand der echten Streckenleistungen berechnet."
+        },
+        "q3": {
+          "question": "Wann ändern sich die Preise?",
+          "answer": "Die Preise ändern sich nach jedem Rennwochenende."
+        },
+        "q4": {
+          "question": "Warum ändern sich die Preise?",
+          "answer": "Preisänderungen spiegeln die Form der Fahrer und Konstrukteure wider, um eine dynamische Strategie während der gesamten Saison zu fördern."
+        },
+        "q5": {
+          "question": "Wie entwickelt sich mein Budget?",
+          "answer": "Dein Budget passt sich automatisch an die Preisänderungen deiner Fahrer und Konstrukteure an. Steigt ihr Wert, steigt dein Budget. Fällt er, sinkt dein Budget. Kein Verkauf nötig, um Gewinne zu realisieren!"
+        }
+      },
+      "points": {
+        "title": "Punkte & Ergebnisse",
+        "badge": "Wertung",
+        "q1": {
+          "question": "Wie werden Punkte vergeben?",
+          "answer": "Punkte werden basierend auf echten Leistungen im Qualifying, Sprint Race und Feature Race vergeben. Das detaillierte Punktesystem ist im Regelbereich verfügbar.",
+          "linkText": "Vollständiges Punktesystem ansehen"
+        },
+        "q2": {
+          "question": "Wann werden die Punkte aktualisiert?",
+          "answer": "Punkte werden automatisch nach jeder offiziellen Session berechnet, sobald die Ergebnisse validiert sind. Vor der endgültigen Validierung kann eine vorläufige Punktzahl angezeigt werden."
+        },
+        "q3": {
+          "question": "Was bedeuten DNS, DNF und DSQ?",
+          "dns": "DNS: Did Not Start (nicht gestartet)",
+          "dnf": "DNF: Did Not Finish (nicht beendet)",
+          "dsq": "DSQ: Disqualified (disqualifiziert)"
+        }
+      },
+      "edge": {
+        "title": "Sonderfälle",
+        "badge": "Ausnahmen",
+        "q1": {
+          "question": "Was passiert, wenn ein Rennen abgesagt wird?",
+          "answer": "Für dieses Rennen werden keine Punkte vergeben."
+        },
+        "q2": {
+          "question": "Was passiert, wenn ein Rennen verkürzt oder unterbrochen wird?",
+          "answer": "Punkte werden nur basierend auf den von der Formel 2 offiziell validierten Ergebnissen vergeben."
+        },
+        "q3": {
+          "question": "Was passiert, wenn ein Fahrer ersetzt wird?",
+          "answer": "Geplante Funktion. Der Umgang mit ersetzten Fahrern wird automatisch und fair sein, damit Spieler nicht durch Änderungen außerhalb ihrer Kontrolle benachteiligt werden."
+        }
+      },
+      "leagues": {
+        "title": "Ligen & Ranglisten",
+        "badge": "Wettbewerb",
+        "q1": {
+          "question": "Was ist eine Liga?",
+          "answer": "Eine Liga ist eine Gruppe von Spielern, die in einer gemeinsamen Rangliste gegeneinander antreten."
+        },
+        "q2": {
+          "question": "Kann ich mehreren Ligen beitreten?",
+          "answer": "Ja. Dasselbe Fantasy-Team kann gleichzeitig an mehreren Ligen teilnehmen."
+        },
+        "q3": {
+          "question": "Wie werden Gleichstände in der Rangliste aufgelöst?",
+          "intro": "Bei Punktgleichstand:",
+          "tiebreak1": "Bestes Feature Race-Ergebnis",
+          "tiebreak2": "Bestes Sprint Race-Ergebnis",
+          "tiebreak3": "Bestes Qualifying-Ergebnis"
+        }
+      },
+      "fairplay": {
+        "title": "Fair Play & Support",
+        "badge": "Hilfe",
+        "q1": {
+          "question": "Können Ergebnisse nachträglich geändert werden?",
+          "answer": "Nein. Es gibt keine rückwirkenden Änderungen an Ergebnissen oder Punkten."
+        },
+        "q2": {
+          "question": "Warum scheinen meine Punkte falsch zu sein?",
+          "answer": "Überprüfe das Punktesystem auf der Regelseite. Falls der Zweifel bleibt, kontaktiere den Support über die Kontaktseite.",
+          "linkText": "Regeln ansehen"
+        },
+        "q3": {
+          "question": "Wie kontaktiere ich das Spielteam?",
+          "answer": "Über die Kontaktseite.",
+          "linkText": "Kontakt aufnehmen"
+        }
+      }
+    },
+    "sidebar": {
+      "help": {
+        "title": "Brauchst du Hilfe?",
+        "description": "Kannst du deine Antwort nicht finden? Zögere nicht, uns zu kontaktieren.",
+        "cta": "Support kontaktieren"
+      },
+      "links": {
+        "title": "Nützliche Links",
+        "howToPlay": "Wie man spielt",
+        "rules": "Spielregeln",
+        "joinLeague": "Einer Liga beitreten"
+      }
+    }
+  },
+  "howToPlay": {
+    "badge": "Einstiegsleitfaden",
+    "title": "Wie man spielt",
+    "description": "Willkommen bei Feeder Series Fantasy F2. Erlebe jedes Formel-2-Wochenende als Teammanager. Wähle deine Fahrer, wähle deine Konstrukteure, bleib im Budget und tritt gegen andere Spieler basierend auf echten Rennergebnissen an.",
+    "steps": {
+      "step1": {
+        "title": "Baue dein Team",
+        "description": "Stelle dein Lineup zusammen und halte dabei die Budgetbeschränkungen ein",
+        "teamName": {
+          "label": "Teamname",
+          "description": "Wähle einen einzigartigen Namen, der dich repräsentiert."
+        },
+        "constructors": {
+          "label": "2 Konstrukteure",
+          "description": "Wähle zwei Konstrukteure für dein Team."
+        },
+        "drivers": {
+          "label": "5 Fahrer",
+          "description": "Stelle dein Lineup mit fünf Fahrern deiner Wahl zusammen."
+        },
+        "captain": {
+          "label": "1 Kapitän (x2 Punkte)",
+          "description": "Bestimme einen Kapitän aus deinen Fahrern: seine Punkte werden verdoppelt!"
+        },
+        "budget": {
+          "label": "Budget einhalten",
+          "description": "Optimiere dein Lineup innerhalb des zugewiesenen Budgets."
+        },
+        "tip": {
+          "title": "Strategietipp",
+          "description": "Beständigkeit zahlt sich oft besser aus als große Namen. Ein konstanter Fahrer kann mehr Punkte erzielen als ein vielversprechender, aber unbeständiger Fahrer."
+        }
+      },
+      "step2": {
+        "title": "Tritt einer Liga bei oder erstelle eine",
+        "description": "Tritt gegen deine Freunde an oder miss dich mit der ganzen Welt.",
+        "privateLeague": {
+          "label": "Private Liga",
+          "description": "Tritt einer bestehenden Liga mit einem Einladungscode bei."
+        },
+        "createLeague": {
+          "label": "Liga erstellen",
+          "description": "Starte deinen eigenen Wettbewerb und lade deine Freunde ein, dich herauszufordern."
+        },
+        "worldRanking": {
+          "label": "Weltrangliste",
+          "description": "Vergleiche dich automatisch mit den besten Spielern der Welt."
+        }
+      },
+      "step3": {
+        "title": "Verfolge die Rennen",
+        "description": "Deine Punkte werden nach jeder Session automatisch aktualisiert",
+        "qualifying": "Qualifying",
+        "sprintRace": "Sprint Race",
+        "featureRace": "Feature Race",
+        "automaticPoints": {
+          "label": "Automatische Punkte",
+          "description": "Punkte werden am Ende des Wochenendes aus den offiziellen Ergebnissen berechnet."
+        },
+        "automaticCalc": {
+          "label": "Automatische Berechnung",
+          "description": "Punkte werden nach jedem Wochenende automatisch berechnet und Preise ändern sich basierend auf den Leistungen."
+        }
+      },
+      "step4": {
+        "title": "Analysiere und optimiere",
+        "description": "Nutze Statistiken, um deine Strategie zu verfeinern",
+        "recentForm": {
+          "label": "Aktuelle Form",
+          "description": "Studiere die Leistungen der Fahrer und Konstrukteure in den letzten Rennen."
+        },
+        "circuitPerf": {
+          "label": "Streckenleistung",
+          "description": "Einige Fahrer glänzen auf bestimmten Strecken."
+        },
+        "priceEvolution": {
+          "label": "Preisentwicklung",
+          "description": "Fahrerpreise steigen oder fallen je nach Leistung. Dein Budget passt sich automatisch an."
+        }
+      },
+      "step5": {
+        "title": "Gewinne die Saison",
+        "description": "Sammle Punkte und dominiere deine Rangliste",
+        "leagueWin": {
+          "label": "Ligasieg",
+          "description": "Die höchste Punktzahl in deiner Liga gewinnt die private Meisterschaft."
+        },
+        "worldChamp": {
+          "label": "Weltmeister",
+          "description": "Die höchste Gesamtpunktzahl wird FSF Series 2/Tier 2 Saisonchampion."
+        },
+        "cta": "Bereit, die Meisterschaft zu dominieren?"
+      }
+    },
+    "sidebar": {
+      "shortcuts": {
+        "title": "Schnellzugriff",
+        "createTeam": "Mein Team erstellen",
+        "joinLeague": "Einer Liga beitreten",
+        "pointsScale": "Punktesystem ansehen",
+        "fullRules": "Vollständige Regeln"
+      },
+      "important": {
+        "title": "Wichtig zu wissen",
+        "note1": "Fahrer- und Konstrukteurspreise ändern sich nach jedem Wochenende.",
+        "note2": "Sobald dein Team gesperrt ist, kannst du es für das Wochenende nicht mehr ändern.",
+        "note3": "Punkte werden anhand der von der FIA veröffentlichten offiziellen Ergebnisse berechnet."
+      },
+      "ready": {
+        "title": "Bereit zum Start?",
+        "description": "Alles klar? Leg los und baue das Team, das die Saison dominieren wird.",
+        "cta": "Einer Liga beitreten"
+      }
+    }
+  },
+  "myLeagues": {
+    "loading": "Ligen werden geladen...",
+    "title": "Meine Ligen",
+    "description": "Erstelle eine private Liga oder tritt deinen Freunden mit einem Einladungscode bei.",
+    "join": "Beitreten",
+    "create": "+ Erstellen",
+    "card": {
+      "official": "Offiziell",
+      "leader": "🏆 Anführer",
+      "code": "Code",
+      "members": "Mitglieder",
+      "position": "Position",
+      "points": "Punkte",
+      "open": "Liga öffnen →"
+    },
+    "empty": {
+      "description": "Noch keine Ligen",
+      "cta": "Deine erste Liga erstellen"
+    },
+    "createModal": {
+      "title": "Liga erstellen",
+      "description": "Gib deiner Liga einen Namen, um zu beginnen.",
+      "placeholder": "Ligabezeichnung",
+      "submit": "Erstellen",
+      "submitting": "Wird erstellt...",
+      "cancel": "Abbrechen"
+    },
+    "joinModal": {
+      "title": "Einer Liga beitreten",
+      "description": "Gib den Einladungscode der Liga ein.",
+      "submit": "Beitreten",
+      "submitting": "Beitritt läuft...",
+      "cancel": "Abbrechen"
+    }
+  },
+  "leagueDetail": {
+    "loading": "Wird geladen...",
+    "notFound": "Liga nicht gefunden",
+    "back": "← Zurück zu den Ligen",
+    "official": "Offiziell",
+    "closed": "Geschlossen",
+    "createdBy": "Erstellt von",
+    "members": "Mitglieder",
+    "manageTeam": "Mein Team verwalten",
+    "editName": "Name bearbeiten",
+    "reopen": "Wieder öffnen",
+    "close": "Schließen",
+    "delete": "Löschen",
+    "saving": "Wird gespeichert...",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "leaderboard": {
+      "title": "Rangliste",
+      "joinedAt": "Mitglied seit",
+      "points": "Pkt.",
+      "viewTeam": "Team ansehen",
+      "empty": "Noch keine Rangliste verfügbar"
+    },
+    "share": {
+      "title": "Liga teilen",
+      "inviteCode": "Einladungscode",
+      "copied": "Kopiert!",
+      "inviteLink": "Einladungslink",
+      "copyLink": "Link kopieren"
+    },
+    "myTeam": {
+      "title": "Mein Team",
+      "nameLabel": "Teamname",
+      "namePlaceholder": "Dein Teamname",
+      "nameHint": "3–20 Zeichen",
+      "notDefined": "Noch nicht festgelegt",
+      "edit": "Bearbeiten",
+      "saving": "Wird gespeichert...",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "noTeamHint": "Lege einen Namen fest unter",
+      "noTeamLink": "Mein Team"
+    },
+    "teamModal": {
+      "title": "Team von",
+      "teamName": "Teamname",
+      "constructors": "Konstrukteure",
+      "drivers": "Fahrer",
+      "rookie": "Rookie",
+      "noConstructors": "Kein Konstrukteur ausgewählt",
+      "noDrivers": "Kein Fahrer ausgewählt",
+      "noTeam": "hat noch kein Team erstellt",
+      "close": "Schließen"
+    }
+  },
+  "login": {
+    "title": "Anmelden",
+    "description": "Melde dich an, um dein Team zu verwalten.",
+    "or": "oder",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "submit": "Anmelden",
+    "submitting": "Anmeldung läuft…",
+    "register": "Konto erstellen"
+  },
+  "myTeam": {
+    "loading": "Wird geladen…",
+    "noName": "Kein Name",
+    "season": "Saison",
+    "budget": {
+      "label": "Budget",
+      "remaining": "verbleibend",
+      "unit": "M"
+    },
+    "save": {
+      "unsaved": "Nicht gespeicherte Änderungen",
+      "saving": "Wird gespeichert",
+      "saved": "Gespeichert",
+      "error": "Fehler",
+      "retry": "Erneut versuchen"
+    },
+    "composition": {
+      "constructors": "Konstrukteure",
+      "drivers": "Fahrer"
+    },
+    "deadline": {
+      "lockingIn": "Sperrung in",
+      "urgentWarning": "⚠️ Achtung! Sperrung in",
+      "locked": "🔒 Team gesperrt für das Wochenende von",
+      "nextPeriod": "Nächster Zeitraum in"
+    },
+    "back": "Zurück zur Liga",
+    "namePopup": {
+      "title": "Benenne dein Team!",
+      "description": "Wähle einen einzigartigen Namen für diese Liga",
+      "placeholder": "Bsp: Road to F1",
+      "hint": "3-20 Zeichen",
+      "info": "Du kannst diesen Namen jederzeit ändern unter",
+      "infoLink": "Meine Ligen",
+      "submit": "Ich will spielen!",
+      "submitting": "Wird validiert..."
+    },
+    "panel": {
+      "drivers": "Fahrer",
+      "constructors": "Konstrukteure",
+      "sortTeam": "Konstrukteur",
+      "sortPrice": "Preis",
+      "selectDrivers": "5 Fahrer auswählen •",
+      "selectConstructors": "2 Konstrukteure auswählen -",
+      "noDrivers": "Keine Fahrer"
+    }
+  },
+  "profile": {
+    "loading": "Profil wird geladen...",
+    "title": "Mein Profil",
+    "description": "Verwalte deine persönlichen Daten und Sicherheit",
+    "general": {
+      "title": "Allgemeine Informationen",
+      "username": {
+        "label": "Benutzername",
+        "placeholder": "Neuer Benutzername",
+        "save": "Speichern",
+        "saving": "Wird gespeichert...",
+        "edit": "Bearbeiten",
+        "cancel": "Abbrechen"
+      },
+      "email": {
+        "label": "E-Mail",
+        "placeholder": "neue.email@example.com",
+        "notSet": "Nicht angegeben",
+        "save": "Speichern",
+        "saving": "Wird gespeichert...",
+        "edit": "Bearbeiten",
+        "cancel": "Abbrechen"
+      }
+    },
+    "security": {
+      "title": "Sicherheit",
+      "password": {
+        "label": "Passwort",
+        "oldPlaceholder": "Aktuelles Passwort",
+        "newPlaceholder": "Neues Passwort",
+        "confirmPlaceholder": "Neues Passwort bestätigen",
+        "submit": "Passwort ändern",
+        "submitting": "Wird geändert...",
+        "edit": "Bearbeiten",
+        "cancel": "Abbrechen"
+      }
+    },
+    "logout": {
+      "title": "Abmelden",
+      "description": "Melde dich auf diesem Gerät von deinem Konto ab.",
+      "submit": "Abmelden"
+    },
+    "deleteAccount": {
+      "title": "Konto löschen",
+      "description": "Das Löschen deines Kontos ist dauerhaft und unwiderruflich. Alle deine Daten gehen verloren.",
+      "submit": "Mein Konto löschen",
+      "confirm": {
+        "title": "Bist du wirklich sicher?",
+        "description": "Diese Aktion ist unwiderruflich. Dein Konto und alle deine Daten werden dauerhaft gelöscht.",
+        "submit": "Ja, dauerhaft löschen",
+        "submitting": "Wird gelöscht...",
+        "cancel": "Abbrechen"
+      }
+    },
+    "createdAt": "Konto erstellt am"
+  },
+  "rankings": {
+    "loading": "Weltrangliste wird geladen...",
+    "hero": {
+      "badge": "Weltrangliste",
+      "title": "Hall of ",
+      "titleHighlight": "Fame",
+      "description": "Die 50 besten Strategen von Feeder Series Fantasy F2. Nur die Talentiertesten schaffen es in diese Elite-Rangliste.",
+      "activePlayers": "Aktive Spieler",
+      "top50": "Elite",
+      "season": "Saison"
+    },
+    "podium": {
+      "building": "Podium im Aufbau",
+      "buildingDescription": "Es werden mindestens 3 platzierte Spieler benötigt, um das Podium anzuzeigen",
+      "currentPlayers_one": "Aktuell: {count} platzierter Spieler",
+      "currentPlayers_other": "Aktuell: {count} platzierte Spieler"
+    },
+    "list": {
+      "top4to50": "Top 4-50",
+      "topN": "Top {count}",
+      "onlyN_one": "Derzeit nur {count} platzierter Spieler",
+      "onlyN_other": "Derzeit nur {count} platzierte Spieler",
+      "empty": "Noch keine platzierten Spieler",
+      "joinedAt": "Mitglied seit",
+      "totalPoints": "Gesamtpunkte",
+      "top10": "Top 10"
+    },
+    "myPosition": {
+      "title": "Meine Position",
+      "rank": "Rang",
+      "points": "Gesamtpunkte",
+      "top50": "🎉 Glückwunsch! Du bist in den weltweiten Top 50",
+      "keepGoing": "Mach weiter, um die Top 50 zu erreichen!"
+    },
+    "infoCard": {
+      "title": "Über die Rangliste",
+      "info1": "Nur die 50 besten Spieler weltweit werden angezeigt",
+      "info2": "Die Rangliste wird nach jedem Rennwochenende aktualisiert",
+      "info3": "Punkte werden über die gesamte Saison gesammelt",
+      "cta": "Werde der nächste FSF-Champion!"
+    }
+  },
+  "register": {
+    "title": "Konto erstellen",
+    "description": "Tritt dem Grid bei und starte dein Team.",
+    "or": "oder",
+    "username": "Benutzername",
+    "email": "E-Mail (optional)",
+    "password": "Passwort",
+    "submit": "Mein Konto erstellen",
+    "submitting": "Wird erstellt…",
+    "login": "Ich habe bereits ein Konto"
+  },
+  "rules": {
+    "hero": {
+      "badge": "Offizielles Regelwerk",
+      "title": "Spielregeln",
+      "description": "Entdecke die vollständigen Regeln: Teamzusammenstellung, Budget, Punktesystem, Ranglisten und Sonderfälle. Alles, was du wissen musst, um regelkonform zu spielen."
+    },
+    "sections": {
+      "s1": {
+        "title": "Teamzusammenstellung",
+        "badge": "Erforderlich",
+        "constructors": { "label": "2 Konstrukteure", "description": "Jedes Team muss genau zwei Konstrukteure auswählen." },
+        "drivers": { "label": "5 Fahrer", "description": "Stelle dein Lineup mit fünf Fahrern deiner Wahl zusammen." },
+        "captain": { "label": "1 Kapitän", "description": "Bestimme einen Kapitän aus deinen 5 Fahrern: alle seine Punkte werden verdoppelt (x2)!" },
+        "budget": { "label": "Festes Budget", "description": "Halte das Budgetlimit für dein gesamtes Lineup ein." },
+        "oneTeam": { "label": "Ein Team pro Benutzer", "description": "Jedes Konto kann pro Liga nur ein Team verwalten." }
+      },
+      "s2": {
+        "title": "Budget und Preisentwicklung",
+        "badge": "Wirtschaft",
+        "prices": { "label": "Fahrer- und Konstrukteurspreise", "description": "Jeder Fahrer und Konstrukteur hat einen Preis, der sich dynamisch ändert." },
+        "evolution": { "label": "Änderungen nach jedem Wochenende", "description": "Preise werden automatisch basierend auf den echten Leistungen des vorherigen Wochenendes angepasst." },
+        "locked": { "label": "Gesperrtes Team", "description": "Sobald dein Team validiert ist und das Rennwochenende beginnt, werden Fahrer- und Konstrukteurspreise eingefroren. Sie ändern sich erst nach dem vollständigen Wochenende." },
+        "tip": { "title": "Marktstrategie", "description": "Antizipiere Preissteigerungen und -rückgänge. Ein leistungsstarker Fahrer wird teurer, während ein schwächelnder Fahrer erschwinglicher wird." }
+      },
+      "s3": {
+        "title": "Fahrerpunkte",
+        "badge": "Wertung",
+        "driverSum": { "label": "Summe beider Fahrer", "description": "Fahrer erzielen die Gesamtpunkte in jeder Session (Qualifying, Sprint Race und Feature Race)." },
+        "quali": "Qualifying",
+        "sprint": "Sprint Race",
+        "feature": "Feature Race",
+        "featureFinalResult": "Endergebnis",
+        "pitlane": "* Autos, die aus der Boxengasse starten, werden als von einer Position relativ zum letzten Auto im Grid startend betrachtet.",
+        "dnfNote": "** DNF = Did Not Finish (Aufgabe) ; DNS = Did Not Start (nicht gestartet) ; DSQ = Disqualified (disqualifiziert)"
+      },
+      "s4": {
+        "title": "Konstrukteurspunkte",
+        "badge": "Konstrukteure",
+        "constructorSum": { "label": "Summe beider Fahrer", "description": "Konstrukteure erzielen die kombinierte Gesamtpunktzahl ihrer beiden offiziellen Fahrer für jede Session (Qualifying, Sprint, Feature Race)." },
+        "bonusTitle": "Nur Qualifying-Bonus/Malus",
+        "bonus": {
+          "bothTop10": "Beide Fahrer ≥ P10",
+          "oneTop10": "Ein Fahrer ≥ P10",
+          "bothTop16": "Beide Fahrer ≥ P16",
+          "oneTop16": "Ein Fahrer ≥ P16",
+          "bothOut16": "Beide Fahrer außerhalb P16"
+        }
+      },
+      "s5": {
+        "title": "Ranglisten",
+        "badge": "Wettbewerb",
+        "captainBonus": {
+          "title": "Kapitänsbonus",
+          "description": "Der designierte Kapitän erzielt das Doppelte seiner Punkte. Wähle weise!"
+        },
+        "weekend": { "label": "Wochenend-Rangliste", "description": "Punkte, die in den drei Sessions (Qualifying, Sprint, Feature) des aktuellen Wochenendes gesammelt wurden." },
+        "league": { "label": "Liga-Rangliste", "description": "Summe aller in der Saison in deiner privaten Liga erzielten Punkte." },
+        "world": { "label": "Weltrangliste", "description": "Globale Rangliste aller FSF-Spieler über alle Ligen hinweg." }
+      },
+      "s6": {
+        "title": "Sonderfälle",
+        "badge": "Ausnahmen",
+        "cancelled": { "label": "Abgesagtes Rennen", "description": "Wenn eine Session abgesagt wird, werden keine Punkte für diese Session vergeben." },
+        "teamChange": { "label": "Konstrukteurswechsel zur Saisonmitte", "description": "Wenn ein Fahrer während der Saison den Konstrukteur wechselt, aktualisiert das System automatisch seine Zugehörigkeit." },
+        "finalDecision": { "label": "Endgültige Entscheidung", "description": "Bei einer außergewöhnlichen oder unvorhergesehenen Situation hat das Wertungssystem des Spiels Vorrang." }
+      }
+    },
+    "summary": {
+      "title": "Zusammenfassung",
+      "description": "Das Punktesystem belohnt die echten Leistungen deiner Fahrer und Konstrukteure. Qualifying, Sprint Races und Feature Races zählen alle. Verwalte dein Budget, antizipiere Preisänderungen und baue ein ausgewogenes Team, um deine Rangliste während der gesamten Saison zu dominieren.",
+      "faqText": "Fragen? Schau in die",
+      "faqLink": "FAQ",
+      "orText": "oder",
+      "contactLink": "kontaktiere",
+      "supportText": "den Support."
+    }
+  },
+  "home": {
+    "mobileWarning": {
+      "ariaClose": "Schließen",
+      "title": "⚠️ PC-Nutzung empfohlen",
+      "description": "ist für ein PC-Erlebnis optimiert. Die Oberfläche ist derzeit",
+      "descriptionHighlight": "nicht für Mobilgeräte geeignet",
+      "descriptionEnd": "und wird auf einem Smartphone schwer zu bedienen sein.",
+      "mobileUpdate": "Eine mobile Version ist für kommende Updates geplant! 📱",
+      "confirm": "Verstanden"
+    },
+    "hero": {
+      "badge": "Fantasy F2 - Saison 2026",
+      "title": "Feeder Series ",
+      "titleHighlight": "Fantasy",
+      "description": "Baue dein ultimatives Team, stelle die besten Fahrer und Konstrukteure auf und dominiere die Weltranglisten im immersivsten F2-Fantasy-Spiel.",
+      "cta": "Mein Team erstellen",
+      "loading": "Wird geladen...",
+      "unavailable": "Nicht verfügbar"
+    },
+    "pitch": {
+      "seasonOpen": "Saison 2026 offen",
+      "title": "Dein ultimatives Team zum Greifen nah",
+      "description": "Erlebe jedes Formel-2-Wochenende als Teammanager. Wähle deine Fahrer, wähle deine Konstrukteure und tritt gegen andere Spieler basierend auf echten Rennleistungen an."
+    },
+    "roadmap": {
+      "badge": "Kommende Updates",
+      "title": "Noch mehr Funktionen kommen bald!",
+      "description": "Wir arbeiten aktiv an neuen Features, um dein Spielerlebnis zu verbessern.",
+      "statusInProgress": "In Bearbeitung",
+      "statusComing": "Demnächst",
+      "features": {
+        "multilang": { "title": "Mehrsprachige Version", "desc": "Spiel verfügbar auf Englisch und anderen Sprachen" },
+        "design": { "title": "Verbessertes Design", "desc": "Noch modernere und intuitivere Oberfläche" },
+        "bugs": { "title": "Fehlerbehebungen", "desc": "Optimierung und verbesserte Stabilität" },
+        "friends": { "title": "Freundessystem", "desc": "Füge Freunde hinzu und verfolgt gegenseitig eure Leistungen" },
+        "mobile": { "title": "Mobile Version", "desc": "Für Smartphones optimierte App" },
+        "f3": { "title": "Formel 3", "desc": "Erweiterung des Spiels auf Formel 3" }
+      },
+      "suggestion": "Deine Meinung zählt!",
+      "suggestionText": "Teile deine Vorschläge gerne über die Seite",
+      "contactLink": "Kontakt"
+    },
+    "features": {
+      "realtime": { "title": "Echtzeit-Ergebnisse", "desc": "Punkte werden nach jeder Session (Qualifications, Sprint, Feature Race) automatisch basierend auf den echten Leistungen deiner Fahrer und Konstrukteure berechnet." },
+      "strategy": { "title": "Strategie & Budget", "desc": "Optimiere dein Lineup mit begrenztem Budget. Fahrer- und Konstrukteurspreise entwickeln sich je nach Leistung. Günstig kaufen, teuer verkaufen!" },
+      "leagues": { "title": "Private Ligen", "desc": "Erstelle private Ligen, um deine Freunde herauszufordern. Teile einen Einladungscode und verfolgt eure Leistungen in einer dedizierten Rangliste." },
+      "world": { "title": "Weltrangliste", "desc": "Vergleiche dich mit den besten Spielern der Welt in der offiziellen FSF-Rangliste. Beweise, dass du der beste Formel-2-Stratege bist." }
+    },
+    "cta": {
+      "title": "Spiel mit deinen Freunden",
+      "description": "Tritt einer privaten Liga mit einem Einladungscode bei und tritt jedes Wochenende gegen deine Freunde an. Spiel, hab Spaß und schlage deine Freunde bei jedem Rennwochenende.",
+      "joinLeague": "Einer Liga beitreten"
+    }
+  },
+  "deleteLeagueModal": {
+    "title": "Liga löschen?",
+    "warning": {
+      "title": "⚠️ Unwiderrufliche Aktion",
+      "line1": "Die Liga",
+      "line1End": "wird dauerhaft gelöscht",
+      "line2Start": "Die",
+      "line2End": "Mitglieder verlieren den Zugang",
+      "line3": "Alle Punkte und Ranglisten werden gelöscht",
+      "line4": "Diese Aktion kann nicht rückgängig gemacht werden"
+    },
+    "confirm": {
+      "label": "Zur Bestätigung den Liga-Code eingeben:",
+      "placeholder": "Code eingeben",
+      "error": "Der Code stimmt nicht überein"
+    },
+    "cancel": "Abbrechen",
+    "submit": "Dauerhaft löschen",
+    "submitting": "Wird gelöscht...",
+    "finalConfirm": {
+      "title": "Bist du sicher?",
+      "description": "Diese Aktion ist unwiderruflich.",
+      "no": "Nein",
+      "yes": "Ja"
+    }
+  },
+  "driverStatsPopup": {
+    "loading": "Statistiken werden geladen...",
+    "errorTitle": "Fehler",
+    "errorFallback": "Daten nicht gefunden",
+    "notAuthenticated": "Nicht authentifiziert",
+    "rookie": "Rookie",
+    "seasonAverages": "Saison-2026-Durchschnitte",
+    "quali": "Quali",
+    "sprint": "Sprint",
+    "feature": "Feature",
+    "seasonPerformance": "Saison-2026-Leistung",
+    "pointsPerM": "Punkte/M",
+    "bestWeekend": "Bestes WE",
+    "total": "Gesamt",
+    "basedOn_one": "Basierend auf {count} Rennen",
+    "basedOn_other": "Basierend auf {count} Rennen",
+    "last5Weekends": "Letzte 5 Wochenenden",
+    "pts": "Pkt.",
+    "radarLabels": {
+      "avgQ": "Ø Q",
+      "avgSR": "Ø SR",
+      "avgFR": "Ø FR",
+      "pointsPerM": "Punkte/M",
+      "bestWE": "Bestes WE"
+    }
+  },
+  "footer": {
+    "disclaimer": "Feeder Series Fantasy ist ein unabhängiges Fantasy-Spiel, das von Fans erstellt wurde. Es ist nicht mit der FIA, Formel 1, Formel 2, Formel 3 oder F1 Academy verbunden.",
+    "howToPlay": "Wie man spielt",
+    "rules": "Spielregeln",
+    "faq": "FAQ",
+    "contact": "Kontakt",
+    "builtBy": "Von Motorsport-Fans entwickelt"
+  },
+  "googleButton": {
+    "login": "Mit Google anmelden",
+    "register": "Mit Google registrieren"
+  },
+  "navigation": {
+    "home": "Startseite",
+    "leagues": "Meine Ligen",
+    "rankings": "Rangliste",
+    "howToPlay": "Wie man spielt",
+    "rules": "Regeln",
+    "faq": "FAQ",
+    "contact": "Kontakt",
+    "login": "Anmelden",
+    "fullscreenEnter": "Vollbild (F11)",
+    "fullscreenExit": "Vollbild beenden (Esc)",
+    "languages": {
+      "ar": "Arabisch",
+      "pt": "Portugiesisch",
+      "nl": "Niederländisch",
+      "en": "Englisch",
+      "fr": "Französisch",
+      "de": "Deutsch",
+      "it": "Italienisch",
+      "ja": "Japanisch",
+      "es": "Spanisch",
+      "tr": "Türkisch"
+    }
+  }
+}

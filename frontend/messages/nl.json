@@ -1,0 +1,817 @@
+{
+  "authCallback": {
+    "loading": {
+      "title": "Inloggen...",
+      "subtitle": "Even geduld"
+    },
+    "success": {
+      "title": "Ingelogd!",
+      "subtitle": "Doorsturen..."
+    },
+    "error": {
+      "title": "Inlogfout",
+      "subtitle": "Doorsturen naar de inlogpagina..."
+    }
+  },
+  "contact": {
+    "badge": "Neem contact op",
+    "title": "Contact",
+    "description": "Je kunt ons schrijven om bugs te melden, verbeteringen voor te stellen, je mening over de spelervaring te delen of een vraag te stellen.",
+    "success": {
+      "title": "Bericht verzonden!",
+      "description": "Bedankt voor je bericht. We nemen zo snel mogelijk contact met je op via",
+      "newMessage": "Nog een bericht sturen"
+    },
+    "form": {
+      "messageType": "Type bericht",
+      "subjects": {
+        "improvement": "Verbetering",
+        "bug": "Bug",
+        "feedback": "Feedback",
+        "question": "Vraag"
+      },
+      "firstName": {
+        "label": "Naam",
+        "placeholder": "Jouw naam"
+      },
+      "email": {
+        "label": "E-mail",
+        "placeholder": "jouw@email.com"
+      },
+      "message": {
+        "label": "Bericht",
+        "placeholders": {
+          "bug": "Beschrijf de bug: op welke pagina, welke actie en welk onverwacht resultaat...",
+          "improvement": "Beschrijf je verbeteringsidee en hoe het het spel zou verrijken...",
+          "feedback": "Deel je mening over de spelervaring, wat je leuk vindt of graag zou zien...",
+          "question": "Stel je vraag duidelijk en precies...",
+          "default": "Jouw bericht..."
+        },
+        "tipBug": "Tip: geef de pagina aan, de uitgevoerde actie en wat er verschijnt in plaats van het verwachte resultaat.",
+        "tipDefault": "Hoe nauwkeuriger je bent, hoe sneller we je kunnen helpen!"
+      },
+      "submit": "Bericht verzenden",
+      "submitting": "Verzenden..."
+    },
+    "faq": {
+      "title": "Veelgestelde vragen",
+      "description": "Raadpleeg onze FAQ voordat je schrijft, je antwoord staat er misschien al in!",
+      "link": "Raadplegen"
+    }
+  },
+  "faq": {
+    "badge": "Veelgestelde vragen",
+    "title": "FAQ",
+    "description": "Vind hier de antwoorden op de meest gestelde vragen over de werking van het spel, de regels, transfers en nog veel meer.",
+    "comingSoon": "Binnenkort",
+    "sections": {
+      "general": {
+        "title": "Algemeen",
+        "badge": "Basis",
+        "q1": {
+          "question": "Wat is Feeder Series Fantasy F2?",
+          "answer": "Feeder Series Fantasy F2 is een fantasygame gebaseerd op het Formule 2-kampioenschap. Je stelt een team samen met coureurs en constructeurs en spaart punten op basis van de werkelijke prestaties op de baan."
+        },
+        "q2": {
+          "question": "Is het spel officieel?",
+          "answer": "Nee. Feeder Series Fantasy F2 is een onafhankelijk project gemaakt door fans, zonder enige band met de FIA, Formule 1, Formule 2, Formule 3 of F1 Academy."
+        },
+        "q3": {
+          "question": "Is het spel gratis?",
+          "answer": "Ja, Feeder Series Fantasy F2 is volledig gratis."
+        },
+        "q4": {
+          "question": "Kan ik beginnen te spelen als het seizoen al begonnen is?",
+          "answer": "Ja. Je kunt op elk moment van het seizoen meedoen. Als een raceweekend al bezig of afgelopen is, begint je team punten te scoren vanaf het volgende raceweekend."
+        }
+      },
+      "team": {
+        "title": "Team & Selecties",
+        "badge": "Samenstelling",
+        "q1": {
+          "question": "Hoeveel teams kan ik aanmaken?",
+          "answer": "Één team per competitie, maar je kunt tegelijkertijd aan meerdere competities deelnemen."
+        },
+        "q2": {
+          "question": "Wanneer wordt mijn team vergrendeld?",
+          "answer": "Je team wordt vergrendeld bij de officiële start van het raceweekend. Daarna zijn er tot het volgende weekend geen wijzigingen meer mogelijk."
+        },
+        "q3": {
+          "question": "Kan ik mijn team tijdens het seizoen wijzigen?",
+          "answer": "Ja, zolang de selectieperiode voor het volgende weekend open is."
+        },
+        "q4": {
+          "question": "Wat is de aanvoerder?",
+          "answer": "De aanvoerder is een coureur in je team wiens punten worden verdubbeld (x2). Je kunt je aanvoerder elk weekend wijzigen zolang je team niet vergrendeld is."
+        }
+      },
+      "transfers": {
+        "title": "Teamwijzigingen",
+        "badge": "Strategie",
+        "q1": {
+          "question": "Kan ik mijn coureurs en constructeurs wisselen?",
+          "answer": "Ja, je kunt je samenstelling (coureurs, constructeurs, aanvoerder) vrij aanpassen tussen elk weekend, zolang de vergrendelperiode nog niet begonnen is. Er is voorlopig geen limiet op wijzigingen."
+        }
+      },
+      "budget": {
+        "title": "Budget & Prijzen",
+        "badge": "Economie",
+        "q1": {
+          "question": "Wat is het startbudget?",
+          "answer": "Elke speler heeft een startbudget van 100 miljoen om zijn team samen te stellen."
+        },
+        "q2": {
+          "question": "Hoe worden de prijzen van coureurs en constructeurs bepaald?",
+          "answer": "De prijzen worden automatisch berekend op basis van de werkelijke prestaties op de baan."
+        },
+        "q3": {
+          "question": "Wanneer veranderen de prijzen?",
+          "answer": "De prijzen veranderen na elk raceweekend."
+        },
+        "q4": {
+          "question": "Waarom veranderen de prijzen?",
+          "answer": "Prijsveranderingen weerspiegelen de vorm van coureurs en constructeurs om een dynamische strategie gedurende het seizoen te stimuleren."
+        },
+        "q5": {
+          "question": "Hoe evolueert mijn budget?",
+          "answer": "Je budget past zich automatisch aan op basis van de prijsevolutie van je coureurs en constructeurs. Als hun waarde stijgt, stijgt je budget ook. Als het daalt, daalt je budget. Je hoeft niet te verkopen om winst te realiseren!"
+        }
+      },
+      "points": {
+        "title": "Punten & Resultaten",
+        "badge": "Puntensysteem",
+        "q1": {
+          "question": "Hoe worden punten toegekend?",
+          "answer": "Punten worden toegekend op basis van de werkelijke prestaties in de kwalificatie, de Sprintrace en de Featurerace. Het gedetailleerde puntensysteem is beschikbaar in de sectie Regels.",
+          "linkText": "Volledig puntensysteem bekijken"
+        },
+        "q2": {
+          "question": "Wanneer worden de punten bijgewerkt?",
+          "answer": "Punten worden automatisch berekend na elke officiële sessie, zodra de resultaten zijn gevalideerd. Een voorlopige score kan worden weergegeven vóór de definitieve validatie."
+        },
+        "q3": {
+          "question": "Wat betekenen DNS, DNF en DSQ?",
+          "dns": "DNS: Did Not Start (niet gestart)",
+          "dnf": "DNF: Did Not Finish (uitgevallen)",
+          "dsq": "DSQ: Disqualified (gediskwalificeerd)"
+        }
+      },
+      "edge": {
+        "title": "Bijzondere gevallen",
+        "badge": "Uitzonderingen",
+        "q1": {
+          "question": "Wat gebeurt er als een race wordt geannuleerd?",
+          "answer": "Er worden geen punten toegekend voor die race."
+        },
+        "q2": {
+          "question": "Wat gebeurt er als een race wordt ingekort of onderbroken?",
+          "answer": "Punten worden alleen toegekend op basis van resultaten die officieel zijn gevalideerd door Formule 2."
+        },
+        "q3": {
+          "question": "Wat gebeurt er als een coureur wordt vervangen?",
+          "answer": "Geplande functionaliteit. De vervanging van coureurs wordt automatisch en eerlijk afgehandeld, zodat spelers niet worden benadeeld door wijzigingen buiten hun wil."
+        }
+      },
+      "leagues": {
+        "title": "Competities & Klassementen",
+        "badge": "Competitie",
+        "q1": {
+          "question": "Wat is een competitie?",
+          "answer": "Een competitie is een groep spelers die strijden in een gemeenschappelijk klassement."
+        },
+        "q2": {
+          "question": "Kan ik aan meerdere competities deelnemen?",
+          "answer": "Ja. Hetzelfde fantasyteam kan tegelijkertijd aan meerdere competities deelnemen."
+        },
+        "q3": {
+          "question": "Hoe worden gelijke standen opgelost?",
+          "intro": "Bij gelijke punten:",
+          "tiebreak1": "Beste score in de Featurerace",
+          "tiebreak2": "Beste score in de Sprintrace",
+          "tiebreak3": "Beste score in de kwalificatie"
+        }
+      },
+      "fairplay": {
+        "title": "Fair Play & Ondersteuning",
+        "badge": "Hulp",
+        "q1": {
+          "question": "Kunnen resultaten achteraf worden gewijzigd?",
+          "answer": "Nee. Er zijn geen retroactieve wijzigingen in resultaten of punten."
+        },
+        "q2": {
+          "question": "Waarom lijken mijn punten onjuist?",
+          "answer": "Controleer het puntensysteem op de pagina Regels. Als de twijfel aanhoudt, neem dan contact op met de support via de contactpagina.",
+          "linkText": "Regels bekijken"
+        },
+        "q3": {
+          "question": "Hoe neem ik contact op met het spelteam?",
+          "answer": "Via de contactpagina.",
+          "linkText": "Neem contact op"
+        }
+      }
+    },
+    "sidebar": {
+      "help": {
+        "title": "Hulp nodig?",
+        "description": "Antwoord niet gevonden? Aarzel niet om contact met ons op te nemen.",
+        "cta": "Contact opnemen"
+      },
+      "links": {
+        "title": "Handige links",
+        "howToPlay": "Hoe te spelen",
+        "rules": "Regels",
+        "joinLeague": "Deelnemen aan een competitie"
+      }
+    }
+  },
+  "howToPlay": {
+    "badge": "Startgids",
+    "title": "Hoe te spelen",
+    "description": "Welkom bij Feeder Series Fantasy F2. Beleef elk Formule 2-weekend als een teammanager. Kies je coureurs, selecteer je constructeurs, respecteer het budget en ga de strijd aan met andere spelers op basis van de werkelijke raceresultaten.",
+    "steps": {
+      "step1": {
+        "title": "Stel je team samen",
+        "description": "Bouw je opstelling met inachtneming van de budgetbeperkingen",
+        "teamName": {
+          "label": "Teamnaam",
+          "description": "Kies een unieke naam die jou vertegenwoordigt."
+        },
+        "constructors": {
+          "label": "2 constructeurs",
+          "description": "Selecteer twee constructeurs voor je team."
+        },
+        "drivers": {
+          "label": "5 coureurs",
+          "description": "Stel je opstelling samen met vijf coureurs naar keuze."
+        },
+        "captain": {
+          "label": "1 aanvoerder (x2 punten)",
+          "description": "Wijs een aanvoerder aan onder je coureurs: zijn punten worden verdubbeld!"
+        },
+        "budget": {
+          "label": "Budget respecteren",
+          "description": "Optimaliseer je opstelling binnen het beschikbare budget."
+        },
+        "tip": {
+          "title": "Strategietip",
+          "description": "Consistentie levert vaak meer op dan grote namen. Een consistente coureur kan meer punten scoren dan een veelbelovende maar wisselvallige coureur."
+        }
+      },
+      "step2": {
+        "title": "Word lid of maak een competitie aan",
+        "description": "Daag je vrienden uit of meet je krachten met de hele wereld.",
+        "privateLeague": {
+          "label": "Privécompetitie",
+          "description": "Doe mee aan een bestaande competitie met een uitnodigingscode."
+        },
+        "createLeague": {
+          "label": "Een competitie aanmaken",
+          "description": "Start je eigen competitie en nodig je vrienden uit om je uit te dagen."
+        },
+        "worldRanking": {
+          "label": "Wereldranglijst",
+          "description": "Word automatisch vergeleken met de beste spelers ter wereld."
+        }
+      },
+      "step3": {
+        "title": "Volg de races",
+        "description": "Je punten worden automatisch bijgewerkt na elke sessie",
+        "qualifying": "Kwalificatie",
+        "sprintRace": "Sprintrace",
+        "featureRace": "Featurerace",
+        "automaticPoints": {
+          "label": "Automatische punten",
+          "description": "Punten worden berekend op basis van de officiële resultaten aan het einde van het weekend."
+        },
+        "automaticCalc": {
+          "label": "Automatische berekening",
+          "description": "Punten worden automatisch berekend na elk weekend en de prijzen evolueren op basis van prestaties."
+        }
+      },
+      "step4": {
+        "title": "Analyseer en optimaliseer",
+        "description": "Gebruik statistieken om je strategie te verfijnen",
+        "recentForm": {
+          "label": "Recente vorm",
+          "description": "Bestudeer de prestaties van coureurs en constructeurs in de afgelopen races."
+        },
+        "circuitPerf": {
+          "label": "Prestaties per circuit",
+          "description": "Sommige coureurs blinken uit op specifieke circuits."
+        },
+        "priceEvolution": {
+          "label": "Prijsevolutie",
+          "description": "De prijs van coureurs stijgt of daalt op basis van hun prestaties. Je budget past zich automatisch aan."
+        }
+      },
+      "step5": {
+        "title": "Win het seizoen",
+        "description": "Spaar punten en domineer je klassement",
+        "leagueWin": {
+          "label": "Competitiewinst",
+          "description": "De hoogste score in je competitie wint het privékampioenschap."
+        },
+        "worldChamp": {
+          "label": "Wereldkampioen",
+          "description": "De hoogste wereldscore wordt seizoenskampioen FSF Serie 2/Tier 2."
+        },
+        "cta": "Klaar om het kampioenschap te domineren?"
+      }
+    },
+    "sidebar": {
+      "shortcuts": {
+        "title": "Snelle toegang",
+        "createTeam": "Mijn team aanmaken",
+        "joinLeague": "Deelnemen aan een competitie",
+        "pointsScale": "Puntensysteem bekijken",
+        "fullRules": "Volledige regels"
+      },
+      "important": {
+        "title": "Belangrijk om te weten",
+        "note1": "De prijzen van coureurs en constructeurs veranderen na elk weekend.",
+        "note2": "Eenmaal vergrendeld, kun je je team niet meer wijzigen voor dat weekend.",
+        "note3": "Punten worden berekend op basis van de officiële resultaten gepubliceerd door de FIA."
+      },
+      "ready": {
+        "title": "Klaar om te beginnen?",
+        "description": "Alles duidelijk? Spring in het avontuur en bouw het team dat het seizoen zal domineren.",
+        "cta": "Deelnemen aan een competitie"
+      }
+    }
+  },
+  "myLeagues": {
+    "loading": "Competities laden...",
+    "title": "Mijn Competities",
+    "description": "Maak een privécompetitie aan of doe mee met je vrienden via een uitnodigingscode.",
+    "join": "Deelnemen",
+    "create": "+ Aanmaken",
+    "card": {
+      "official": "Officieel",
+      "leader": "🏆 Leider",
+      "code": "Code",
+      "members": "Leden",
+      "position": "Positie",
+      "points": "Punten",
+      "open": "Competitie openen →"
+    },
+    "empty": {
+      "description": "Nog geen competities",
+      "cta": "Je eerste competitie aanmaken"
+    },
+    "createModal": {
+      "title": "Een competitie aanmaken",
+      "description": "Geef je competitie een naam om te beginnen.",
+      "placeholder": "Naam van de competitie",
+      "submit": "Aanmaken",
+      "submitting": "Aanmaken...",
+      "cancel": "Annuleren"
+    },
+    "joinModal": {
+      "title": "Deelnemen aan een competitie",
+      "description": "Voer de uitnodigingscode van de competitie in.",
+      "submit": "Deelnemen",
+      "submitting": "Deelnemen...",
+      "cancel": "Annuleren"
+    }
+  },
+  "leagueDetail": {
+    "loading": "Laden...",
+    "notFound": "Competitie niet gevonden",
+    "back": "← Terug naar competities",
+    "official": "Officieel",
+    "closed": "Gesloten",
+    "createdBy": "Aangemaakt door",
+    "members": "leden",
+    "manageTeam": "Mijn team beheren",
+    "editName": "Naam bewerken",
+    "reopen": "Heropenen",
+    "close": "Sluiten",
+    "delete": "Verwijderen",
+    "saving": "Opslaan...",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "leaderboard": {
+      "title": "Klassement",
+      "joinedAt": "Lid sinds",
+      "points": "pnt",
+      "viewTeam": "Team bekijken",
+      "empty": "Geen klassement beschikbaar"
+    },
+    "share": {
+      "title": "Competitie delen",
+      "inviteCode": "Uitnodigingscode",
+      "copied": "Gekopieerd!",
+      "inviteLink": "Uitnodigingslink",
+      "copyLink": "Link kopiëren"
+    },
+    "myTeam": {
+      "title": "Mijn team",
+      "nameLabel": "Teamnaam",
+      "namePlaceholder": "Naam van je team",
+      "nameHint": "3–20 tekens",
+      "notDefined": "Nog niet ingesteld",
+      "edit": "Bewerken",
+      "saving": "Opslaan...",
+      "save": "Opslaan",
+      "cancel": "Annuleren",
+      "noTeamHint": "Stel een naam in via",
+      "noTeamLink": "Mijn Team"
+    },
+    "teamModal": {
+      "title": "Team van",
+      "teamName": "Teamnaam",
+      "constructors": "Constructeurs",
+      "drivers": "Coureurs",
+      "rookie": "Rookie",
+      "noConstructors": "Geen constructeur geselecteerd",
+      "noDrivers": "Geen coureur geselecteerd",
+      "noTeam": "heeft nog geen team aangemaakt",
+      "close": "Sluiten"
+    }
+  },
+  "login": {
+    "title": "Inloggen",
+    "description": "Log in om je team te beheren.",
+    "or": "of",
+    "username": "Gebruikersnaam",
+    "password": "Wachtwoord",
+    "submit": "Inloggen",
+    "submitting": "Inloggen…",
+    "register": "Account aanmaken"
+  },
+  "myTeam": {
+    "loading": "Laden…",
+    "noName": "Geen naam",
+    "season": "Seizoen",
+    "budget": {
+      "label": "Budget",
+      "remaining": "resterend",
+      "unit": "M"
+    },
+    "save": {
+      "unsaved": "Niet-opgeslagen wijzigingen",
+      "saving": "Opslaan",
+      "saved": "Opgeslagen",
+      "error": "Fout",
+      "retry": "Opnieuw proberen"
+    },
+    "composition": {
+      "constructors": "Constructeurs",
+      "drivers": "Coureurs"
+    },
+    "deadline": {
+      "lockingIn": "Vergrendeling over",
+      "urgentWarning": "⚠️ Let op! Vergrendeling over",
+      "locked": "🔒 Team vergrendeld voor het weekend van",
+      "nextPeriod": "Volgende periode over"
+    },
+    "back": "Terug naar de competitie",
+    "namePopup": {
+      "title": "Geef je team een naam!",
+      "description": "Kies een unieke naam voor deze competitie",
+      "placeholder": "Bijv.: Road to F1",
+      "hint": "3-20 tekens",
+      "info": "Je kunt deze naam op elk moment wijzigen via",
+      "infoLink": "Mijn Competities",
+      "submit": "Ik wil spelen!",
+      "submitting": "Valideren..."
+    },
+    "panel": {
+      "drivers": "Coureurs",
+      "constructors": "Constructeurs",
+      "sortTeam": "Constructeur",
+      "sortPrice": "Prijs",
+      "selectDrivers": "Selecteer 5 coureurs •",
+      "selectConstructors": "Selecteer 2 constructeurs -",
+      "noDrivers": "Geen coureurs"
+    }
+  },
+  "profile": {
+    "loading": "Profiel laden...",
+    "title": "Mijn Profiel",
+    "description": "Beheer je persoonlijke gegevens en beveiliging",
+    "general": {
+      "title": "Algemene informatie",
+      "username": {
+        "label": "Gebruikersnaam",
+        "placeholder": "Nieuwe gebruikersnaam",
+        "save": "Opslaan",
+        "saving": "Opslaan...",
+        "edit": "Bewerken",
+        "cancel": "Annuleren"
+      },
+      "email": {
+        "label": "E-mail",
+        "placeholder": "nieuw@email.com",
+        "notSet": "Niet ingesteld",
+        "save": "Opslaan",
+        "saving": "Opslaan...",
+        "edit": "Bewerken",
+        "cancel": "Annuleren"
+      }
+    },
+    "security": {
+      "title": "Beveiliging",
+      "password": {
+        "label": "Wachtwoord",
+        "oldPlaceholder": "Huidig wachtwoord",
+        "newPlaceholder": "Nieuw wachtwoord",
+        "confirmPlaceholder": "Nieuw wachtwoord bevestigen",
+        "submit": "Wachtwoord wijzigen",
+        "submitting": "Wijzigen...",
+        "edit": "Bewerken",
+        "cancel": "Annuleren"
+      }
+    },
+    "logout": {
+      "title": "Uitloggen",
+      "description": "Log uit van je account op dit apparaat.",
+      "submit": "Uitloggen"
+    },
+    "deleteAccount": {
+      "title": "Account verwijderen",
+      "description": "Het verwijderen van je account is permanent en onomkeerbaar. Al je gegevens gaan verloren.",
+      "submit": "Mijn account verwijderen",
+      "confirm": {
+        "title": "Weet je het zeker?",
+        "description": "Deze actie is onomkeerbaar. Je account en al je gegevens worden permanent verwijderd.",
+        "submit": "Ja, permanent verwijderen",
+        "submitting": "Verwijderen...",
+        "cancel": "Annuleren"
+      }
+    },
+    "createdAt": "Account aangemaakt op"
+  },
+  "rankings": {
+    "loading": "Wereldranglijst laden...",
+    "hero": {
+      "badge": "Wereldranglijst",
+      "title": "Hall of ",
+      "titleHighlight": "Fame",
+      "description": "De top 50 strategen van Feeder Series Fantasy F2. Alleen de meest getalenteerden staan in dit elite-klassement.",
+      "activePlayers": "Actieve spelers",
+      "top50": "Elite",
+      "season": "Seizoen"
+    },
+    "podium": {
+      "building": "Podium in opbouw",
+      "buildingDescription": "Er zijn minimaal 3 geklasseerde spelers nodig om het podium weer te geven",
+      "currentPlayers_one": "Momenteel: {count} geklasseerde speler",
+      "currentPlayers_other": "Momenteel: {count} geklasseerde spelers"
+    },
+    "list": {
+      "top4to50": "Top 4-50",
+      "topN": "Top {count}",
+      "onlyN_one": "Slechts {count} geklasseerde speler momenteel",
+      "onlyN_other": "Slechts {count} geklasseerde spelers momenteel",
+      "empty": "Nog geen geklasseerde spelers",
+      "joinedAt": "Lid sinds",
+      "totalPoints": "totale punten",
+      "top10": "Top 10"
+    },
+    "myPosition": {
+      "title": "Mijn Positie",
+      "rank": "Ranglijst",
+      "points": "Totale punten",
+      "top50": "🎉 Gefeliciteerd! Je staat in de wereldwijde Top 50",
+      "keepGoing": "Blijf verbeteren om de Top 50 te bereiken!"
+    },
+    "infoCard": {
+      "title": "Over de ranglijst",
+      "info1": "Alleen de 50 beste spelers ter wereld worden weergegeven",
+      "info2": "De ranglijst wordt bijgewerkt na elk raceweekend",
+      "info3": "Punten worden gedurende het hele seizoen opgebouwd",
+      "cta": "Word de volgende FSF-kampioen!"
+    }
+  },
+  "register": {
+    "title": "Account aanmaken",
+    "description": "Doe mee aan de grid en start je team.",
+    "or": "of",
+    "username": "Gebruikersnaam",
+    "email": "E-mail (optioneel)",
+    "password": "Wachtwoord",
+    "submit": "Mijn account aanmaken",
+    "submitting": "Aanmaken…",
+    "login": "Ik heb al een account"
+  },
+  "rules": {
+    "hero": {
+      "badge": "Officieel reglement",
+      "title": "Spelregels",
+      "description": "Ontdek de volledige regels: teamsamenstelling, budget, puntensysteem, klassementen en bijzondere gevallen. Alles wat je moet weten om correct te spelen."
+    },
+    "sections": {
+      "s1": {
+        "title": "Teamsamenstelling",
+        "badge": "Verplicht",
+        "constructors": { "label": "2 constructeurs", "description": "Elk team moet precies twee constructeurs selecteren." },
+        "drivers": { "label": "5 coureurs", "description": "Stel je opstelling samen met vijf coureurs naar keuze." },
+        "captain": { "label": "1 aanvoerder", "description": "Wijs een aanvoerder aan uit je 5 coureurs: al zijn punten worden verdubbeld (x2)!" },
+        "budget": { "label": "Vast budget", "description": "Respecteer de budgetlimiet voor je volledige opstelling." },
+        "oneTeam": { "label": "Één team per gebruiker", "description": "Elk account kan slechts één team per competitie beheren." }
+      },
+      "s2": {
+        "title": "Budget en prijsevolutie",
+        "badge": "Economie",
+        "prices": { "label": "Prijzen van coureurs en constructeurs", "description": "Elke coureur en constructeur heeft een prijs die dynamisch verandert." },
+        "evolution": { "label": "Wijzigingen na elk weekend", "description": "Prijzen worden automatisch aangepast op basis van de werkelijke prestaties van het vorige weekend." },
+        "locked": { "label": "Team vergrendeld", "description": "Zodra je team is bevestigd en het raceweekend begint, worden de prijzen van coureurs en constructeurs bevroren. Ze veranderen pas na het volledige weekend." },
+        "tip": { "title": "Marktstrategie", "description": "Anticipeer op prijsstijgingen en -dalingen. Een goed presterende coureur zal in waarde stijgen, terwijl een coureur die het moeilijk heeft toegankelijker wordt." }
+      },
+      "s3": {
+        "title": "Coureurspunten",
+        "badge": "Puntensysteem",
+        "driverSum": { "label": "Som van beide coureurs", "description": "Coureurs scoren het totaal van de punten behaald in elke sessie (kwalificatie, sprintrace en featurerace)." },
+        "quali": "Kwalificatie",
+        "sprint": "Sprintrace",
+        "feature": "Featurerace",
+        "featureFinalResult": "Eindresultaat",
+        "pitlane": "* Auto's die vanuit de pitstraat starten, worden beschouwd als gestart vanuit een positie relatief aan de laatste auto op de grid.",
+        "dnfNote": "** DNF = Did Not Finish (uitgevallen); DNS = Did Not Start (niet gestart); DSQ = Disqualified (gediskwalificeerd)"
+      },
+      "s4": {
+        "title": "Constructeurspunten",
+        "badge": "Constructeurs",
+        "constructorSum": { "label": "Som van beide coureurs", "description": "Constructeurs scoren het gecombineerde totaal van hun twee officiële coureurs in elke sessie (kwalificatie, sprint, featurerace)." },
+        "bonusTitle": "Bonus/malus alleen in kwalificatie",
+        "bonus": {
+          "bothTop10": "Beide coureurs ≥ P10",
+          "oneTop10": "Één coureur ≥ P10",
+          "bothTop16": "Beide coureurs ≥ P16",
+          "oneTop16": "Één coureur ≥ P16",
+          "bothOut16": "Beide coureurs buiten P16"
+        }
+      },
+      "s5": {
+        "title": "Klassementen",
+        "badge": "Competitie",
+        "captainBonus": {
+          "title": "Aanvoerdersbonus",
+          "description": "De aangewezen aanvoerder scoort het dubbele van zijn punten. Kies verstandig!"
+        },
+        "weekend": { "label": "Weekendklassement", "description": "Punten verzameld in de drie sessies (kwalificatie, sprint, feature) van het huidige weekend." },
+        "league": { "label": "Competitieklassement", "description": "Som van alle punten gescoord tijdens het seizoen in je privécompetitie." },
+        "world": { "label": "Wereldranglijst", "description": "Globale ranglijst van alle FSF-spelers in alle competities." }
+      },
+      "s6": {
+        "title": "Bijzondere gevallen",
+        "badge": "Uitzonderingen",
+        "cancelled": { "label": "Race geannuleerd", "description": "Als een sessie wordt geannuleerd, worden er geen punten toegekend voor die sessie." },
+        "teamChange": { "label": "Constructeurswissel halverwege het seizoen", "description": "Als een coureur halverwege het seizoen van constructeur wisselt, werkt het systeem zijn affiliatie automatisch bij." },
+        "finalDecision": { "label": "Eindbeslissing", "description": "In geval van een uitzonderlijke of onvoorziene situatie is het puntensysteem van het spel doorslaggevend." }
+      }
+    },
+    "summary": {
+      "title": "Samenvatting",
+      "description": "Het puntensysteem beloont de werkelijke prestaties van je coureurs en constructeurs. Kwalificaties, sprintraces en featureraces tellen allemaal mee. Beheer je budget, anticipeer op prijsveranderingen en bouw een evenwichtig team om je klassement het hele seizoen lang te domineren.",
+      "faqText": "Vragen? Raadpleeg de",
+      "faqLink": "FAQ",
+      "orText": "of",
+      "contactLink": "neem contact op met",
+      "supportText": "de support."
+    }
+  },
+  "home": {
+    "mobileWarning": {
+      "ariaClose": "Sluiten",
+      "title": "⚠️ Gebruik op pc aanbevolen",
+      "description": "is geoptimaliseerd voor een pc-ervaring. De interface is momenteel",
+      "descriptionHighlight": "niet geschikt voor mobiel",
+      "descriptionEnd": "en zal moeilijk te gebruiken zijn op een smartphone.",
+      "mobileUpdate": "Een mobiele versie is gepland voor toekomstige updates! 📱",
+      "confirm": "Begrepen"
+    },
+    "hero": {
+      "badge": "Fantasy F2 - Seizoen 2026",
+      "title": "Feeder Series ",
+      "titleHighlight": "Fantasy",
+      "description": "Stel het ultieme team samen, selecteer de beste coureurs en constructeurs en domineer de wereldranglijsten in de meest meeslepende F2 fantasygame.",
+      "cta": "Mijn team aanmaken",
+      "loading": "Laden...",
+      "unavailable": "Niet beschikbaar"
+    },
+    "pitch": {
+      "seasonOpen": "Seizoen 2026 geopend",
+      "title": "Jouw ultieme team binnen handbereik",
+      "description": "Beleef elk Formule 2-weekend als een teammanager. Kies je coureurs, selecteer je constructeurs en ga de strijd aan met andere spelers op basis van de werkelijke raceresultaten."
+    },
+    "roadmap": {
+      "badge": "Komende updates",
+      "title": "Nog meer functies komen eraan!",
+      "description": "We werken actief aan nieuwe functies om je spelervaring te verbeteren.",
+      "statusInProgress": "Bezig",
+      "statusComing": "Binnenkort",
+      "features": {
+        "multilang": { "title": "Meertalige versie", "desc": "Spel beschikbaar in het Engels en andere talen" },
+        "design": { "title": "Verbeterd ontwerp", "desc": "Nog modernere en intuïtievere interface" },
+        "bugs": { "title": "Bugfixes", "desc": "Verbeterde optimalisatie en stabiliteit" },
+        "friends": { "title": "Vriendensysteem", "desc": "Voeg vrienden toe en volg elkaars prestaties" },
+        "mobile": { "title": "Mobiele versie", "desc": "App geoptimaliseerd voor smartphones" },
+        "f3": { "title": "Formule 3", "desc": "Uitbreiding van het spel naar Formule 3" }
+      },
+      "suggestion": "Jouw mening telt!",
+      "suggestionText": "Deel gerust je suggesties via de pagina",
+      "contactLink": "Contact"
+    },
+    "features": {
+      "realtime": { "title": "Realtime scores", "desc": "Punten worden automatisch berekend na elke sessie (kwalificatie, sprint, featurerace) op basis van de werkelijke prestaties van je coureurs en constructeurs." },
+      "strategy": { "title": "Strategie en budget", "desc": "Optimaliseer je opstelling met een beperkt budget. De prijzen van coureurs en constructeurs evolueren op basis van hun prestaties. Koop laag, verkoop hoog!" },
+      "leagues": { "title": "Privécompetities", "desc": "Maak privécompetities aan om je vrienden uit te dagen. Deel een uitnodigingscode en volg elkaars prestaties in een speciaal klassement." },
+      "world": { "title": "Wereldranglijst", "desc": "Vergelijk jezelf met de beste spelers ter wereld in de officiële FSF-ranglijst. Bewijs dat jij de beste strateeg van Formule 2 bent." }
+    },
+    "cta": {
+      "title": "Speel met je vrienden",
+      "description": "Word lid van een privécompetitie met een uitnodigingscode en daag je vrienden elk weekend uit. Speel, geniet en overtref je vrienden elk raceweekend.",
+      "joinLeague": "Deelnemen aan een competitie"
+    }
+  },
+  "deleteLeagueModal": {
+    "title": "Competitie verwijderen?",
+    "warning": {
+      "title": "⚠️ Onomkeerbare actie",
+      "line1": "De competitie",
+      "line1End": "wordt permanent verwijderd",
+      "line2Start": "De",
+      "line2End": "leden verliezen toegang",
+      "line3": "Alle scores en klassementen worden gewist",
+      "line4": "Deze actie kan niet ongedaan worden gemaakt"
+    },
+    "confirm": {
+      "label": "Voer ter bevestiging de competitiecode in:",
+      "placeholder": "Code invoeren",
+      "error": "De code komt niet overeen"
+    },
+    "cancel": "Annuleren",
+    "submit": "Permanent verwijderen",
+    "submitting": "Verwijderen...",
+    "finalConfirm": {
+      "title": "Weet je het zeker?",
+      "description": "Deze actie is onomkeerbaar.",
+      "no": "Nee",
+      "yes": "Ja"
+    }
+  },
+  "driverStatsPopup": {
+    "loading": "Statistieken laden...",
+    "errorTitle": "Fout",
+    "errorFallback": "Gegevens niet gevonden",
+    "notAuthenticated": "Niet geauthenticeerd",
+    "rookie": "Rookie",
+    "seasonAverages": "Gemiddelden seizoen 2026",
+    "quali": "Kwal",
+    "sprint": "Sprint",
+    "feature": "Feature",
+    "seasonPerformance": "Prestaties seizoen 2026",
+    "pointsPerM": "Punten/M",
+    "bestWeekend": "Beste WE",
+    "total": "Totaal",
+    "basedOn_one": "Gebaseerd op {count} gereden race",
+    "basedOn_other": "Gebaseerd op {count} gereden races",
+    "last5Weekends": "Laatste 5 weekenden",
+    "pts": "pnt",
+    "radarLabels": {
+      "avgQ": "Gem K",
+      "avgSR": "Gem SR",
+      "avgFR": "Gem FR",
+      "pointsPerM": "Punten/M",
+      "bestWE": "Beste WE"
+    }
+  },
+  "footer": {
+    "disclaimer": "Feeder Series Fantasy is een onafhankelijke fantasygame gemaakt door fans. Het heeft geen band met de FIA, Formule 1, Formule 2, Formule 3 of F1 Academy.",
+    "howToPlay": "Hoe te spelen",
+    "rules": "Regels",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "builtBy": "Gemaakt door motorsportfans"
+  },
+  "googleButton": {
+    "login": "Inloggen met Google",
+    "register": "Registreren met Google"
+  },
+  "navigation": {
+    "home": "Home",
+    "leagues": "Mijn Competities",
+    "rankings": "Ranglijst",
+    "howToPlay": "Hoe te spelen",
+    "rules": "Regels",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "login": "Inloggen",
+    "fullscreenEnter": "Volledig scherm (F11)",
+    "fullscreenExit": "Volledig scherm verlaten (Esc)",
+    "languages": {
+    "ar": "Arabisch",
+    "pt": "Portugees",
+    "nl": "Nederlands",
+    "en": "Engels",
+    "fr": "Frans",
+    "de": "Duits",
+    "it": "Italiaans",
+    "ja": "Japans",
+    "es": "Spaans",
+    "tr": "Turks"
+    }
+  }
+}

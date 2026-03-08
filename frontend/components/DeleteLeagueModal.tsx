@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface DeleteLeagueModalProps {
   leagueName: string;
@@ -19,6 +20,7 @@ export default function DeleteLeagueModal({
   onCancel,
   isDeleting,
 }: DeleteLeagueModalProps) {
+  const t = useTranslations("deleteLeagueModal");
   const [confirmCode, setConfirmCode] = useState("");
   const [showFinalConfirm, setShowFinalConfirm] = useState(false);
   const isValid = confirmCode.toUpperCase() === leagueCode.toUpperCase();
@@ -58,24 +60,24 @@ export default function DeleteLeagueModal({
 
           {/* Titre */}
           <h2 className="text-2xl font-bold text-white text-center mb-2">
-            Supprimer la ligue ?
+            {t("title")}
           </h2>
 
           {/* Avertissement */}
           <div className="bg-red-950/40 border border-red-900/50 rounded-lg p-4 mb-6">
-            <p className="text-red-200 text-sm font-semibold mb-2">⚠️ Action irréversible</p>
+            <p className="text-red-200 text-sm font-semibold mb-2">{t("warning.title")}</p>
             <ul className="text-red-300 text-sm space-y-1">
-              <li>• La ligue <span className="font-bold">{leagueName}</span> sera définitivement supprimée</li>
-              <li>• Les {memberCount} membres perdront l'accès</li>
-              <li>• Tous les scores et classements seront effacés</li>
-              <li>• Cette action ne peut pas être annulée</li>
+              <li>• {t("warning.line1")} <span className="font-bold">{leagueName}</span> {t("warning.line1End")}</li>
+              <li>• {t("warning.line2Start")} {memberCount} {t("warning.line2End")}</li>
+              <li>• {t("warning.line3")}</li>
+              <li>• {t("warning.line4")}</li>
             </ul>
           </div>
 
           {/* Confirmation par code */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-white mb-2">
-              Pour confirmer, entre le code de la ligue :
+              {t("confirm.label")}
             </label>
             <div className="text-center mb-3">
               <span className="text-2xl font-bold text-red-400 font-mono tracking-widest">
@@ -85,14 +87,14 @@ export default function DeleteLeagueModal({
             <input
               type="text"
               className="w-full px-4 py-3 rounded-lg bg-slate-800/50 border border-slate-700 text-white text-center text-xl font-mono tracking-widest uppercase outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/50"
-              placeholder="Entre le code"
+              placeholder={t("confirm.placeholder")}
               value={confirmCode}
               onChange={(e) => setConfirmCode(e.target.value)}
               maxLength={6}
               autoFocus
             />
             {confirmCode && !isValid && (
-              <p className="text-red-400 text-sm mt-2 text-center">Le code ne correspond pas</p>
+              <p className="text-red-400 text-sm mt-2 text-center">{t("confirm.error")}</p>
             )}
           </div>
 
@@ -103,14 +105,14 @@ export default function DeleteLeagueModal({
               disabled={isDeleting}
               className="flex-1 px-4 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold transition-colors disabled:opacity-50"
             >
-              Annuler
+              {t("cancel")}
             </button>
             <button
               onClick={handleDelete}
               disabled={!isValid || isDeleting}
               className="flex-1 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-500 text-white font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isDeleting ? "Suppression..." : "Supprimer définitivement"}
+              {isDeleting ? t("submitting") : t("submit")}
             </button>
           </div>
         </div>
@@ -127,23 +129,23 @@ export default function DeleteLeagueModal({
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="text-xl font-bold text-white text-center mb-4">
-              Êtes-vous sûr ?
+              {t("finalConfirm.title")}
             </h3>
             <p className="text-slate-300 text-center mb-6">
-              Cette action est irréversible.
+              {t("finalConfirm.description")}
             </p>
             <div className="flex gap-3">
               <button
                 onClick={handleFinalCancel}
                 className="flex-1 px-4 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-medium transition-colors"
               >
-                Non
+                {t("finalConfirm.no")}
               </button>
               <button
                 onClick={handleFinalConfirm}
                 className="flex-1 px-4 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-medium transition-colors"
               >
-                Oui
+                {t("finalConfirm.yes")}
               </button>
             </div>
           </div>

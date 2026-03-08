@@ -1,15 +1,17 @@
 import React from "react"
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
+import { Geist, Geist_Mono, Noto_Sans_Arabic, Noto_Sans_JP } from 'next/font/google'
+import { NextIntlClientProvider } from 'next-intl'
+import { getLocale, getMessages } from 'next-intl/server'
 import './globals.css'
-// import "../styles/globals.css";
-import Navigation from "@/components/navigation";
-import Footer from "@/components/footer";
-import LayoutFrame from "@/components/layout-frame";
+import Navigation from "@/components/navigation"
+import Footer from "@/components/footer"
+import LayoutFrame from "@/components/layout-frame"
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const _geist = Geist({ subsets: ["latin"] })
+const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const _notoArabic = Noto_Sans_Arabic({ subsets: ["arabic"], variable: "--font-arabic" })
+const _notoJP = Noto_Sans_JP({ subsets: ["latin"], variable: "--font-jp" })
 
 export const metadata: Metadata = {
   title: 'Feeder Series Fantasy',
@@ -17,22 +19,25 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: '/logo/favicon.ico', sizes: 'any' },
-      // { url: '/logo/icon-192.png', sizes: '192x192', type: 'image/png' },
-      // { url: '/logo/icon-512.png', sizes: '512x512', type: 'image/png' },
     ],
-    // apple: '/logo/apple-touch-icon.png',
   },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale()
+  const messages = await getMessages()
+  const isRTL = locale === 'ar'
+
   return (
-    <html lang="fr">
-      <body className="bg-background text-foreground">
-        <LayoutFrame>
-          <Navigation />
-          {children}
-        </LayoutFrame>
+    <html lang={locale} dir={isRTL ? 'rtl' : 'ltr'}>
+      <body className={`bg-background text-foreground ${isRTL ? _notoArabic.className : ''} ${locale === 'ja' ? _notoJP.className : ''}`}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <LayoutFrame>
+            <Navigation />
+            {children}
+          </LayoutFrame>
+        </NextIntlClientProvider>
       </body>
     </html>
-  );
+  )
 }

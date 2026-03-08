@@ -8,6 +8,23 @@ const { authenticateToken } = require("./auth");
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) throw new Error("JWT_SECRET manquant dans .env");
 
+// Fonction de validation du mot de passe
+function validatePassword(password) {
+  if (!password || password.length < 8) {
+    return { valid: false, error: "Le mot de passe doit contenir au moins 8 caractères" };
+  }
+
+  if (!/[A-Z]/.test(password)) {
+    return { valid: false, error: "Le mot de passe doit contenir au moins une lettre majuscule" };
+  }
+
+  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+    return { valid: false, error: "Le mot de passe doit contenir au moins un caractère spécial (!@#$%^&*...)" };
+  }
+
+  return { valid: true };
+}
+
 // ============================================
 // GET /users/me - Récupérer le profil
 // ============================================
@@ -125,8 +142,10 @@ router.patch("/me/password", authenticateToken, async (req, res) => {
     return res.status(400).json({ error: "Ancien et nouveau mot de passe requis" });
   }
 
-  if (newPassword.length < 6) {
-    return res.status(400).json({ error: "Le nouveau mot de passe doit contenir au moins 6 caractères" });
+  // VALIDATION DU NOUVEAU MOT DE PASSE
+  const passwordCheck = validatePassword(newPassword);
+  if (!passwordCheck.valid) {
+    return res.status(400).json({ error: passwordCheck.error });
   }
 
   try {

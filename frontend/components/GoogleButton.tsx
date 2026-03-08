@@ -1,15 +1,16 @@
+import { useTranslations } from "next-intl";
+
 interface GoogleButtonProps {
   mode: "login" | "register";
 }
-
 export default function GoogleButton({ mode }: GoogleButtonProps) {
+  const t = useTranslations("googleButton");
   const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
   
   const handleGoogleAuth = () => {
     // Rediriger vers l'endpoint Google OAuth du backend
     window.location.href = `${API_BASE}/api/auth/google`;
   };
-
   return (
     <button
       type="button"
@@ -37,7 +38,7 @@ export default function GoogleButton({ mode }: GoogleButtonProps) {
       </svg>
       
       <span>
-        {mode === "login" ? "Se connecter avec Google" : "S'inscrire avec Google"}
+        {mode === "login" ? t("login") : t("register")}
       </span>
     </button>
   );

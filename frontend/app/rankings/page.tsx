@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { getToken } from "@/lib/auth/token";
 import { getGlobalRankings, GlobalRankingEntry } from "@/lib/api/rankings.api";
+import { useTranslations } from "next-intl";
 
 export default function RankingsPage() {
+  const t = useTranslations("rankings");
   const router = useRouter();
   const pathname = usePathname();
   const [rankings, setRankings] = useState<GlobalRankingEntry[]>([]);
@@ -47,7 +49,7 @@ export default function RankingsPage() {
         <div className="max-w-7xl mx-auto px-8 py-16">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-accent border-t-transparent mb-4"></div>
-            <p className="text-white text-lg">Chargement du classement mondial...</p>
+            <p className="text-white text-lg">{t("loading")}</p>
           </div>
         </div>
       </div>
@@ -91,27 +93,26 @@ export default function RankingsPage() {
             <div className="flex items-center justify-center gap-3 mb-6">
               <div className="h-1 w-16 bg-gradient-to-r from-transparent via-yellow-500 to-transparent rounded-full" />
               <span className="text-yellow-400 text-sm font-bold tracking-wider uppercase">
-                Classement Mondial
+                {t("hero.badge")}
               </span>
               <div className="h-1 w-16 bg-gradient-to-r from-transparent via-yellow-500 to-transparent rounded-full" />
             </div>
             
             <h1 className="text-7xl font-black text-white mb-6 tracking-tight">
-              Hall of <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">Fame</span>
+              {t("hero.title")}<span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">{t("hero.titleHighlight")}</span>
             </h1>
             
             <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-              Les 50 meilleurs stratèges de Feeder Series Fantasy F2. 
-              Seuls les plus talentueux figurent dans ce classement d'élite.
+              {t("hero.description")}
             </p>
 
             {/* Stats bar */}
             <div className="mt-12 flex items-center justify-center gap-8">
-              <StatBadge label="Joueurs actifs" value={rankings.length} />
+              <StatBadge label={t("hero.activePlayers")} value={rankings.length} />
               <div className="h-12 w-px bg-slate-700" />
-              <StatBadge label="Top 50" value="Élite" highlight />
+              <StatBadge label={t("hero.top50")} value="Élite" highlight />
               <div className="h-12 w-px bg-slate-700" />
-              <StatBadge label="Saison" value="2026" />
+              <StatBadge label={t("hero.season")} value="2026" />
             </div>
           </div>
         </div>
@@ -159,12 +160,14 @@ export default function RankingsPage() {
                     <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Podium en construction</h3>
+                <h3 className="text-xl font-bold text-white mb-2">{t("podium.building")}</h3>
                 <p className="text-slate-400 mb-4">
-                  Il faut au moins 3 joueurs classés pour afficher le podium
+                  {t("podium.buildingDescription")}
                 </p>
                 <p className="text-sm text-slate-500">
-                  Actuellement : {rankings.length} joueur{rankings.length > 1 ? 's' : ''} classé{rankings.length > 1 ? 's' : ''}
+                  {rankings.length > 1
+                    ? t("podium.currentPlayers_other", { count: rankings.length })
+                    : t("podium.currentPlayers_one", { count: rankings.length })}
                 </p>
               </div>
             ) : null}
@@ -176,7 +179,7 @@ export default function RankingsPage() {
                   <div className="flex items-center gap-3 mb-6">
                     <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-700 to-slate-700" />
                     <h2 className="text-xl font-bold text-white">
-                      {rankings.length >= 50 ? 'Top 4-50' : `Top ${rankings.length}`}
+                      {rankings.length >= 50 ? t("list.top4to50") : t("list.topN", { count: rankings.length })}
                     </h2>
                     <div className="h-px flex-1 bg-gradient-to-r from-slate-700 via-slate-700 to-transparent" />
                   </div>
@@ -190,14 +193,16 @@ export default function RankingsPage() {
               {rankings.length < 4 && rankings.length > 0 && (
                 <div className="text-center py-12">
                   <p className="text-slate-400">
-                    Seulement {rankings.length} joueur{rankings.length > 1 ? 's' : ''} classé{rankings.length > 1 ? 's' : ''} pour le moment
+                    {rankings.length > 1
+                      ? t("list.onlyN_other", { count: rankings.length })
+                      : t("list.onlyN_one", { count: rankings.length })}
                   </p>
                 </div>
               )}
 
               {rankings.length === 0 && (
                 <div className="text-center py-12">
-                  <p className="text-slate-400">Aucun joueur classé pour le moment</p>
+                  <p className="text-slate-400">{t("list.empty")}</p>
                 </div>
               )}
             </div>
@@ -246,6 +251,7 @@ interface PodiumPlaceProps {
 }
 
 function PodiumPlace({ rank, entry, height, medal }: PodiumPlaceProps) {
+  const t = useTranslations("rankings");
   const medalColors = {
     gold: "from-yellow-400 to-amber-600",
     silver: "from-gray-300 to-gray-500",
@@ -290,7 +296,7 @@ function PodiumPlace({ rank, entry, height, medal }: PodiumPlaceProps) {
             <span className="text-2xl font-bold text-white">
               {entry.total_points}
             </span>
-            <span className="text-sm text-slate-400">pts</span>
+            <span className="text-sm text-slate-400">{t("list.totalPoints")}</span>
           </div>
         </div>
       </div>
@@ -308,6 +314,7 @@ interface RankingRowProps {
 }
 
 function RankingRow({ entry }: RankingRowProps) {
+  const t = useTranslations("rankings");
   const isTopTen = entry.rank <= 10;
   
   return (
@@ -340,12 +347,12 @@ function RankingRow({ entry }: RankingRowProps) {
               {entry.username}
               {isTopTen && (
                 <span className="px-2 py-0.5 bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 text-xs font-bold rounded uppercase">
-                  Top 10
+                  {t("list.top10")}
                 </span>
               )}
             </h3>
             <p className="text-sm text-slate-400">
-              Membre depuis {new Date(entry.joined_at).toLocaleDateString("fr-FR")}
+              {t("list.joinedAt")} {new Date(entry.joined_at).toLocaleDateString("fr-FR")}
             </p>
           </div>
         </div>
@@ -360,7 +367,7 @@ function RankingRow({ entry }: RankingRowProps) {
               {entry.total_points}
             </span>
           </div>
-          <p className="text-xs text-slate-500">points totaux</p>
+          <p className="text-xs text-slate-500">{t("list.totalPoints")}</p>
         </div>
       </div>
     </div>
@@ -372,6 +379,7 @@ interface MyPositionCardProps {
 }
 
 function MyPositionCard({ entry }: MyPositionCardProps) {
+  const t = useTranslations("rankings");
   const isTop50 = entry.rank <= 50;
   
   return (
@@ -380,30 +388,30 @@ function MyPositionCard({ entry }: MyPositionCardProps) {
         <svg className="w-6 h-6 text-accent" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
         </svg>
-        <h3 className="text-lg font-bold text-white">Ma Position</h3>
+        <h3 className="text-lg font-bold text-white">{t("myPosition.title")}</h3>
       </div>
 
       <div className="space-y-3">
         <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-accent/30">
-          <span className="text-sm text-slate-300">Classement</span>
+          <span className="text-sm text-slate-300">{t("myPosition.rank")}</span>
           <span className="text-2xl font-bold text-accent">#{entry.rank}</span>
         </div>
 
         <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-accent/30">
-          <span className="text-sm text-slate-300">Points totaux</span>
+          <span className="text-sm text-slate-300">{t("myPosition.points")}</span>
           <span className="text-2xl font-bold text-white">{entry.total_points}</span>
         </div>
 
         {isTop50 ? (
           <div className="p-4 bg-gradient-to-br from-green-500/20 to-emerald-600/20 border border-green-500/30 rounded-lg">
             <p className="text-sm text-green-300 text-center font-semibold">
-              🎉 Félicitations ! Tu es dans le Top 50 mondial
+              {t("myPosition.top50")}
             </p>
           </div>
         ) : (
           <div className="p-4 bg-slate-900/50 border border-slate-700/50 rounded-lg">
             <p className="text-sm text-slate-400 text-center">
-              Continue à progresser pour atteindre le Top 50 !
+              {t("myPosition.keepGoing")}
             </p>
           </div>
         )}
@@ -413,35 +421,31 @@ function MyPositionCard({ entry }: MyPositionCardProps) {
 }
 
 function InfoCard() {
+  const t = useTranslations("rankings");
   return (
     <div className="bg-gradient-to-br from-slate-900/90 to-slate-900/50 border border-slate-800/50 rounded-xl p-6">
-      <h3 className="text-lg font-bold text-white mb-4">À propos du classement</h3>
+      <h3 className="text-lg font-bold text-white mb-4">{t("infoCard.title")}</h3>
       
       <div className="space-y-3 text-sm text-slate-300">
         <div className="flex gap-3">
           <span className="text-blue-400 flex-shrink-0">•</span>
-          <p>Seuls les 50 meilleurs joueurs mondiaux sont affichés</p>
+          <p>{t("infoCard.info1")}</p>
         </div>
         
         <div className="flex gap-3">
           <span className="text-blue-400 flex-shrink-0">•</span>
-          <p>Le classement est mis à jour après chaque week-end de course</p>
+          <p>{t("infoCard.info2")}</p>
         </div>
         
         <div className="flex gap-3">
           <span className="text-blue-400 flex-shrink-0">•</span>
-          <p>Les points sont cumulés sur toute la saison</p>
+          <p>{t("infoCard.info3")}</p>
         </div>
-{/*         
-        <div className="flex gap-3">
-          <span className="text-blue-400 flex-shrink-0">•</span>
-          <p>Tous les joueurs ayant une équipe validée participent au classement mondial</p>
-        </div> */}
       </div>
 
       <div className="mt-4 p-4 bg-accent/10 border border-accent/30 rounded-lg">
         <p className="text-xs text-accent text-center font-medium">
-          Deviens le prochain champion FSF !
+          {t("infoCard.cta")}
         </p>
       </div>
     </div>

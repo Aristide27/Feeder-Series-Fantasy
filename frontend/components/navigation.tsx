@@ -4,14 +4,27 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getToken } from "@/lib/auth/token";
+import { useChangeLocale, getCurrentLocale } from "@/lib/locale";
+import { useTranslations } from "next-intl";
 
 export default function NavigationStyle2() {
+  const t = useTranslations("navigation");
   const pathname = usePathname();
   const [username, setUsername] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [loading, setLoading] = useState(true);
+  
+  // SÉLECTEUR DE LANGUE
+  const [currentLocale, setCurrentLocale] = useState('fr');
+  const [showLangDropdown, setShowLangDropdown] = useState(false);
+  const changeLocale = useChangeLocale();
 
-  // ✅ VÉRIFICATION DE L'UTILISATEUR AU MONTAGE
+  // Initialiser la langue au montage
+  useEffect(() => {
+    setCurrentLocale(getCurrentLocale());
+  }, []);
+
+  // VÉRIFICATION DE L'UTILISATEUR AU MONTAGE
   useEffect(() => {
     const checkUser = async () => {
       const token = getToken();
@@ -67,15 +80,36 @@ export default function NavigationStyle2() {
     }
   };
 
+  const handleChangeLanguage = (locale: string) => {
+    setCurrentLocale(locale);
+    changeLocale(locale);
+    setShowLangDropdown(false);
+  };
+
   const navItems = [
-    { href: "/", label: "Accueil" },
-    { href: "/leagues", label: "Mes ligues" },
-    { href: "/rankings", label: "Classement" },
-    { href: "/how-to-play", label: "Comment jouer" },
-    { href: "/rules", label: "Règles" },
-    { href: "/faq", label: "FAQ" },
-    { href: "/contact", label: "Contact" },
+    { href: "/", label: t("home") },
+    { href: "/leagues", label: t("leagues") },
+    { href: "/rankings", label: t("rankings") },
+    { href: "/how-to-play", label: t("howToPlay") },
+    { href: "/rules", label: t("rules") },
+    { href: "/faq", label: t("faq") },
+    { href: "/contact", label: t("contact") },
   ];
+
+  const languages = [
+    { code: 'ar',    name: t("languages.ar"),   flag: '🇸🇦', label: 'AR' }, // Arabic
+    { code: 'pt',    name: t("languages.pt"),   flag: '🇵🇹', label: 'PT' }, // Portuguese
+    { code: 'nl',    name: t("languages.nl"),   flag: '🇳🇱', label: 'NL' }, // Dutch
+    { code: 'en',    name: t("languages.en"),   flag: '🇬🇧', label: 'EN' }, // English
+    { code: 'fr',    name: t("languages.fr"),   flag: '🇫🇷', label: 'FR' }, // French
+    { code: 'de',    name: t("languages.de"),   flag: '🇩🇪', label: 'DE' }, // German
+    { code: 'it',    name: t("languages.it"),   flag: '🇮🇹', label: 'IT' }, // Italian
+    { code: 'ja',    name: t("languages.ja"),   flag: '🇯🇵', label: 'JA' }, // Japanese
+    { code: 'es',    name: t("languages.es"),   flag: '🇪🇸', label: 'ES' }, // Spanish
+    { code: 'tr',    name: t("languages.tr"),   flag: '🇹🇷', label: 'TR' }, // Turkish
+  ];
+
+  const currentLang = languages.find(l => l.code === currentLocale) || languages[0];
 
   return (
     <nav className="border-b border-slate-800/50 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50">
@@ -136,11 +170,63 @@ export default function NavigationStyle2() {
 
           {/* Actions droite */}
           <div className="hidden md:flex items-center gap-3">
+            {/* SÉLECTEUR DE LANGUE */}
+            <div className="relative">
+              <button
+                onClick={() => setShowLangDropdown(!showLangDropdown)}
+                className="h-9 px-2 py-2 text-sm font-medium rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-800 hover:border-slate-700 transition-all duration-200 flex items-center gap-2"
+              >
+                <span className="text-lg">{currentLang.flag}</span>
+                <span className="text-xs font-bold">{currentLang.label}</span>
+                <svg 
+                  className={`w-3 h-3 transition-transform ${showLangDropdown ? 'rotate-180' : ''}`} 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* Dropdown */}
+              {showLangDropdown && (
+                <>
+                  {/* Overlay pour fermer au clic extérieur */}
+                  <div 
+                    className="fixed inset-0 z-10" 
+                    onClick={() => setShowLangDropdown(false)}
+                  />
+                  
+                  <div className="absolute right-0 mt-2 w-36 bg-slate-900 border border-slate-700 rounded-lg shadow-xl overflow-hidden z-20">
+                    {languages.map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => handleChangeLanguage(lang.code)}
+                        className={`w-full flex items-center gap-3 px-4 py-1.5 text-sm transition-colors ${
+                          currentLocale === lang.code
+                            ? 'bg-blue-600/20 text-white'
+                            : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                        }`}
+                      >
+                        <span className="text-lg">{lang.flag}</span>
+                        <span className="flex-1 text-left">{lang.name}</span>
+                        {currentLocale === lang.code && (
+                          <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+
             {/* Bouton Fullscreen */}
             <button
               onClick={toggleFullscreen}
               className="px-2 h-9 py-2 text-sm font-medium rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-800 hover:border-slate-700 transition-all duration-200 flex items-center gap-2"
-              title={isFullscreen ? "Quitter le plein écran (Esc)" : "Plein écran (F11)"}
+              title={isFullscreen ? t("fullscreenExit") : t("fullscreenEnter")}
             >
               {isFullscreen ? (
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -165,7 +251,7 @@ export default function NavigationStyle2() {
                 href="/login"
                 className="px-4 py-2 text-sm font-medium rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-800 hover:border-slate-700 transition-all duration-200"
               >
-                Se connecter
+                {t("login")}
               </Link>
             ) : (
               <Link

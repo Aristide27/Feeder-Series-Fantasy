@@ -35,6 +35,23 @@ async function authenticateToken(req, res, next) {
   }
 }
 
+// Fonction de validation du mot de passe
+function validatePassword(password) {
+  if (!password || password.length < 8) {
+    return { valid: false, error: "Le mot de passe doit contenir au moins 8 caractères" };
+  }
+
+  if (!/[A-Z]/.test(password)) {
+    return { valid: false, error: "Le mot de passe doit contenir au moins une lettre majuscule" };
+  }
+
+  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+    return { valid: false, error: "Le mot de passe doit contenir au moins un caractère spécial (!@#$%^&*...)" };
+  }
+
+  return { valid: true };
+}
+
 // --- Inscription ---
 router.post("/register", async (req, res) => {
   let { username, email, password } = req.body;
@@ -45,6 +62,11 @@ router.post("/register", async (req, res) => {
 
   if (!username || !password) {
     return res.status(400).json({ error: "Champs manquants" });
+  }
+
+  const passwordCheck = validatePassword(password);
+  if (!passwordCheck.valid) {
+    return res.status(400).json({ error: passwordCheck.error });
   }
 
   const emailValue = email.length ? email : null;

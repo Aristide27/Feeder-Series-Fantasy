@@ -1,0 +1,817 @@
+{
+  "authCallback": {
+    "loading": {
+      "title": "ログイン中...",
+      "subtitle": "しばらくお待ちください"
+    },
+    "success": {
+      "title": "ログイン成功！",
+      "subtitle": "リダイレクト中..."
+    },
+    "error": {
+      "title": "ログインエラー",
+      "subtitle": "ログインページへリダイレクト中..."
+    }
+  },
+  "contact": {
+    "badge": "お問い合わせ",
+    "title": "コンタクト",
+    "description": "バグの報告、改善提案、ゲーム体験に関するご意見、またはご質問がある場合は、こちらからご連絡ください。",
+    "success": {
+      "title": "メッセージを送信しました！",
+      "description": "メッセージありがとうございます。できるだけ早くご返信いたします：",
+      "newMessage": "別のメッセージを送る"
+    },
+    "form": {
+      "messageType": "メッセージの種類",
+      "subjects": {
+        "improvement": "改善提案",
+        "bug": "バグ報告",
+        "feedback": "フィードバック",
+        "question": "質問"
+      },
+      "firstName": {
+        "label": "お名前",
+        "placeholder": "あなたの名前"
+      },
+      "email": {
+        "label": "メールアドレス",
+        "placeholder": "your@email.com"
+      },
+      "message": {
+        "label": "メッセージ",
+        "placeholders": {
+          "bug": "バグの内容をご説明ください：どのページで、何をしたときに、どのような予期しない結果が起きたか...",
+          "improvement": "改善アイデアと、それがゲームをどのように充実させるかをご説明ください...",
+          "feedback": "ゲーム体験についてのご意見、気に入っている点やご要望をお聞かせください...",
+          "question": "ご質問を明確にお書きください...",
+          "default": "メッセージを入力してください..."
+        },
+        "tipBug": "ヒント：ページ名、実行した操作、期待した結果の代わりに表示されたものをお知らせください。",
+        "tipDefault": "詳しくご説明いただくほど、迅速にサポートできます！"
+      },
+      "submit": "メッセージを送信",
+      "submitting": "送信中..."
+    },
+    "faq": {
+      "title": "よくある質問",
+      "description": "ご連絡の前に、FAQをご確認ください。すでに回答が掲載されているかもしれません！",
+      "link": "確認する"
+    }
+  },
+  "faq": {
+    "badge": "よくある質問",
+    "title": "FAQ",
+    "description": "ゲームの仕組み、ルール、移籍など、よくある質問への回答をこちらでご確認ください。",
+    "comingSoon": "近日公開",
+    "sections": {
+      "general": {
+        "title": "全般",
+        "badge": "基本",
+        "q1": {
+          "question": "Feeder Series Fantasy F2とは何ですか？",
+          "answer": "Feeder Series Fantasy F2は、フォーミュラ2選手権をベースにしたファンタジーゲームです。ドライバーとコンストラクターでチームを編成し、実際のレース結果に基づいてポイントを獲得します。"
+        },
+        "q2": {
+          "question": "このゲームは公式ですか？",
+          "answer": "いいえ。Feeder Series Fantasy F2は、FIA、フォーミュラ1、フォーミュラ2、フォーミュラ3、F1アカデミーとは無関係のファンによる独立したプロジェクトです。"
+        },
+        "q3": {
+          "question": "ゲームは無料ですか？",
+          "answer": "はい、Feeder Series Fantasy F2は完全無料です。"
+        },
+        "q4": {
+          "question": "シーズンが始まってからでも参加できますか？",
+          "answer": "はい。シーズン中いつでも参加できます。レースウィークエンドが進行中または終了している場合、次のレースウィークエンドからポイント獲得が始まります。"
+        }
+      },
+      "team": {
+        "title": "チーム＆選手選択",
+        "badge": "編成",
+        "q1": {
+          "question": "いくつのチームを作れますか？",
+          "answer": "リーグごとに1チームですが、複数のリーグに同時に参加できます。"
+        },
+        "q2": {
+          "question": "チームはいつロックされますか？",
+          "answer": "チームはレースウィークエンドの公式開始時にロックされます。それ以降は次のウィークエンドまで変更できません。"
+        },
+        "q3": {
+          "question": "シーズン中にチームを変更できますか？",
+          "answer": "はい、次のウィークエンドの選択期間が開いている限り変更可能です。"
+        },
+        "q4": {
+          "question": "キャプテンとは何ですか？",
+          "answer": "キャプテンはチームの中でポイントが2倍（x2）になるドライバーです。チームがロックされていない間は、毎ウィークエンド変更できます。"
+        }
+      },
+      "transfers": {
+        "title": "チーム変更",
+        "badge": "戦略",
+        "q1": {
+          "question": "ドライバーやコンストラクターを交代できますか？",
+          "answer": "はい、ロック期間が始まる前であれば、各ウィークエンドの間に編成（ドライバー、コンストラクター、キャプテン）を自由に変更できます。現在、変更回数に制限はありません。"
+        }
+      },
+      "budget": {
+        "title": "予算＆価格",
+        "badge": "経済",
+        "q1": {
+          "question": "初期予算はいくらですか？",
+          "answer": "各プレイヤーはチーム編成のために1億の初期予算を持っています。"
+        },
+        "q2": {
+          "question": "ドライバーとコンストラクターの価格はどのように決まりますか？",
+          "answer": "価格は実際のレースパフォーマンスに基づいて自動計算されます。"
+        },
+        "q3": {
+          "question": "価格はいつ変わりますか？",
+          "answer": "価格は各レースウィークエンドの後に変更されます。"
+        },
+        "q4": {
+          "question": "なぜ価格が変わるのですか？",
+          "answer": "価格変動はドライバーとコンストラクターの調子を反映しており、シーズンを通じた動的な戦略を促進します。"
+        },
+        "q5": {
+          "question": "予算はどのように変化しますか？",
+          "answer": "予算はドライバーやコンストラクターの価格変動に合わせて自動調整されます。価値が上がれば予算も増え、下がれば減ります。利益を回収するために売却する必要はありません！"
+        }
+      },
+      "points": {
+        "title": "ポイント＆結果",
+        "badge": "採点",
+        "q1": {
+          "question": "ポイントはどのように付与されますか？",
+          "answer": "ポイントは予選、スプリントレース、フィーチャーレースの実際の成績に基づいて付与されます。詳細な採点システムはルールセクションで確認できます。",
+          "linkText": "完全な採点システムを見る"
+        },
+        "q2": {
+          "question": "ポイントはいつ更新されますか？",
+          "answer": "ポイントは各公式セッション後、結果が確定次第自動計算されます。最終確定前に暫定ポイントが表示される場合があります。"
+        },
+        "q3": {
+          "question": "DNS、DNF、DSQとは何ですか？",
+          "dns": "DNS：Did Not Start（スタートせず）",
+          "dnf": "DNF：Did Not Finish（リタイア）",
+          "dsq": "DSQ：Disqualified（失格）"
+        }
+      },
+      "edge": {
+        "title": "特殊ケース",
+        "badge": "例外",
+        "q1": {
+          "question": "レースがキャンセルされた場合はどうなりますか？",
+          "answer": "そのレースのポイントは付与されません。"
+        },
+        "q2": {
+          "question": "レースが短縮または中断された場合はどうなりますか？",
+          "answer": "フォーミュラ2が公式に認定した結果のみに基づいてポイントが付与されます。"
+        },
+        "q3": {
+          "question": "ドライバーが交代した場合はどうなりますか？",
+          "answer": "予定された機能です。交代ドライバーの処理は自動かつ公平に行われ、プレイヤーが意図しない変更によって不利益を受けないようにします。"
+        }
+      },
+      "leagues": {
+        "title": "リーグ＆ランキング",
+        "badge": "競争",
+        "q1": {
+          "question": "リーグとは何ですか？",
+          "answer": "リーグは共通ランキングで競い合うプレイヤーのグループです。"
+        },
+        "q2": {
+          "question": "複数のリーグに参加できますか？",
+          "answer": "はい。同じファンタジーチームで複数のリーグに同時に参加できます。"
+        },
+        "q3": {
+          "question": "同点の場合はどうなりますか？",
+          "intro": "ポイントが同じ場合：",
+          "tiebreak1": "フィーチャーレースの最高得点",
+          "tiebreak2": "スプリントレースの最高得点",
+          "tiebreak3": "予選の最高得点"
+        }
+      },
+      "fairplay": {
+        "title": "フェアプレー＆サポート",
+        "badge": "ヘルプ",
+        "q1": {
+          "question": "結果は後から変更されますか？",
+          "answer": "いいえ。結果やポイントに遡及的な変更はありません。"
+        },
+        "q2": {
+          "question": "ポイントが正しくないと思われる場合は？",
+          "answer": "ルールページの採点システムをご確認ください。疑問が解決しない場合は、コンタクトページからサポートにご連絡ください。",
+          "linkText": "ルールを見る"
+        },
+        "q3": {
+          "question": "ゲームチームへの連絡方法は？",
+          "answer": "コンタクトページからご連絡ください。",
+          "linkText": "お問い合わせ"
+        }
+      }
+    },
+    "sidebar": {
+      "help": {
+        "title": "お困りですか？",
+        "description": "回答が見つかりませんでしたか？お気軽にお問い合わせください。",
+        "cta": "サポートに連絡"
+      },
+      "links": {
+        "title": "便利なリンク",
+        "howToPlay": "遊び方",
+        "rules": "ルール",
+        "joinLeague": "リーグに参加"
+      }
+    }
+  },
+  "howToPlay": {
+    "badge": "スタートガイド",
+    "title": "遊び方",
+    "description": "Feeder Series Fantasy F2へようこそ。フォーミュラ2の毎ウィークエンドをチームディレクターとして体験してください。ドライバーを選び、コンストラクターを決め、予算を守り、実際のレース結果で他のプレイヤーと競い合いましょう。",
+    "steps": {
+      "step1": {
+        "title": "チームを編成する",
+        "description": "予算制約を守りながらラインナップを構築しましょう",
+        "teamName": {
+          "label": "チーム名",
+          "description": "あなたを表すユニークな名前を選びましょう。"
+        },
+        "constructors": {
+          "label": "コンストラクター2チーム",
+          "description": "チームのためにコンストラクターを2つ選択してください。"
+        },
+        "drivers": {
+          "label": "ドライバー5名",
+          "description": "お好みの5名のドライバーでラインナップを組んでください。"
+        },
+        "captain": {
+          "label": "キャプテン1名（x2ポイント）",
+          "description": "ドライバーの中からキャプテンを指定しましょう：そのポイントが2倍になります！"
+        },
+        "budget": {
+          "label": "予算を守る",
+          "description": "利用可能な予算内でラインナップを最適化してください。"
+        },
+        "tip": {
+          "title": "戦略のヒント",
+          "description": "安定性は有名ドライバーよりも多くのポイントをもたらすことがあります。安定したドライバーは有望でも不安定なドライバーよりも多くのポイントを獲得できます。"
+        }
+      },
+      "step2": {
+        "title": "リーグに参加または作成する",
+        "description": "友達と競うか、世界中のプレイヤーと実力を試しましょう。",
+        "privateLeague": {
+          "label": "プライベートリーグ",
+          "description": "招待コードで既存のリーグに参加しましょう。"
+        },
+        "createLeague": {
+          "label": "リーグを作成",
+          "description": "自分のリーグを立ち上げて、友達を招待して挑戦してもらいましょう。"
+        },
+        "worldRanking": {
+          "label": "世界ランキング",
+          "description": "世界最高のプレイヤーと自動的に比較されます。"
+        }
+      },
+      "step3": {
+        "title": "レースを追う",
+        "description": "各セッション後にポイントが自動更新されます",
+        "qualifying": "予選",
+        "sprintRace": "スプリントレース",
+        "featureRace": "フィーチャーレース",
+        "automaticPoints": {
+          "label": "自動ポイント",
+          "description": "ポイントはウィークエンド終了後の公式結果から自動計算されます。"
+        },
+        "automaticCalc": {
+          "label": "自動計算",
+          "description": "ポイントは各ウィークエンド後に自動計算され、価格はパフォーマンスに基づいて変動します。"
+        }
+      },
+      "step4": {
+        "title": "分析して最適化する",
+        "description": "統計データを活用して戦略を磨きましょう",
+        "recentForm": {
+          "label": "最近の調子",
+          "description": "直近のレースにおけるドライバーとコンストラクターのパフォーマンスを研究しましょう。"
+        },
+        "circuitPerf": {
+          "label": "サーキット別パフォーマンス",
+          "description": "特定のサーキットで際立つドライバーがいます。"
+        },
+        "priceEvolution": {
+          "label": "価格の変動",
+          "description": "ドライバーの価格はパフォーマンスに応じて上下します。予算は自動調整されます。"
+        }
+      },
+      "step5": {
+        "title": "シーズンを制する",
+        "description": "ポイントを積み重ねてランキングを支配しましょう",
+        "leagueWin": {
+          "label": "リーグ優勝",
+          "description": "リーグで最高得点のプレイヤーがプライベートチャンピオンシップを制します。"
+        },
+        "worldChamp": {
+          "label": "世界チャンピオン",
+          "description": "総合最高得点がシーズンのFSFシリーズ2/ティア2チャンピオンになります。"
+        },
+        "cta": "チャンピオンシップを制する準備はできていますか？"
+      }
+    },
+    "sidebar": {
+      "shortcuts": {
+        "title": "クイックアクセス",
+        "createTeam": "チームを作る",
+        "joinLeague": "リーグに参加",
+        "pointsScale": "採点システムを見る",
+        "fullRules": "完全なルール"
+      },
+      "important": {
+        "title": "重要事項",
+        "note1": "ドライバーとコンストラクターの価格は各ウィークエンド後に変更されます。",
+        "note2": "チームがロックされると、そのウィークエンドは変更できません。",
+        "note3": "ポイントはFIAが公表する公式結果に基づいて計算されます。"
+      },
+      "ready": {
+        "title": "始める準備はできましたか？",
+        "description": "すべて理解できましたか？冒険に飛び込んで、シーズンを制するチームを作りましょう。",
+        "cta": "リーグに参加する"
+      }
+    }
+  },
+  "myLeagues": {
+    "loading": "リーグを読み込み中...",
+    "title": "マイリーグ",
+    "description": "プライベートリーグを作成するか、招待コードで友達のリーグに参加しましょう。",
+    "join": "参加",
+    "create": "＋ 作成",
+    "card": {
+      "official": "公式",
+      "leader": "🏆 リーダー",
+      "code": "コード",
+      "members": "メンバー",
+      "position": "順位",
+      "points": "ポイント",
+      "open": "リーグを開く →"
+    },
+    "empty": {
+      "description": "まだリーグがありません",
+      "cta": "最初のリーグを作る"
+    },
+    "createModal": {
+      "title": "リーグを作成",
+      "description": "リーグ名を入力して開始しましょう。",
+      "placeholder": "リーグ名",
+      "submit": "作成",
+      "submitting": "作成中...",
+      "cancel": "キャンセル"
+    },
+    "joinModal": {
+      "title": "リーグに参加",
+      "description": "リーグの招待コードを入力してください。",
+      "submit": "参加",
+      "submitting": "参加中...",
+      "cancel": "キャンセル"
+    }
+  },
+  "leagueDetail": {
+    "loading": "読み込み中...",
+    "notFound": "リーグが見つかりません",
+    "back": "← リーグ一覧に戻る",
+    "official": "公式",
+    "closed": "終了",
+    "createdBy": "作成者",
+    "members": "メンバー",
+    "manageTeam": "チームを管理",
+    "editName": "名前を編集",
+    "reopen": "再開",
+    "close": "終了",
+    "delete": "削除",
+    "saving": "保存中...",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "leaderboard": {
+      "title": "ランキング",
+      "joinedAt": "参加日",
+      "points": "pt",
+      "viewTeam": "チームを見る",
+      "empty": "ランキングはまだありません"
+    },
+    "share": {
+      "title": "リーグを共有",
+      "inviteCode": "招待コード",
+      "copied": "コピーしました！",
+      "inviteLink": "招待リンク",
+      "copyLink": "リンクをコピー"
+    },
+    "myTeam": {
+      "title": "マイチーム",
+      "nameLabel": "チーム名",
+      "namePlaceholder": "チーム名を入力",
+      "nameHint": "3〜20文字",
+      "notDefined": "未設定",
+      "edit": "編集",
+      "saving": "保存中...",
+      "save": "保存",
+      "cancel": "キャンセル",
+      "noTeamHint": "名前を設定するには",
+      "noTeamLink": "マイチーム"
+    },
+    "teamModal": {
+      "title": "のチーム",
+      "teamName": "チーム名",
+      "constructors": "コンストラクター",
+      "drivers": "ドライバー",
+      "rookie": "ルーキー",
+      "noConstructors": "コンストラクターが選択されていません",
+      "noDrivers": "ドライバーが選択されていません",
+      "noTeam": "はまだチームを作成していません",
+      "close": "閉じる"
+    }
+  },
+  "login": {
+    "title": "ログイン",
+    "description": "ログインしてチームを管理しましょう。",
+    "or": "または",
+    "username": "ユーザー名",
+    "password": "パスワード",
+    "submit": "ログイン",
+    "submitting": "ログイン中…",
+    "register": "アカウント作成"
+  },
+  "myTeam": {
+    "loading": "読み込み中…",
+    "noName": "名前なし",
+    "season": "シーズン",
+    "budget": {
+      "label": "予算",
+      "remaining": "残り",
+      "unit": "M"
+    },
+    "save": {
+      "unsaved": "未保存の変更",
+      "saving": "保存中",
+      "saved": "保存済み",
+      "error": "エラー",
+      "retry": "再試行"
+    },
+    "composition": {
+      "constructors": "コンストラクター",
+      "drivers": "ドライバー"
+    },
+    "deadline": {
+      "lockingIn": "ロックまで",
+      "urgentWarning": "⚠️ 注意！ロックまで",
+      "locked": "🔒 チームはこのウィークエンドでロックされています：",
+      "nextPeriod": "次の期間まで"
+    },
+    "back": "リーグに戻る",
+    "namePopup": {
+      "title": "チームに名前をつけましょう！",
+      "description": "このリーグ用のユニークな名前を選んでください",
+      "placeholder": "例：Road to F1",
+      "hint": "3〜20文字",
+      "info": "この名前はいつでも変更できます：",
+      "infoLink": "マイリーグ",
+      "submit": "プレイ開始！",
+      "submitting": "確認中..."
+    },
+    "panel": {
+      "drivers": "ドライバー",
+      "constructors": "コンストラクター",
+      "sortTeam": "コンストラクター",
+      "sortPrice": "価格",
+      "selectDrivers": "ドライバーを5名選択 •",
+      "selectConstructors": "コンストラクターを2つ選択 -",
+      "noDrivers": "ドライバーなし"
+    }
+  },
+  "profile": {
+    "loading": "プロフィールを読み込み中...",
+    "title": "マイプロフィール",
+    "description": "個人情報とセキュリティを管理しましょう",
+    "general": {
+      "title": "基本情報",
+      "username": {
+        "label": "ユーザー名",
+        "placeholder": "新しいユーザー名",
+        "save": "保存",
+        "saving": "保存中...",
+        "edit": "編集",
+        "cancel": "キャンセル"
+      },
+      "email": {
+        "label": "メールアドレス",
+        "placeholder": "new@email.com",
+        "notSet": "未設定",
+        "save": "保存",
+        "saving": "保存中...",
+        "edit": "編集",
+        "cancel": "キャンセル"
+      }
+    },
+    "security": {
+      "title": "セキュリティ",
+      "password": {
+        "label": "パスワード",
+        "oldPlaceholder": "現在のパスワード",
+        "newPlaceholder": "新しいパスワード",
+        "confirmPlaceholder": "新しいパスワードを確認",
+        "submit": "パスワードを変更",
+        "submitting": "変更中...",
+        "edit": "編集",
+        "cancel": "キャンセル"
+      }
+    },
+    "logout": {
+      "title": "ログアウト",
+      "description": "このデバイスでアカウントからログアウトします。",
+      "submit": "ログアウト"
+    },
+    "deleteAccount": {
+      "title": "アカウントを削除",
+      "description": "アカウントの削除は永久的で元に戻せません。すべてのデータが失われます。",
+      "submit": "アカウントを削除",
+      "confirm": {
+        "title": "本当によろしいですか？",
+        "description": "この操作は元に戻せません。アカウントとすべてのデータが完全に削除されます。",
+        "submit": "はい、完全に削除します",
+        "submitting": "削除中...",
+        "cancel": "キャンセル"
+      }
+    },
+    "createdAt": "アカウント作成日："
+  },
+  "rankings": {
+    "loading": "世界ランキングを読み込み中...",
+    "hero": {
+      "badge": "世界ランキング",
+      "title": "Hall of ",
+      "titleHighlight": "Fame",
+      "description": "Feeder Series Fantasy F2のトップ50ストラテジスト。最も才能あるプレイヤーのみがこのエリートランキングに名を連ねます。",
+      "activePlayers": "アクティブプレイヤー",
+      "top50": "エリート",
+      "season": "シーズン"
+    },
+    "podium": {
+      "building": "表彰台を構築中",
+      "buildingDescription": "表彰台を表示するには少なくとも3名のランキング入りプレイヤーが必要です",
+      "currentPlayers_one": "現在：{{count}}名のプレイヤーがランキング入り",
+      "currentPlayers_other": "現在：{{count}}名のプレイヤーがランキング入り"
+    },
+    "list": {
+      "top4to50": "トップ4〜50",
+      "topN": "トップ{{count}}",
+      "onlyN_one": "現在{{count}}名のみランキング入り",
+      "onlyN_other": "現在{{count}}名のみランキング入り",
+      "empty": "まだランキング入りしたプレイヤーはいません",
+      "joinedAt": "参加日",
+      "totalPoints": "合計ポイント",
+      "top10": "トップ10"
+    },
+    "myPosition": {
+      "title": "マイポジション",
+      "rank": "ランキング",
+      "points": "合計ポイント",
+      "top50": "🎉 おめでとうございます！世界トップ50入りです",
+      "keepGoing": "トップ50を目指して頑張りましょう！"
+    },
+    "infoCard": {
+      "title": "ランキングについて",
+      "info1": "世界トップ50のプレイヤーのみ表示されます",
+      "info2": "ランキングは各レースウィークエンド後に更新されます",
+      "info3": "ポイントはシーズンを通じて累積されます",
+      "cta": "次のFSFチャンピオンを目指しましょう！"
+    }
+  },
+  "register": {
+    "title": "アカウント作成",
+    "description": "グリッドに加わってチームをスタートしましょう。",
+    "or": "または",
+    "username": "ユーザー名",
+    "email": "メールアドレス（任意）",
+    "password": "パスワード",
+    "submit": "アカウントを作成",
+    "submitting": "作成中…",
+    "login": "すでにアカウントをお持ちの方"
+  },
+  "rules": {
+    "hero": {
+      "badge": "公式レギュレーション",
+      "title": "ゲームルール",
+      "description": "チーム編成、予算、採点システム、ランキング、特殊ケースなど、完全なルールをご確認ください。正しくプレイするために知っておくべきすべてのことが揃っています。"
+    },
+    "sections": {
+      "s1": {
+        "title": "チーム編成",
+        "badge": "必須",
+        "constructors": { "label": "コンストラクター2チーム", "description": "各チームはコンストラクターを正確に2つ選択する必要があります。" },
+        "drivers": { "label": "ドライバー5名", "description": "お好みの5名のドライバーでラインナップを組んでください。" },
+        "captain": { "label": "キャプテン1名", "description": "5名のドライバーの中からキャプテンを指定してください：そのポイントがすべて2倍（x2）になります！" },
+        "budget": { "label": "固定予算", "description": "ラインナップ全体の予算上限を守ってください。" },
+        "oneTeam": { "label": "ユーザーにつき1チーム", "description": "各アカウントはリーグごとに1チームのみ管理できます。" }
+      },
+      "s2": {
+        "title": "予算と価格の変動",
+        "badge": "経済",
+        "prices": { "label": "ドライバーとコンストラクターの価格", "description": "各ドライバーとコンストラクターには動的に変化する価格があります。" },
+        "evolution": { "label": "各ウィークエンド後の変動", "description": "価格は前のウィークエンドの実際のパフォーマンスに基づいて自動調整されます。" },
+        "locked": { "label": "チームロック時", "description": "チームが確定してレースウィークエンドが始まると、ドライバーとコンストラクターの価格は固定されます。価格はウィークエンド終了後にのみ変動します。" },
+        "tip": { "title": "市場戦略", "description": "価格の上下を予測しましょう。好調なドライバーは価格が上がり、不調なドライバーはより手頃になります。" }
+      },
+      "s3": {
+        "title": "ドライバーポイント",
+        "badge": "採点",
+        "driverSum": { "label": "両ドライバーの合計", "description": "ドライバーは各セッション（予選、スプリントレース、フィーチャーレース）で獲得した合計ポイントを積み重ねます。" },
+        "quali": "予選",
+        "sprint": "スプリントレース",
+        "feature": "フィーチャーレース",
+        "featureFinalResult": "最終結果",
+        "pitlane": "* ピットレーンからスタートする車は、グリッド最後尾の車からの相対順位でスタートしたとみなされます。",
+        "dnfNote": "** DNF = Did Not Finish（リタイア）; DNS = Did Not Start（スタートせず）; DSQ = Disqualified（失格）"
+      },
+      "s4": {
+        "title": "コンストラクターポイント",
+        "badge": "コンストラクター",
+        "constructorSum": { "label": "両ドライバーの合計", "description": "コンストラクターは各セッション（予選、スプリント、フィーチャーレース）における2名の公式ドライバーの合算ポイントを獲得します。" },
+        "bonusTitle": "予選のみのボーナス/ペナルティ",
+        "bonus": {
+          "bothTop10": "両ドライバーがP10以上",
+          "oneTop10": "1名がP10以上",
+          "bothTop16": "両ドライバーがP16以上",
+          "oneTop16": "1名がP16以上",
+          "bothOut16": "両ドライバーがP16圏外"
+        }
+      },
+      "s5": {
+        "title": "ランキング",
+        "badge": "競争",
+        "captainBonus": {
+          "title": "キャプテンボーナス",
+          "description": "指定されたキャプテンのポイントは2倍になります。賢く選びましょう！"
+        },
+        "weekend": { "label": "ウィークエンドランキング", "description": "現在のウィークエンドの3セッション（予選、スプリント、フィーチャー）で積み重ねたポイント。" },
+        "league": { "label": "リーグランキング", "description": "プライベートリーグにおけるシーズン全体の獲得ポイントの合計。" },
+        "world": { "label": "世界ランキング", "description": "全リーグを対象にしたFSF全プレイヤーのグローバルランキング。" }
+      },
+      "s6": {
+        "title": "特殊ケース",
+        "badge": "例外",
+        "cancelled": { "label": "レースキャンセル", "description": "セッションがキャンセルされた場合、そのセッションのポイントは付与されません。" },
+        "teamChange": { "label": "シーズン途中のコンストラクター変更", "description": "ドライバーがシーズン中にコンストラクターを変更した場合、システムが自動的に所属を更新します。" },
+        "finalDecision": { "label": "最終決定", "description": "想定外または規則に定めのない状況が発生した場合、ゲームの採点システムが最終的な拠り所となります。" }
+      }
+    },
+    "summary": {
+      "title": "まとめ",
+      "description": "採点システムはドライバーとコンストラクターの実際のパフォーマンスを評価します。予選、スプリントレース、フィーチャーレースすべてが対象です。予算を管理し、価格変動を予測して、シーズンを通じてランキングを制するバランスのとれたチームを構築しましょう。",
+      "faqText": "ご不明な点は",
+      "faqLink": "FAQ",
+      "orText": "または",
+      "contactLink": "サポート",
+      "supportText": "までお問い合わせください。"
+    }
+  },
+  "home": {
+    "mobileWarning": {
+      "ariaClose": "閉じる",
+      "title": "⚠️ PC使用を推奨",
+      "description": "はPC体験向けに最適化されています。現在のインターフェースは",
+      "descriptionHighlight": "モバイルには対応していません",
+      "descriptionEnd": "スマートフォンでは使いにくい場合があります。",
+      "mobileUpdate": "モバイル版は今後のアップデートで予定されています！ 📱",
+      "confirm": "わかりました"
+    },
+    "hero": {
+      "badge": "Fantasy F2 - 2026シーズン",
+      "title": "Feeder Series ",
+      "titleHighlight": "Fantasy",
+      "description": "最高のチームを編成し、最高のドライバーとコンストラクターをラインナップして、最も没入感のあるF2ファンタジーゲームで世界ランキングを制しましょう。",
+      "cta": "チームを作る",
+      "loading": "読み込み中...",
+      "unavailable": "利用不可"
+    },
+    "pitch": {
+      "seasonOpen": "2026シーズン開幕",
+      "title": "あなたの最強チームが手の届くところに",
+      "description": "フォーミュラ2の毎ウィークエンドをチームディレクターとして体験しましょう。ドライバーを選び、コンストラクターを決め、実際のレース結果で他のプレイヤーと競い合いましょう。"
+    },
+    "roadmap": {
+      "badge": "今後のアップデート",
+      "title": "さらに多くの機能が近日登場！",
+      "description": "ゲーム体験を向上させるために新機能を積極的に開発中です。",
+      "statusInProgress": "進行中",
+      "statusComing": "近日公開",
+      "features": {
+        "multilang": { "title": "多言語対応", "desc": "英語その他の言語でのゲームプレイ" },
+        "design": { "title": "デザイン改善", "desc": "さらにモダンで直感的なインターフェース" },
+        "bugs": { "title": "バグ修正", "desc": "最適化と安定性の向上" },
+        "friends": { "title": "フレンドシステム", "desc": "フレンドを追加してお互いの成績を確認" },
+        "mobile": { "title": "モバイル版", "desc": "スマートフォン向けに最適化されたアプリ" },
+        "f3": { "title": "フォーミュラ3", "desc": "フォーミュラ3へのゲーム拡張" }
+      },
+      "suggestion": "あなたのご意見が大切です！",
+      "suggestionText": "コンタクトページからご提案をお気軽にお寄せください：",
+      "contactLink": "コンタクト"
+    },
+    "features": {
+      "realtime": { "title": "リアルタイムスコア", "desc": "ドライバーとコンストラクターの実際のパフォーマンスに基づき、各セッション（予選、スプリント、フィーチャーレース）後にポイントが自動計算されます。" },
+      "strategy": { "title": "戦略と予算", "desc": "限られた予算でラインナップを最適化しましょう。ドライバーとコンストラクターの価格はパフォーマンスに応じて変動します。安く買って高く売る！" },
+      "leagues": { "title": "プライベートリーグ", "desc": "プライベートリーグを作成して友達と競い合いましょう。招待コードを共有して、専用ランキングでお互いの成績を確認できます。" },
+      "world": { "title": "世界ランキング", "desc": "FSF公式ランキングで世界最高のプレイヤーと比較しましょう。フォーミュラ2最高のストラテジストであることを証明してください。" }
+    },
+    "cta": {
+      "title": "友達と一緒にプレイ",
+      "description": "招待コードでプライベートリーグに参加して、毎週末友達と競い合いましょう。プレイして楽しんで、毎レースウィークエンドに友達を超えましょう。",
+      "joinLeague": "リーグに参加"
+    }
+  },
+  "deleteLeagueModal": {
+    "title": "リーグを削除しますか？",
+    "warning": {
+      "title": "⚠️ 取り消せない操作",
+      "line1": "リーグ",
+      "line1End": "は完全に削除されます",
+      "line2Start": "",
+      "line2End": "名のメンバーがアクセスを失います",
+      "line3": "すべてのスコアとランキングが削除されます",
+      "line4": "この操作は元に戻せません"
+    },
+    "confirm": {
+      "label": "確認のためリーグコードを入力してください：",
+      "placeholder": "コードを入力",
+      "error": "コードが一致しません"
+    },
+    "cancel": "キャンセル",
+    "submit": "完全に削除",
+    "submitting": "削除中...",
+    "finalConfirm": {
+      "title": "本当によろしいですか？",
+      "description": "この操作は元に戻せません。",
+      "no": "いいえ",
+      "yes": "はい"
+    }
+  },
+  "driverStatsPopup": {
+    "loading": "統計を読み込み中...",
+    "errorTitle": "エラー",
+    "errorFallback": "データが見つかりません",
+    "notAuthenticated": "未認証",
+    "rookie": "ルーキー",
+    "seasonAverages": "2026シーズン平均",
+    "quali": "予選",
+    "sprint": "スプリント",
+    "feature": "フィーチャー",
+    "seasonPerformance": "2026シーズンパフォーマンス",
+    "pointsPerM": "pt/M",
+    "bestWeekend": "最高WE",
+    "total": "合計",
+    "basedOn_one": "{{count}}レースのデータに基づく",
+    "basedOn_other": "{{count}}レースのデータに基づく",
+    "last5Weekends": "直近5ウィークエンド",
+    "pts": "pt",
+    "radarLabels": {
+      "avgQ": "予選平均",
+      "avgSR": "SR平均",
+      "avgFR": "FR平均",
+      "pointsPerM": "pt/M",
+      "bestWE": "最高WE"
+    }
+  },
+  "footer": {
+    "disclaimer": "Feeder Series Fantasyは、ファンが作った独立系ファンタジーゲームです。FIA、フォーミュラ1、フォーミュラ2、フォーミュラ3、またはF1アカデミーとは一切関係ありません。",
+    "howToPlay": "遊び方",
+    "rules": "ルール",
+    "faq": "FAQ",
+    "contact": "コンタクト",
+    "builtBy": "モータースポーツファンによる作品"
+  },
+  "googleButton": {
+    "login": "Googleでログイン",
+    "register": "Googleで登録"
+  },
+  "navigation": {
+    "home": "ホーム",
+    "leagues": "マイリーグ",
+    "rankings": "ランキング",
+    "howToPlay": "遊び方",
+    "rules": "ルール",
+    "faq": "FAQ",
+    "contact": "コンタクト",
+    "login": "ログイン",
+    "fullscreenEnter": "全画面表示（F11）",
+    "fullscreenExit": "全画面解除（Esc）",
+    "languages": {
+      "ar": "アラビア語",
+      "pt": "ポルトガル語",
+      "nl": "オランダ語",
+      "en": "英語",
+      "fr": "フランス語",
+      "de": "ドイツ語",
+      "it": "イタリア語",
+      "ja": "日本語",
+      "es": "スペイン語",
+      "tr": "トルコ語"
+    }
+  }
+}

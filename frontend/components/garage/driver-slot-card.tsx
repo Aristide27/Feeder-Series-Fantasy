@@ -1,13 +1,11 @@
 import React from "react";
 import Image from "next/image";
-
 export type DriverLite = {
   id: number;
   name: string;
   teamName?: string;
   price?: number;
 };
-
 type DriverSlotCardProps = {
   driver?: DriverLite;
   label: string;
@@ -18,7 +16,6 @@ type DriverSlotCardProps = {
   canEdit?: boolean;
   showBadge?: boolean;
 };
-
 export default function DriverSlotCard({ 
   driver, 
   label, 
@@ -32,10 +29,8 @@ export default function DriverSlotCard({
   const filled = Boolean(driver);
   const safe = ((avatarIndex % 5) + 5) % 5;
   const avatarSrc = `/drivers/driver-${safe + 1}.png`;
-
   // Style "invisible button": clickable sans carte/bulle
   const Wrapper: any = onClick && filled ? "button" : "div";
-
   return (
     <Wrapper
       type={Wrapper === "button" ? "button" : undefined}
@@ -61,7 +56,7 @@ export default function DriverSlotCard({
               "absolute top-0 right-[8%] z-10 w-7 h-7 rounded-full border-2 flex items-center justify-center font-bold text-xs transition-all",
               isCaptain
                 ? "bg-white border-white text-slate-900 shadow-lg"
-                : "bg-white/20 border-white/30 text-white/50 hover:bg-white/30 hover:border-white/40",
+                : "bg-white/40 border-white/60 text-white/80 hover:bg-white/50 hover:border-white/70",
               !canEdit && "opacity-50 cursor-not-allowed",
             ].join(" ")}
             title={isCaptain ? "Capitaine (2x points)" : "Définir comme capitaine"}
@@ -69,7 +64,6 @@ export default function DriverSlotCard({
             C
           </button>
         )}
-
           {/* PNG pilote SANS fond */}
           <div className="relative w-full">
             <div className="mx-auto w-[92%]">
@@ -84,7 +78,6 @@ export default function DriverSlotCard({
               </div>
             </div>
           </div>
-
           {/* Infos en dessous */}
           <div className="-mt-7 w-full text-center">
             <div className="text-sm font-semibold text-white/95 truncate">

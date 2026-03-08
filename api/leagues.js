@@ -470,7 +470,8 @@ router.get("/:code/team/:userId", authenticateToken, async (req, res) => {
         d.name,
         ds.price,
         ds.rookie,
-        c.name as constructor_name
+        c.name as constructor_name,
+        fp.is_captain
       FROM fantasy_picks fp
       JOIN drivers d ON fp.driver_id = d.id
       JOIN driver_seasons ds ON ds.driver_id = d.id AND ds.season = $1

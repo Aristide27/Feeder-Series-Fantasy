@@ -1,0 +1,817 @@
+{
+  "authCallback": {
+    "loading": {
+      "title": "Giriş yapılıyor...",
+      "subtitle": "Lütfen bekleyin"
+    },
+    "success": {
+      "title": "Giriş başarılı!",
+      "subtitle": "Yönlendiriliyor..."
+    },
+    "error": {
+      "title": "Giriş hatası",
+      "subtitle": "Giriş sayfasına yönlendiriliyor..."
+    }
+  },
+  "contact": {
+    "badge": "Bize ulaşın",
+    "title": "İletişim",
+    "description": "Hata bildirmek, iyileştirme önermek, oyun deneyiminiz hakkında geri bildirim vermek veya soru sormak için bize yazabilirsiniz.",
+    "success": {
+      "title": "Mesaj gönderildi!",
+      "description": "Mesajın için teşekkürler. En kısa sürede şu adrese geri döneceğiz:",
+      "newMessage": "Başka bir mesaj gönder"
+    },
+    "form": {
+      "messageType": "Mesaj türü",
+      "subjects": {
+        "improvement": "İyileştirme",
+        "bug": "Hata",
+        "feedback": "Geri bildirim",
+        "question": "Soru"
+      },
+      "firstName": {
+        "label": "Ad",
+        "placeholder": "Adın"
+      },
+      "email": {
+        "label": "E-posta",
+        "placeholder": "senin@email.com"
+      },
+      "message": {
+        "label": "Mesaj",
+        "placeholders": {
+          "bug": "Hatayı açıkla: hangi sayfa, hangi işlem ve beklenmedik sonuç neydi...",
+          "improvement": "İyileştirme fikrinin oyunu nasıl zenginleştireceğini açıkla...",
+          "feedback": "Oyun deneyimi hakkındaki düşüncelerini, beğendiklerini veya görmek istediklerini paylaş...",
+          "question": "Sorunuzu açık ve net bir şekilde sorun...",
+          "default": "Mesajın..."
+        },
+        "tipBug": "İpucu: sayfayı, yapılan işlemi ve beklenen sonuç yerine ne göründüğünü belirt.",
+        "tipDefault": "Ne kadar ayrıntılı olursan, sana o kadar hızlı yardımcı olabiliriz!"
+      },
+      "submit": "Mesaj gönder",
+      "submitting": "Gönderiliyor..."
+    },
+    "faq": {
+      "title": "Sık sorulan sorular",
+      "description": "Yazmadan önce SSS bölümümüze göz at, cevabın orada olabilir!",
+      "link": "İncele"
+    }
+  },
+  "faq": {
+    "badge": "Sık sorulan sorular",
+    "title": "SSS",
+    "description": "Oyunun nasıl çalıştığı, kurallar, transferler ve çok daha fazlası hakkında en sık sorulan soruların cevaplarını burada bulabilirsin.",
+    "comingSoon": "Yakında",
+    "sections": {
+      "general": {
+        "title": "Genel",
+        "badge": "Temel Bilgiler",
+        "q1": {
+          "question": "Feeder Series Fantasy F2 nedir?",
+          "answer": "Feeder Series Fantasy F2, Formula 2 şampiyonasına dayalı bir fantasy oyunudur. Pilotlar ve konstruktörlerden oluşan bir takım kurarsın ve gerçek pist performanslarına göre puan kazanırsın."
+        },
+        "q2": {
+          "question": "Oyun resmi mi?",
+          "answer": "Hayır. Feeder Series Fantasy F2, FIA, Formula 1, Formula 2, Formula 3 veya F1 Academy ile hiçbir bağlantısı olmayan bağımsız bir taraftar projesidir."
+        },
+        "q3": {
+          "question": "Oyun ücretsiz mi?",
+          "answer": "Evet, Feeder Series Fantasy F2 tamamen ücretsizdir."
+        },
+        "q4": {
+          "question": "Sezon başladıktan sonra oynamaya başlayabilir miyim?",
+          "answer": "Evet. Sezon boyunca istediğin zaman oyuna katılabilirsin. Bir haftasonu zaten devam ediyorsa veya bitmişse, takımın bir sonraki yarış haftasonundan itibaren puan kazanmaya başlar."
+        }
+      },
+      "team": {
+        "title": "Takım & Seçimler",
+        "badge": "Kompozisyon",
+        "q1": {
+          "question": "Kaç takım oluşturabilirim?",
+          "answer": "Lig başına yalnızca bir takım, ancak aynı anda birden fazla ligde yer alabilirsin."
+        },
+        "q2": {
+          "question": "Takımım ne zaman kilitlenir?",
+          "answer": "Takımın yarış haftasonunun resmi başlangıcında kilitlenir. Bu an geçtikten sonra bir sonraki haftasonuna kadar hiçbir değişiklik yapılamaz."
+        },
+        "q3": {
+          "question": "Sezon içinde takımımı değiştirebilir miyim?",
+          "answer": "Evet, bir sonraki haftasonunun seçim süresi açık olduğu sürece."
+        },
+        "q4": {
+          "question": "Kaptan nedir?",
+          "answer": "Kaptan, tüm puanları iki katına çıkarılan (x2) takımındaki bir pilottur. Takımın kilitli olmadığı sürece her haftasonu kaptanını değiştirebilirsin."
+        }
+      },
+      "transfers": {
+        "title": "Takım Değişiklikleri",
+        "badge": "Strateji",
+        "q1": {
+          "question": "Pilotlarımı ve konstruktörlerimi değiştirebilir miyim?",
+          "answer": "Evet, kilit süresi başlamadan her haftasonu arasında kompozisyonunu (pilotlar, konstruktörler, kaptan) özgürce değiştirebilirsin. Şu an için değişiklik sınırı yoktur."
+        }
+      },
+      "budget": {
+        "title": "Bütçe ve Fiyatlar",
+        "badge": "Ekonomi",
+        "q1": {
+          "question": "Başlangıç bütçesi nedir?",
+          "answer": "Her oyuncunun takımını oluşturmak için 100 milyon başlangıç bütçesi vardır."
+        },
+        "q2": {
+          "question": "Pilot ve konstruktör fiyatları nasıl belirlenir?",
+          "answer": "Fiyatlar, gerçek pist performanslarından otomatik olarak hesaplanır."
+        },
+        "q3": {
+          "question": "Fiyatlar ne zaman değişir?",
+          "answer": "Fiyatlar her yarış haftasonundan sonra değişir."
+        },
+        "q4": {
+          "question": "Fiyatlar neden değişir?",
+          "answer": "Fiyat değişimleri, sezon boyunca dinamik stratejiyi teşvik etmek için pilot ve konstruktörlerin formunu yansıtır."
+        },
+        "q5": {
+          "question": "Bütçem nasıl değişir?",
+          "answer": "Bütçen, pilotlarının ve konstruktörlerinin fiyat değişimlerine göre otomatik olarak güncellenir. Değerleri artarsa bütçen de artar. Düşerse bütçen azalır. Kazancı geri almak için satmana gerek yok!"
+        }
+      },
+      "points": {
+        "title": "Puanlar ve Sonuçlar",
+        "badge": "Puanlama",
+        "q1": {
+          "question": "Puanlar nasıl verilir?",
+          "answer": "Puanlar, sıralama turları, Sprint Yarışı ve Feature Yarışındaki gerçek performanslara göre verilir. Ayrıntılı puan tablosu Kurallar bölümünde mevcuttur.",
+          "linkText": "Tam puan tablosunu gör"
+        },
+        "q2": {
+          "question": "Puanlar ne zaman güncellenir?",
+          "answer": "Puanlar, sonuçlar onaylandıktan sonra her resmi oturumun ardından otomatik olarak hesaplanır. Nihai onaydan önce geçici bir skor gösterilebilir."
+        },
+        "q3": {
+          "question": "DNS, DNF ve DSQ ne anlama gelir?",
+          "dns": "DNS: Did Not Start (starta çıkmadı)",
+          "dnf": "DNF: Did Not Finish (yarışı tamamlayamadı)",
+          "dsq": "DSQ: Disqualified (diskalifiye edildi)"
+        }
+      },
+      "edge": {
+        "title": "Özel Durumlar",
+        "badge": "İstisnalar",
+        "q1": {
+          "question": "Bir yarış iptal edilirse ne olur?",
+          "answer": "O yarış için puan verilmez."
+        },
+        "q2": {
+          "question": "Bir yarış kısaltılır veya yarıda kesilirse ne olur?",
+          "answer": "Puanlar yalnızca Formula 2 tarafından resmi olarak onaylanan sonuçlara göre verilir."
+        },
+        "q3": {
+          "question": "Bir pilot değiştirilirse ne olur?",
+          "answer": "Planlanan özellik. Değiştirilen pilotların yönetimi otomatik ve adil olacak; oyuncuların kendi iradeleri dışındaki değişiklikler nedeniyle ceza almaması sağlanacak."
+        }
+      },
+      "leagues": {
+        "title": "Ligler ve Sıralamalar",
+        "badge": "Rekabet",
+        "q1": {
+          "question": "Lig nedir?",
+          "answer": "Lig, ortak bir sıralamada rekabet eden bir oyuncu grubudur."
+        },
+        "q2": {
+          "question": "Birden fazla lige katılabilir miyim?",
+          "answer": "Evet. Aynı fantasy takımı aynı anda birden fazla ligde yer alabilir."
+        },
+        "q3": {
+          "question": "Sıralamada beraberlik nasıl çözülür?",
+          "intro": "Puan eşitliği durumunda:",
+          "tiebreak1": "En iyi Feature Yarışı skoru",
+          "tiebreak2": "En iyi Sprint Yarışı skoru",
+          "tiebreak3": "En iyi sıralama skoru"
+        }
+      },
+      "fairplay": {
+        "title": "Fair Play ve Destek",
+        "badge": "Yardım",
+        "q1": {
+          "question": "Sonuçlar sonradan değiştirilebilir mi?",
+          "answer": "Hayır. Sonuçlar veya puanlar üzerinde geriye dönük değişiklik yapılmaz."
+        },
+        "q2": {
+          "question": "Puanlarım neden yanlış görünüyor?",
+          "answer": "Kurallar sayfasındaki puan tablosunu kontrol et. Şüphen devam ederse İletişim sayfası aracılığıyla destekle iletişime geç.",
+          "linkText": "Kurallara bak"
+        },
+        "q3": {
+          "question": "Oyun ekibiyle nasıl iletişime geçebilirim?",
+          "answer": "İletişim sayfası aracılığıyla.",
+          "linkText": "Bize ulaşın"
+        }
+      }
+    },
+    "sidebar": {
+      "help": {
+        "title": "Yardıma mı ihtiyacın var?",
+        "description": "Cevabını bulamıyor musun? Bizimle iletişime geçmekten çekinme.",
+        "cta": "Destekle iletişime geç"
+      },
+      "links": {
+        "title": "Faydalı bağlantılar",
+        "howToPlay": "Nasıl oynanır",
+        "rules": "Kurallar",
+        "joinLeague": "Lige katıl"
+      }
+    }
+  },
+  "howToPlay": {
+    "badge": "Başlangıç rehberi",
+    "title": "Nasıl Oynanır",
+    "description": "Feeder Series Fantasy F2'ye hoş geldin. Her Formula 2 haftasonunu bir takım direktörü olarak yaşa. Pilotlarını seç, konstruktörlerini belirle, bütçeye uy ve gerçek yarış performanslarına göre diğer oyuncularla rekabet et.",
+    "steps": {
+      "step1": {
+        "title": "Takımını kur",
+        "description": "Bütçe kısıtlamalarına uyarak kadronunu oluştur",
+        "teamName": {
+          "label": "Takım adı",
+          "description": "Seni temsil eden benzersiz bir isim seç."
+        },
+        "constructors": {
+          "label": "2 konstruktör",
+          "description": "Takımın için iki konstruktör seç."
+        },
+        "drivers": {
+          "label": "5 pilot",
+          "description": "İstediğin beş pilotla kadronunu oluştur."
+        },
+        "captain": {
+          "label": "1 kaptan (x2 puan)",
+          "description": "Pilotlarından birini kaptan olarak belirle: puanları iki katına çıkar!"
+        },
+        "budget": {
+          "label": "Bütçeye uy",
+          "description": "Belirlenen bütçe dahilinde kadronunu optimize et."
+        },
+        "tip": {
+          "title": "Stratejik ipucu",
+          "description": "Tutarlılık çoğu zaman büyük isimlerden daha fazla kazandırır. İstikrarlı bir pilot, gelişmeye çalışan ama tutarsız bir pilottan daha fazla puan getirebilir."
+        }
+      },
+      "step2": {
+        "title": "Bir lige katıl veya oluştur",
+        "description": "Arkadaşlarınla rekabet et ya da dünyayla ölç kendini.",
+        "privateLeague": {
+          "label": "Özel lig",
+          "description": "Davet koduyla mevcut bir lige katıl."
+        },
+        "createLeague": {
+          "label": "Lig oluştur",
+          "description": "Kendi yarışmanı başlat ve arkadaşlarını sana meydan okumaya davet et."
+        },
+        "worldRanking": {
+          "label": "Dünya sıralaması",
+          "description": "Otomatik olarak dünyanın en iyi oyuncularıyla kendini karşılaştır."
+        }
+      },
+      "step3": {
+        "title": "Yarışları takip et",
+        "description": "Puanların her oturumdan sonra otomatik güncellenir",
+        "qualifying": "Sıralama",
+        "sprintRace": "Sprint Yarışı",
+        "featureRace": "Ana Yarış",
+        "automaticPoints": {
+          "label": "Otomatik puanlar",
+          "description": "Puanlar, haftasonunun sonunda resmi sonuçlardan hesaplanır."
+        },
+        "automaticCalc": {
+          "label": "Otomatik hesaplama",
+          "description": "Puanlar her haftasonundan sonra otomatik hesaplanır ve fiyatlar performanslara göre değişir."
+        }
+      },
+      "step4": {
+        "title": "Analiz et ve optimize et",
+        "description": "Stratejini geliştirmek için istatistikleri kullan",
+        "recentForm": {
+          "label": "Son form",
+          "description": "Pilotların ve konstruktörlerin son yarışlardaki performanslarını incele."
+        },
+        "circuitPerf": {
+          "label": "Pist performansı",
+          "description": "Bazı pilotlar belirli pistlerde öne çıkar."
+        },
+        "priceEvolution": {
+          "label": "Fiyat değişimi",
+          "description": "Pilot fiyatları performanslarına göre artar veya düşer. Bütçen otomatik olarak güncellenir."
+        }
+      },
+      "step5": {
+        "title": "Sezonu kazan",
+        "description": "Puan topla ve sıralamana hükmet",
+        "leagueWin": {
+          "label": "Lig zaferi",
+          "description": "Ligindeki en yüksek skor özel şampiyonayı kazanır."
+        },
+        "worldChamp": {
+          "label": "Dünya şampiyonu",
+          "description": "En yüksek genel skor, sezonun FSF Seri 2/Tier 2 şampiyonu olur."
+        },
+        "cta": "Şampiyonaya hükmetmeye hazır mısın?"
+      }
+    },
+    "sidebar": {
+      "shortcuts": {
+        "title": "Hızlı kısayollar",
+        "createTeam": "Takımımı oluştur",
+        "joinLeague": "Bir lige katıl",
+        "pointsScale": "Puan tablosunu gör",
+        "fullRules": "Tam kurallar"
+      },
+      "important": {
+        "title": "Bilinmesi gerekenler",
+        "note1": "Pilot ve konstruktör fiyatları her haftasonundan sonra değişir.",
+        "note2": "Takım kilitlendiğinde, o haftasonu için artık değiştiremezsin.",
+        "note3": "Puanlar, FIA tarafından yayımlanan resmi sonuçlara göre hesaplanır."
+      },
+      "ready": {
+        "title": "Başlamaya hazır mısın?",
+        "description": "Her şey anlaşıldı mı? Maceraya atıl ve sezonu domine edecek takımı kur.",
+        "cta": "Bir lige katıl"
+      }
+    }
+  },
+  "myLeagues": {
+    "loading": "Ligler yükleniyor...",
+    "title": "Liglerим",
+    "description": "Özel bir lig oluştur veya davet koduyla arkadaşlarına katıl.",
+    "join": "Katıl",
+    "create": "+ Oluştur",
+    "card": {
+      "official": "Resmi",
+      "leader": "🏆 Lider",
+      "code": "Kod",
+      "members": "Üyeler",
+      "position": "Sıra",
+      "points": "Puan",
+      "open": "Ligi aç →"
+    },
+    "empty": {
+      "description": "Henüz lig yok",
+      "cta": "İlk liginizi oluşturun"
+    },
+    "createModal": {
+      "title": "Lig oluştur",
+      "description": "Başlamak için ligine bir isim ver.",
+      "placeholder": "Lig adı",
+      "submit": "Oluştur",
+      "submitting": "Oluşturuluyor...",
+      "cancel": "İptal"
+    },
+    "joinModal": {
+      "title": "Bir lige katıl",
+      "description": "Lig davet kodunu girin.",
+      "submit": "Katıl",
+      "submitting": "Katılınıyor...",
+      "cancel": "İptal"
+    }
+  },
+  "leagueDetail": {
+    "loading": "Yükleniyor...",
+    "notFound": "Lig bulunamadı",
+    "back": "← Liglere dön",
+    "official": "Resmi",
+    "closed": "Kapalı",
+    "createdBy": "Oluşturan",
+    "members": "üye",
+    "manageTeam": "Takımımı yönet",
+    "editName": "İsmi düzenle",
+    "reopen": "Yeniden aç",
+    "close": "Kapat",
+    "delete": "Sil",
+    "saving": "Kaydediliyor...",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "leaderboard": {
+      "title": "Sıralama",
+      "joinedAt": "Üyelik tarihi",
+      "points": "puan",
+      "viewTeam": "Takımı gör",
+      "empty": "Henüz sıralama yok"
+    },
+    "share": {
+      "title": "Ligi paylaş",
+      "inviteCode": "Davet kodu",
+      "copied": "Kopyalandı!",
+      "inviteLink": "Davet bağlantısı",
+      "copyLink": "Bağlantıyı kopyala"
+    },
+    "myTeam": {
+      "title": "Takımım",
+      "nameLabel": "Takım adı",
+      "namePlaceholder": "Takımının adı",
+      "nameHint": "3–20 karakter",
+      "notDefined": "Henüz belirlenmedi",
+      "edit": "Düzenle",
+      "saving": "Kaydediliyor...",
+      "save": "Kaydet",
+      "cancel": "İptal",
+      "noTeamHint": "Şuraya giderek bir isim belirle:",
+      "noTeamLink": "Takımım"
+    },
+    "teamModal": {
+      "title": "Takım:",
+      "teamName": "Takım adı",
+      "constructors": "Konstruktörler",
+      "drivers": "Pilotlar",
+      "rookie": "Rookie",
+      "noConstructors": "Konstruktör seçilmedi",
+      "noDrivers": "Pilot seçilmedi",
+      "noTeam": "henüz takım oluşturmadı",
+      "close": "Kapat"
+    }
+  },
+  "login": {
+    "title": "Giriş yap",
+    "description": "Takımını yönetmek için giriş yap.",
+    "or": "veya",
+    "username": "Kullanıcı adı",
+    "password": "Şifre",
+    "submit": "Giriş yap",
+    "submitting": "Giriş yapılıyor…",
+    "register": "Hesap oluştur"
+  },
+  "myTeam": {
+    "loading": "Yükleniyor…",
+    "noName": "İsimsiz",
+    "season": "Sezon",
+    "budget": {
+      "label": "Bütçe",
+      "remaining": "kalan",
+      "unit": "M"
+    },
+    "save": {
+      "unsaved": "Kaydedilmemiş değişiklikler",
+      "saving": "Kaydediliyor",
+      "saved": "Kaydedildi",
+      "error": "Hata",
+      "retry": "Tekrar dene"
+    },
+    "composition": {
+      "constructors": "Konstruktörler",
+      "drivers": "Pilotlar"
+    },
+    "deadline": {
+      "lockingIn": "Kilitlenme:",
+      "urgentWarning": "⚠️ Dikkat! Kilitlenme:",
+      "locked": "🔒 Takım kilitlendi, haftasonu:",
+      "nextPeriod": "Sonraki dönem:"
+    },
+    "back": "Lige dön",
+    "namePopup": {
+      "title": "Takımına isim ver!",
+      "description": "Bu lig için benzersiz bir isim seç",
+      "placeholder": "Örn: Road to F1",
+      "hint": "3-20 karakter",
+      "info": "Bu ismi istediğin zaman şuradan değiştirebilirsin:",
+      "infoLink": "Liglerим",
+      "submit": "Oynamak istiyorum!",
+      "submitting": "Doğrulanıyor..."
+    },
+    "panel": {
+      "drivers": "Pilotlar",
+      "constructors": "Konstruktörler",
+      "sortTeam": "Konstruktör",
+      "sortPrice": "Fiyat",
+      "selectDrivers": "5 pilot seç •",
+      "selectConstructors": "2 konstruktör seç -",
+      "noDrivers": "Pilot yok"
+    }
+  },
+  "profile": {
+    "loading": "Profil yükleniyor...",
+    "title": "Profilim",
+    "description": "Kişisel bilgilerinizi ve güvenliğinizi yönetin",
+    "general": {
+      "title": "Genel bilgiler",
+      "username": {
+        "label": "Kullanıcı adı",
+        "placeholder": "Yeni kullanıcı adı",
+        "save": "Kaydet",
+        "saving": "Kaydediliyor...",
+        "edit": "Düzenle",
+        "cancel": "İptal"
+      },
+      "email": {
+        "label": "E-posta",
+        "placeholder": "yeni.email@example.com",
+        "notSet": "Girilmemiş",
+        "save": "Kaydet",
+        "saving": "Kaydediliyor...",
+        "edit": "Düzenle",
+        "cancel": "İptal"
+      }
+    },
+    "security": {
+      "title": "Güvenlik",
+      "password": {
+        "label": "Şifre",
+        "oldPlaceholder": "Mevcut şifre",
+        "newPlaceholder": "Yeni şifre",
+        "confirmPlaceholder": "Yeni şifreyi onayla",
+        "submit": "Şifreyi değiştir",
+        "submitting": "Değiştiriliyor...",
+        "edit": "Düzenle",
+        "cancel": "İptal"
+      }
+    },
+    "logout": {
+      "title": "Çıkış yap",
+      "description": "Bu cihazdaki hesabınızdan çıkış yapın.",
+      "submit": "Çıkış yap"
+    },
+    "deleteAccount": {
+      "title": "Hesabı sil",
+      "description": "Hesabınızı silmek kalıcı ve geri alınamaz. Tüm verileriniz kaybolacaktır.",
+      "submit": "Hesabımı sil",
+      "confirm": {
+        "title": "Gerçekten emin misiniz?",
+        "description": "Bu işlem geri alınamaz. Hesabınız ve tüm verileriniz kalıcı olarak silinecektir.",
+        "submit": "Evet, kalıcı olarak sil",
+        "submitting": "Siliniyor...",
+        "cancel": "İptal"
+      }
+    },
+    "createdAt": "Hesap oluşturulma tarihi"
+  },
+  "rankings": {
+    "loading": "Dünya sıralaması yükleniyor...",
+    "hero": {
+      "badge": "Dünya Sıralaması",
+      "title": "Hall of ",
+      "titleHighlight": "Fame",
+      "description": "Feeder Series Fantasy F2'nin en iyi 50 stratejisti. Yalnızca en yetenekliler bu elit sıralamada yer alır.",
+      "activePlayers": "Aktif oyuncular",
+      "top50": "Elit",
+      "season": "Sezon"
+    },
+    "podium": {
+      "building": "Podyum oluşturuluyor",
+      "buildingDescription": "Podyumu görüntülemek için en az 3 sıralanmış oyuncu gereklidir",
+      "currentPlayers_one": "Şu an: {count} sıralanmış oyuncu",
+      "currentPlayers_other": "Şu an: {count} sıralanmış oyuncu"
+    },
+    "list": {
+      "top4to50": "Top 4-50",
+      "topN": "Top {count}",
+      "onlyN_one": "Şu an yalnızca {count} sıralanmış oyuncu",
+      "onlyN_other": "Şu an yalnızca {count} sıralanmış oyuncu",
+      "empty": "Henüz sıralanmış oyuncu yok",
+      "joinedAt": "Üyelik tarihi",
+      "totalPoints": "toplam puan",
+      "top10": "Top 10"
+    },
+    "myPosition": {
+      "title": "Sıramım",
+      "rank": "Sıralama",
+      "points": "Toplam puan",
+      "top50": "🎉 Tebrikler! Dünya Top 50'sindesin",
+      "keepGoing": "Top 50'ye ulaşmak için ilerlemeye devam et!"
+    },
+    "infoCard": {
+      "title": "Sıralama hakkında",
+      "info1": "Yalnızca dünyanın en iyi 50 oyuncusu gösterilir",
+      "info2": "Sıralama her yarış haftasonundan sonra güncellenir",
+      "info3": "Puanlar sezon boyunca birikir",
+      "cta": "Bir sonraki FSF şampiyonu sen ol!"
+    }
+  },
+  "register": {
+    "title": "Hesap oluştur",
+    "description": "Gridiron'a katıl ve takımını oluşturmaya başla.",
+    "or": "veya",
+    "username": "Kullanıcı adı",
+    "email": "E-posta (isteğe bağlı)",
+    "password": "Şifre",
+    "submit": "Hesabımı oluştur",
+    "submitting": "Oluşturuluyor…",
+    "login": "Zaten hesabım var"
+  },
+  "rules": {
+    "hero": {
+      "badge": "Resmi Kural Kitabı",
+      "title": "Oyun Kuralları",
+      "description": "Tam kuralları keşfet: takım kompozisyonu, bütçe, puan sistemi, sıralamalar ve özel durumlar. Kurallara uygun oynamak için bilmen gereken her şey."
+    },
+    "sections": {
+      "s1": {
+        "title": "Takım Kompozisyonu",
+        "badge": "Zorunlu",
+        "constructors": { "label": "2 konstruktör", "description": "Her takım tam olarak iki konstruktör seçmek zorundadır." },
+        "drivers": { "label": "5 pilot", "description": "İstediğin beş pilotla kadronunu oluştur." },
+        "captain": { "label": "1 kaptan", "description": "5 pilotundan birini kaptan olarak belirle: tüm puanları iki katına çıkar (x2)!" },
+        "budget": { "label": "Sabit bütçe", "description": "Tüm kadronun için belirlenen bütçe limitine uy." },
+        "oneTeam": { "label": "Kullanıcı başına bir takım", "description": "Her hesap lig başına yalnızca bir takım yönetebilir." }
+      },
+      "s2": {
+        "title": "Bütçe ve Fiyat Değişimleri",
+        "badge": "Ekonomi",
+        "prices": { "label": "Pilot ve konstruktör fiyatları", "description": "Her pilot ve konstruktörün dinamik olarak değişen bir fiyatı vardır." },
+        "evolution": { "label": "Her haftasonundan sonra değişim", "description": "Fiyatlar, önceki haftasonunun gerçek performanslarına göre otomatik olarak güncellenir." },
+        "locked": { "label": "Kilitli takım", "description": "Takımın onaylandıktan ve yarış haftasonu başladıktan sonra pilot ve konstruktör fiyatları dondurulur. Yalnızca tam haftasonunun ardından değişirler." },
+        "tip": { "title": "Pazar stratejisi", "description": "Fiyat artışlarını ve düşüşlerini önceden tahmin et. Yüksek performanslı bir pilotun fiyatı artarken, zor dönemdeki bir pilotun fiyatı daha erişilebilir hale gelir." }
+      },
+      "s3": {
+        "title": "Pilot Puanları",
+        "badge": "Puanlama",
+        "driverSum": { "label": "İki pilotun toplamı", "description": "Pilotlar her oturumda (sıralama, sprint yarışı ve ana yarış) kazandıkları toplam puanları alır." },
+        "quali": "Sıralama",
+        "sprint": "Sprint Yarışı",
+        "feature": "Ana Yarış",
+        "featureFinalResult": "Nihai sonuç",
+        "pitlane": "* Pit yolundan start alan araçlar, ızgaradaki son araca göre göreli bir pozisyondan başlamış kabul edilecektir.",
+        "dnfNote": "** DNF = Did Not Finish (yarışı bitiremeyen); DNS = Did Not Start (starta çıkmayan); DSQ = Disqualified (diskalifiye)"
+      },
+      "s4": {
+        "title": "Konstruktör Puanları",
+        "badge": "Konstruktörler",
+        "constructorSum": { "label": "İki pilotun toplamı", "description": "Konstruktörler, her oturumda (sıralama, sprint, ana yarış) iki resmi pilotlarının birleşik toplamını alır." },
+        "bonusTitle": "Yalnızca sıralama bonusu/cezası",
+        "bonus": {
+          "bothTop10": "Her iki pilot ≥ P10",
+          "oneTop10": "Bir pilot ≥ P10",
+          "bothTop16": "Her iki pilot ≥ P16",
+          "oneTop16": "Bir pilot ≥ P16",
+          "bothOut16": "Her iki pilot P16 dışında"
+        }
+      },
+      "s5": {
+        "title": "Sıralamalar",
+        "badge": "Rekabet",
+        "captainBonus": {
+          "title": "Kaptan Bonusu",
+          "description": "Kaptan olarak belirlenen pilot puanlarının iki katını alır. Akıllıca seç!"
+        },
+        "weekend": { "label": "Haftasonu sıralaması", "description": "Mevcut haftasonunun üç oturumunda (sıralama, sprint, ana yarış) biriktirilen puanlar." },
+        "league": { "label": "Lig sıralaması", "description": "Sezon boyunca özel liginde kazanılan tüm puanların toplamı." },
+        "world": { "label": "Dünya sıralaması", "description": "Tüm liglerdeki tüm FSF oyuncularının genel sıralaması." }
+      },
+      "s6": {
+        "title": "Özel Durumlar",
+        "badge": "İstisnalar",
+        "cancelled": { "label": "İptal edilen yarış", "description": "Bir oturum iptal edilirse, o oturum için puan verilmez." },
+        "teamChange": { "label": "Sezon ortasında konstruktör değişikliği", "description": "Bir pilot sezon boyunca konstruktör değiştirirse, sistem bağlantısını otomatik olarak günceller." },
+        "finalDecision": { "label": "Nihai karar", "description": "Olağanüstü veya öngörülemeyen bir durum söz konusu olduğunda, oyunun puanlama sistemi geçerlidir." }
+      }
+    },
+    "summary": {
+      "title": "Özetle",
+      "description": "Puan sistemi, pilotlarının ve konstruktörlerinin gerçek performanslarını ödüllendirir. Sıralama, sprint yarışları ve ana yarışların hepsi sayılır. Bütçeni yönet, fiyat değişimlerini önceden tahmin et ve sezon boyunca sıralamanda üstünlük kurmak için dengeli bir takım kur.",
+      "faqText": "Sorularınız mı var? Göz atın",
+      "faqLink": "SSS",
+      "orText": "veya",
+      "contactLink": "iletişim",
+      "supportText": "desteği."
+    }
+  },
+  "home": {
+    "mobileWarning": {
+      "ariaClose": "Kapat",
+      "title": "⚠️ PC kullanımı önerilir",
+      "description": "PC deneyimi için optimize edilmiştir. Arayüz şu an",
+      "descriptionHighlight": "mobil için uygun değil",
+      "descriptionEnd": "ve akıllı telefonda kullanımı zor olacaktır.",
+      "mobileUpdate": "Yaklaşan güncellemelerde mobil sürüm planlanıyor! 📱",
+      "confirm": "Anladım"
+    },
+    "hero": {
+      "badge": "Fantasy F2 - 2026 Sezonu",
+      "title": "Feeder Series ",
+      "titleHighlight": "Fantasy",
+      "description": "Hayalindeki takımı kur, en iyi pilotları ve konstruktörleri seç ve en sürükleyici F2 fantasy oyununda dünya sıralamalarına hükmet.",
+      "cta": "Takımımı oluştur",
+      "loading": "Yükleniyor...",
+      "unavailable": "Kullanılamıyor"
+    },
+    "pitch": {
+      "seasonOpen": "2026 Sezonu açık",
+      "title": "Hayalindeki takım parmaklarının ucunda",
+      "description": "Her Formula 2 haftasonunu bir takım direktörü olarak yaşa. Pilotlarını seç, konstruktörlerini belirle ve gerçek yarış performanslarına göre diğer oyuncularla rekabet et."
+    },
+    "roadmap": {
+      "badge": "Yaklaşan güncellemeler",
+      "title": "Yakında çok daha fazla özellik!",
+      "description": "Oyun deneyimini iyileştirmek için yeni özellikler üzerinde aktif olarak çalışıyoruz.",
+      "statusInProgress": "Devam ediyor",
+      "statusComing": "Yakında",
+      "features": {
+        "multilang": { "title": "Çok dilli sürüm", "desc": "Oyun İngilizce ve diğer dillerde mevcut" },
+        "design": { "title": "Geliştirilmiş tasarım", "desc": "Daha modern ve sezgisel arayüz" },
+        "bugs": { "title": "Hata düzeltmeleri", "desc": "Optimizasyon ve geliştirilmiş kararlılık" },
+        "friends": { "title": "Arkadaş sistemi", "desc": "Arkadaşlarını ekle ve performansları takip edin" },
+        "mobile": { "title": "Mobil sürüm", "desc": "Akıllı telefon için optimize edilmiş uygulama" },
+        "f3": { "title": "Formula 3", "desc": "Oyunun Formula 3'e genişletilmesi" }
+      },
+      "suggestion": "Görüşün önemli!",
+      "suggestionText": "Önerilerini şu sayfa üzerinden paylaşmaktan çekinme:",
+      "contactLink": "İletişim"
+    },
+    "features": {
+      "realtime": { "title": "Gerçek zamanlı skorlar", "desc": "Puanlar, pilotlarının ve konstruktörlerinin gerçek performanslarına göre her oturumdan (sıralama, sprint, ana yarış) sonra otomatik hesaplanır." },
+      "strategy": { "title": "Strateji ve bütçe", "desc": "Sınırlı bütçeyle kadronunu optimize et. Pilot ve konstruktör fiyatları performanslarına göre değişir. Ucuza al, pahalıya sat!" },
+      "leagues": { "title": "Özel ligler", "desc": "Arkadaşlarına meydan okumak için özel ligler oluştur. Davet kodu paylaş ve özel bir sıralamada performansları takip edin." },
+      "world": { "title": "Dünya sıralaması", "desc": "Resmi FSF sıralamasında dünyanın en iyi oyuncularıyla kendini karşılaştır. En iyi Formula 2 stratejisti olduğunu kanıtla." }
+    },
+    "cta": {
+      "title": "Arkadaşlarınla oyna",
+      "description": "Davet koduyla özel bir lige katıl ve her haftasonu arkadaşlarınla rekabet et. Oyna, eğlen ve her yarış haftasonunda arkadaşlarını geç.",
+      "joinLeague": "Bir lige katıl"
+    }
+  },
+  "deleteLeagueModal": {
+    "title": "Lig silinsin mi?",
+    "warning": {
+      "title": "⚠️ Geri alınamaz işlem",
+      "line1": "Lig",
+      "line1End": "kalıcı olarak silinecek",
+      "line2Start": "",
+      "line2End": "üye erişimini kaybedecek",
+      "line3": "Tüm skorlar ve sıralamalar silinecek",
+      "line4": "Bu işlem geri alınamaz"
+    },
+    "confirm": {
+      "label": "Onaylamak için lig kodunu girin:",
+      "placeholder": "Kodu girin",
+      "error": "Kod eşleşmiyor"
+    },
+    "cancel": "İptal",
+    "submit": "Kalıcı olarak sil",
+    "submitting": "Siliniyor...",
+    "finalConfirm": {
+      "title": "Emin misiniz?",
+      "description": "Bu işlem geri alınamaz.",
+      "no": "Hayır",
+      "yes": "Evet"
+    }
+  },
+  "driverStatsPopup": {
+    "loading": "İstatistikler yükleniyor...",
+    "errorTitle": "Hata",
+    "errorFallback": "Veri bulunamadı",
+    "notAuthenticated": "Giriş yapılmadı",
+    "rookie": "Rookie",
+    "seasonAverages": "2026 sezon ortalamaları",
+    "quali": "Sıralama",
+    "sprint": "Sprint",
+    "feature": "Feature",
+    "seasonPerformance": "2026 sezon performansı",
+    "pointsPerM": "Puan/M",
+    "bestWeekend": "En iyi HF",
+    "total": "Toplam",
+    "basedOn_one": "{{count}} yarışa göre",
+    "basedOn_other": "{{count}} yarışa göre",
+    "last5Weekends": "Son 5 haftasonu",
+    "pts": "puan",
+    "radarLabels": {
+      "avgQ": "Ort S",
+      "avgSR": "Ort SR",
+      "avgFR": "Ort FR",
+      "pointsPerM": "Puan/M",
+      "bestWE": "En İyi HF"
+    }
+  },
+  "footer": {
+    "disclaimer": "Feeder Series Fantasy, taraftarlar tarafından oluşturulan bağımsız bir fantasy oyunudur. FIA, Formula 1, Formula 2, Formula 3 veya F1 Academy ile hiçbir bağlantısı yoktur.",
+    "howToPlay": "Nasıl oynanır",
+    "rules": "Kurallar",
+    "faq": "SSS",
+    "contact": "İletişim",
+    "builtBy": "Motorsport taraftarları tarafından yapıldı"
+  },
+  "googleButton": {
+    "login": "Google ile giriş yap",
+    "register": "Google ile kayıt ol"
+  },
+  "navigation": {
+    "home": "Ana Sayfa",
+    "leagues": "Liglerим",
+    "rankings": "Sıralama",
+    "howToPlay": "Nasıl Oynanır",
+    "rules": "Kurallar",
+    "faq": "SSS",
+    "contact": "İletişim",
+    "login": "Giriş yap",
+    "fullscreenEnter": "Tam ekran (F11)",
+    "fullscreenExit": "Tam ekrandan çık (Esc)",
+    "languages": {
+      "ar": "Arapça",
+      "pt": "Portekizce",
+      "nl": "Hollandaca",
+      "en": "İngilizce",
+      "fr": "Fransızca",
+      "de": "Almanca",
+      "it": "İtalyanca",
+      "ja": "Japonca",
+      "es": "İspanyolca",
+      "tr": "Türkçe"
+    }
+  }
+}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { X, Activity } from "lucide-react";
 import { getToken } from "@/lib/auth/token";
+import { useTranslations } from "next-intl";
 
 type Weekend = {
   weekend_id: number | null;
@@ -10,8 +11,11 @@ type Weekend = {
   round: number | null;
   weekend_name: string;
   quali_position: number | null;
+  quali_status?: string;
   sprint_position: number | null;
+  sprint_status?: string;
   feature_position: number | null;
+  feature_status?: string;
   quali_points: number;
   sprint_points: number;
   feature_points: number;
@@ -57,6 +61,7 @@ type Props = {
 };
 
 export default function DriverStatsPopup({ driverId, onClose }: Props) {
+  const t = useTranslations("driverStatsPopup");
   const [stats, setStats] = useState<DriverStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -64,7 +69,7 @@ export default function DriverStatsPopup({ driverId, onClose }: Props) {
   useEffect(() => {
     const token = getToken();
     if (!token) {
-      setError("Non authentifié");
+      setError(t("notAuthenticated"));
       setLoading(false);
       return;
     }
@@ -95,7 +100,7 @@ export default function DriverStatsPopup({ driverId, onClose }: Props) {
         >
           <div className="flex items-center justify-center gap-3 text-slate-400">
             <Activity className="w-5 h-5 animate-pulse" />
-            <span>Chargement des statistiques...</span>
+            <span>{t("loading")}</span>
           </div>
         </div>
       </div>
@@ -113,7 +118,7 @@ export default function DriverStatsPopup({ driverId, onClose }: Props) {
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex justify-between items-start mb-4">
-            <h3 className="text-xl font-bold text-red-400">Erreur</h3>
+            <h3 className="text-xl font-bold text-red-400">{t("errorTitle")}</h3>
             <button
               onClick={onClose}
               className="text-slate-400 hover:text-white transition-colors"
@@ -121,7 +126,7 @@ export default function DriverStatsPopup({ driverId, onClose }: Props) {
               <X className="w-6 h-6" />
             </button>
           </div>
-          <p className="text-slate-300">{error || "Données introuvables"}</p>
+          <p className="text-slate-300">{error || t("errorFallback")}</p>
         </div>
       </div>
     );
@@ -160,7 +165,7 @@ export default function DriverStatsPopup({ driverId, onClose }: Props) {
                 </span>
                 {driver.rookie === 1 && (
                   <span className="px-2 py-0.5 bg-yellow-500/20 border border-yellow-500/40 text-yellow-400 text-xs font-bold rounded uppercase">
-                    Rookie
+                    {t("rookie")}
                   </span>
                 )}
               </div>
@@ -185,23 +190,23 @@ export default function DriverStatsPopup({ driverId, onClose }: Props) {
                 <div className="rounded-xl border border-slate-700/40 bg-slate-900/30 p-5 space-y-6">
                   <div>
                     <div className="text-slate-400 text-m font-bold mb-3 text-center">
-                      Moyennes saison 2026
+                      {t("seasonAverages")}
                     </div>
                     <div className="grid grid-cols-3 gap-4 text-center">
                       <div>
-                        <div className="text-slate-400 text-xs mb-1">Qualif</div>
+                        <div className="text-slate-400 text-xs mb-1">{t("quali")}</div>
                         <div className="text-white text-lg font-bold">
                           {raw!.avg_quali ? `P${raw!.avg_quali.toFixed(1)}` : "N/A"}
                         </div>
                       </div>
                       <div>
-                        <div className="text-slate-400 text-xs mb-1">Sprint</div>
+                        <div className="text-slate-400 text-xs mb-1">{t("sprint")}</div>
                         <div className="text-white text-lg font-bold">
                           {raw!.avg_sprint ? `P${raw!.avg_sprint.toFixed(1)}` : "N/A"}
                         </div>
                       </div>
                       <div>
-                        <div className="text-slate-400 text-xs mb-1">Feature</div>
+                        <div className="text-slate-400 text-xs mb-1">{t("feature")}</div>
                         <div className="text-white text-lg font-bold">
                           {raw!.avg_feature ? `P${raw!.avg_feature.toFixed(1)}` : "N/A"}
                         </div>
@@ -211,25 +216,25 @@ export default function DriverStatsPopup({ driverId, onClose }: Props) {
 
                   <div>
                     <div className="text-slate-400 text-m font-bold mb-3 text-center">
-                      Performance saison 2026
+                      {t("seasonPerformance")}
                     </div>
                     <div className="grid grid-cols-3 gap-4 text-center">
                       <div>
-                        <div className="text-slate-400 text-xs mb-1">Points/M</div>
+                        <div className="text-slate-400 text-xs mb-1">{t("pointsPerM")}</div>
                         <div className="text-white text-lg font-bold">
                           {raw!.points_per_million.toFixed(1)}
                         </div>
                       </div>
                       <div>
-                        <div className="text-slate-400 text-xs mb-1">Meilleur WE</div>
+                        <div className="text-slate-400 text-xs mb-1">{t("bestWeekend")}</div>
                         <div className="text-white text-lg font-bold">
-                          {raw!.best_weekend} pts
+                          {raw!.best_weekend} {t("pts")}
                         </div>
                       </div>
                       <div>
-                        <div className="text-slate-400 text-xs mb-1">Total</div>
+                        <div className="text-slate-400 text-xs mb-1">{t("total")}</div>
                         <div className="text-white text-lg font-bold">
-                          {raw!.total_points} pts
+                          {raw!.total_points} {t("pts")}
                         </div>
                       </div>
                     </div>
@@ -237,8 +242,9 @@ export default function DriverStatsPopup({ driverId, onClose }: Props) {
                 </div>
 
                 <div className="text-xs text-slate-500 text-center pt-3">
-                  Basé sur {raw!.races_count} course{raw!.races_count > 1 ? "s" : ""} disputée
-                  {raw!.races_count > 1 ? "s" : ""}
+                  {raw!.races_count > 1
+                    ? t("basedOn_other", { count: raw!.races_count })
+                    : t("basedOn_one", { count: raw!.races_count })}
                 </div>
               </div>
             </div>
@@ -248,7 +254,7 @@ export default function DriverStatsPopup({ driverId, onClose }: Props) {
             <div className="bg-slate-800/30 rounded-xl border border-slate-700/30 p-4">
               <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-2">
                 <Activity className="w-5 h-5" />
-                5 derniers weekends
+                {t("last5Weekends")}
               </h3>
               <Last5WeekendsTable weekends={last_weekends} />
             </div>
@@ -260,7 +266,14 @@ export default function DriverStatsPopup({ driverId, onClose }: Props) {
 }
 
 function RadarChart({ data }: { data: NonNullable<DriverStats["normalized"]> }) {
-  const labels = ["Moy Q", "Moy SR", "Moy FR", "Points/M", "Best WE"];
+  const t = useTranslations("driverStatsPopup");
+  const labels = [
+    t("radarLabels.avgQ"),
+    t("radarLabels.avgSR"),
+    t("radarLabels.avgFR"),
+    t("radarLabels.pointsPerM"),
+    t("radarLabels.bestWE"),
+  ];
   const values = [
     data.avg_quali,
     data.avg_sprint,
@@ -355,8 +368,15 @@ function RadarChart({ data }: { data: NonNullable<DriverStats["normalized"]> }) 
 function Last5WeekendsTable({ weekends }: { weekends: Weekend[] }) {
   const cols = [...weekends].slice(0, 5).reverse();
 
-  const cell = (pos: number | null, isNA: boolean) => {
+  const cell = (pos: number | null, status: string | undefined, isNA: boolean) => {
     if (isNA) return "—";
+    
+    // Si status existe et n'est pas "OK", afficher le status
+    if (status && status !== "OK") {
+      return status;  // DNF, DNS, DSQ
+    }
+    
+    // Sinon afficher la position ou tiret
     if (pos === null || pos === 0) return "—";
     return String(pos);
   };
@@ -386,7 +406,7 @@ function Last5WeekendsTable({ weekends }: { weekends: Weekend[] }) {
           const isNA = w.weekend_id === null;
           return (
             <div key={i} className="text-center text-slate-100">
-              {cell(w.quali_position, isNA)}
+              {cell(w.quali_position, w.quali_status, isNA)}
             </div>
           );
         })}
@@ -398,7 +418,7 @@ function Last5WeekendsTable({ weekends }: { weekends: Weekend[] }) {
           const isNA = w.weekend_id === null;
           return (
             <div key={i} className="text-center text-slate-100">
-              {cell(w.sprint_position, isNA)}
+              {cell(w.sprint_position, w.sprint_status, isNA)}
             </div>
           );
         })}
@@ -410,7 +430,7 @@ function Last5WeekendsTable({ weekends }: { weekends: Weekend[] }) {
           const isNA = w.weekend_id === null;
           return (
             <div key={i} className="text-center text-slate-100">
-              {cell(w.feature_position, isNA)}
+              {cell(w.feature_position, w.feature_status, isNA)}
             </div>
           );
         })}
